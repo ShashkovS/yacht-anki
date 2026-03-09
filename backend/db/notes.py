@@ -1,3 +1,9 @@
+"""Store and load note rows for the notes feature.
+
+Edit this file when the notes table or note query behavior changes.
+Copy this file as a starting point when you add queries for another table.
+"""
+
 from __future__ import annotations
 
 import aiosqlite

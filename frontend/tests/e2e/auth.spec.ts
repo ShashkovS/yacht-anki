@@ -1,3 +1,9 @@
+/*
+This file checks the main browser flows: login, notes, logout, and admin access.
+Edit this file when the real user flow changes across pages, cookies, or redirects.
+Copy a test pattern here when you add another end-to-end browser flow.
+*/
+
 import { expect, test } from "@playwright/test";
 
 test("user can login, manage notes, and logout", async ({ page }) => {

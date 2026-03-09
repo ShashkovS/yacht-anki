@@ -1,3 +1,9 @@
+/*
+This file tests the notes panel UI and note API calls.
+Edit this file when note form behavior or note list rendering changes.
+Copy a test pattern here when you add another small feature panel.
+*/
+
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { NotesPanel } from "./NotesPanel";

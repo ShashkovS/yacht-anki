@@ -13,6 +13,20 @@ This repository is a small teaching template for school projects.
 - Use simple English in the UI and docs.
 - Avoid unnecessary production-style features.
 
+## Adding libraries
+
+Python:
+
+- add a runtime package with `uv add package-name`
+- add a dev-only package with `uv add --dev package-name`
+
+Frontend:
+
+- add a runtime package with `npm install package-name`
+- add a dev-only package with `npm install -D package-name`
+
+Use these commands instead of editing dependency lists by hand.
+
 ## Default dev users
 
 These users are created only in `dev` mode and only if they do not exist:
@@ -30,32 +44,34 @@ This is intentionally simple and does not include a full CSRF framework.
 
 ## Project layout
 
-- `/Users/sergeyshashkov/repos/templatePWA/backend` backend app, auth, HTTP handlers, WebSocket, DB access, migrations, tests.
-- `/Users/sergeyshashkov/repos/templatePWA/frontend` frontend app, unit tests, and Playwright tests.
-- `/Users/sergeyshashkov/repos/templatePWA/backend/db` all SQLite code.
+- `backend` backend app, auth, HTTP handlers, WebSocket, DB access, migrations, tests.
+- `frontend` frontend app, unit tests, and Playwright tests.
+- `backend/db` all SQLite code.
 
-## First start
+## Start from zero
 
-1. Copy `.env.example` to `.env`.
-2. Install Python packages:
+Preferred way:
 
 ```bash
-uv sync --group dev
+git clone <your-repo-url> templatePWA
+cd templatePWA
+make setup
 ```
 
-3. Install frontend packages:
+Manual way:
 
 ```bash
+git clone <your-repo-url> templatePWA
+cd templatePWA
+uv sync --all-groups
 cd frontend
 npm install
-```
-
-4. Copy the frontend env example:
-
-```bash
-cd frontend
 cp .env.example .env.development.local
+cd ..
+cp .env.example .env
 ```
+
+`make setup` does the same install and env-file setup from the project root.
 
 ## Run in development
 
@@ -99,6 +115,7 @@ Do not mix `localhost` and `127.0.0.1` when using cookie auth, or the browser ma
 You can also use:
 
 ```bash
+make setup
 make back
 make back-once
 make open

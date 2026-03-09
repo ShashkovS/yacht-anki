@@ -12,3 +12,12 @@
 - Check browser console and network requests for uncaught errors, 4xx/5xx responses, bad cookies, and broken WebSocket connections.
 - Do not rely on Vitest or Playwright alone when the task changes auth, routing, startup, or browser-only behavior.
 - Start each frontend source file with a short simple-English comment that says what the file does, when to edit it, and whether it can be copied for a new page, component, hook, or test.
+- Usual frontend growth pattern:
+  - add or update a page or feature component;
+  - add or update a shared helper only if more than one page needs it;
+  - add unit tests for the new browser state;
+  - add or update an e2e test if the real clicked flow changed.
+- Copy an existing page file when you add another page with similar shape.
+- Copy an existing feature panel or test file when you add another small feature block.
+- Extend an existing file only when the new code still belongs to the same page, feature, or shared helper topic.
+- Add frontend packages with `npm install` for runtime deps and `npm install -D` for dev-only deps.

@@ -1,3 +1,9 @@
+/*
+This file shows the logged-in dashboard and connects the notes panel to the websocket.
+Edit this file when dashboard layout or logged-in live updates change.
+Copy this file as a starting point when you add another logged-in page.
+*/
+
 import { useEffect, useState } from "react";
 import { useAuth } from "../app/auth";
 import { createUserSocket, type SocketStatus } from "../shared/socket";

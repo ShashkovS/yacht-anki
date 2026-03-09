@@ -1,3 +1,9 @@
+/*
+This file shows the notes form and notes list for the logged-in user.
+Edit this file when note UI, note API calls, or note error handling changes.
+Copy this file as a starting point when you add another small logged-in feature panel.
+*/
+
 import { FormEvent, useEffect, useState } from "react";
 import { postJson } from "../../shared/api";
 import type { Note } from "../../shared/types";

@@ -1,3 +1,9 @@
+/*
+This file shows the public home page for the starter app.
+Edit this file when the first page text, links, or starter hints change.
+Copy this file as a starting point when you add another public page.
+*/
+
 import { Link } from "react-router-dom";
 
 export function HomePage() {

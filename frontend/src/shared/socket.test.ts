@@ -1,3 +1,9 @@
+/*
+This file tests the shared websocket client helper.
+Edit this file when websocket client behavior or reconnect rules change.
+Copy a test pattern here when you add another small realtime helper.
+*/
+
 import { createUserSocket } from "./socket";
 
 class FakeWebSocket {

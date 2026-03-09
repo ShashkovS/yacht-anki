@@ -1,3 +1,9 @@
+"""Track live websocket connections per user and send messages to them.
+
+Edit this file when websocket connection storage or fan-out behavior changes.
+Copy the helper style here when you add another small websocket utility.
+"""
+
 from __future__ import annotations
 
 from collections import defaultdict

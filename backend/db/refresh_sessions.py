@@ -1,3 +1,9 @@
+"""Store and update refresh-session rows for browser login state.
+
+Edit this file when refresh-session fields or refresh-session queries change.
+Copy this file as a starting point when you add queries for another auth-style table.
+"""
+
 from __future__ import annotations
 
 from typing import Any

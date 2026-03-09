@@ -1,3 +1,6 @@
+// This file keeps the TypeScript rules for frontend app source files.
+// Edit this file when app-side TS strictness or source-file compiler settings change.
+// Copy a config pattern here when you add another small app-side TS setting.
 {
   "compilerOptions": {
     "target": "ES2022",

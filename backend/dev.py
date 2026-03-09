@@ -1,7 +1,7 @@
-"""Run the backend with simple auto-reload in local development.
+"""Run the backend with simple auto-reload for local development.
 
-Edit this file when you want to change how backend hot-reload works.
-You can copy this file as a starting point for another small local dev helper.
+Edit this file when reload rules, watched files, or restart behavior changes.
+Copy this file only when you add another small local dev helper process.
 """
 
 from __future__ import annotations

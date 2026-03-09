@@ -1,3 +1,9 @@
+"""Handle the authenticated websocket endpoint and basic JSON messages.
+
+Edit this file when websocket auth, message types, or connection flow changes.
+Copy the route pattern here when you add another websocket endpoint.
+"""
+
 from __future__ import annotations
 
 from aiohttp import WSMsgType, web

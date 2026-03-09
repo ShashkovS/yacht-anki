@@ -1,3 +1,9 @@
+"""Apply shared backend middleware such as errors, CORS, and origin checks.
+
+Edit this file when request-wide backend rules change.
+Copy the helper style here when you add another small shared middleware helper.
+"""
+
 from __future__ import annotations
 
 from aiohttp import web

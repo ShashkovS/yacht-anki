@@ -1,3 +1,9 @@
+"""Test the custom SQLite UTC datetime adapters and converters.
+
+Edit this file when SQLite time encoding or decoding changes.
+Copy a test pattern here when you add another small DB codec helper.
+"""
+
 from __future__ import annotations
 
 from datetime import UTC, datetime

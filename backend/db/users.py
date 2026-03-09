@@ -1,3 +1,9 @@
+"""Store and load user rows for login and admin features.
+
+Edit this file when the users table or user query behavior changes.
+Copy this file as a starting point when you add queries for another table.
+"""
+
 from __future__ import annotations
 
 from typing import Any

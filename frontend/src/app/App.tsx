@@ -1,3 +1,9 @@
+/*
+This file builds the main frontend layout, routes, and route guards.
+Edit this file when top-level pages, navigation, or auth guard behavior changes.
+Copy the route pattern here when you add another top-level page.
+*/
+
 import { NavLink, Navigate, Route, Routes } from "react-router-dom";
 import { useAuth } from "./auth";
 import { HomePage } from "../pages/HomePage";

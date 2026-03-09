@@ -1,3 +1,9 @@
+/*
+This file shows the admin-only page and loads the simple user list.
+Edit this file when admin page UI or admin-only API behavior changes.
+Copy this file as a starting point when you add another admin-only page.
+*/
+
 import { useEffect, useState } from "react";
 import { postJson } from "../shared/api";
 import type { User } from "../shared/types";

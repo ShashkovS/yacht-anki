@@ -1,3 +1,9 @@
+/*
+This file keeps the small shared TypeScript types for users, notes, API results, and websocket messages.
+Edit this file when backend JSON shapes or websocket message shapes change.
+Copy a type pattern here when you add another shared API or websocket type.
+*/
+
 export type User = {
   id: number;
   username: string;

@@ -1,3 +1,9 @@
+"""Create the notes table.
+
+Edit this file only if this migration has not been used yet.
+Create a new migration file instead when you need another schema change.
+"""
+
 from yoyo import step
 
 

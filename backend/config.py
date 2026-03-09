@@ -1,3 +1,9 @@
+"""Load backend settings from .env and keep them in one Settings object.
+
+Edit this file when env variables, ports, cookie names, or dev/prod defaults change.
+Do not copy this file. Change it when the app configuration model changes.
+"""
+
 from __future__ import annotations
 
 import os

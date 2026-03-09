@@ -1,3 +1,7 @@
+# This file keeps the Python project settings, dependencies, and test/tool config.
+# Edit this file when Python packages or shared Python tool settings change.
+# Copy a config pattern here when you add another small shared Python tool setting.
+# Add new Python packages with `uv add` or `uv add --dev` instead of editing dependency lists by hand.
 [project]
 name = "templatepwa"
 version = "0.1.0"

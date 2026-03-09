@@ -1,3 +1,9 @@
+"""Test backend auth flows, roles, cookies, and auth-related CORS behavior.
+
+Edit this file when login, refresh, logout, or admin-access behavior changes.
+Copy a test pattern here when you add another auth rule or auth endpoint.
+"""
+
 from __future__ import annotations
 
 import pytest

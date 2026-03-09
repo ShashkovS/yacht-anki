@@ -1,3 +1,9 @@
+"""Provide shared backend test fixtures for the aiohttp test app and test database.
+
+Edit this file when many backend tests need the same fixture or helper.
+Copy fixture patterns here when you add another shared backend test helper.
+"""
+
 from __future__ import annotations
 
 from collections.abc import AsyncIterator, Awaitable, Callable

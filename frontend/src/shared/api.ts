@@ -1,3 +1,9 @@
+/*
+This file sends frontend JSON requests to the backend and builds the websocket base URL.
+Edit this file when backend URL rules, shared fetch behavior, or API error parsing changes.
+Copy the helper pattern here when you add another shared browser API helper.
+*/
+
 import type { ApiResponse } from "./types";
 
 export class ApiError extends Error {

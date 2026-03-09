@@ -1,3 +1,9 @@
+"""Open SQLite connections and provide small UTC time helpers.
+
+Edit this file when DB connection setup, PRAGMA values, or shared time helpers change.
+Copy the helper style here when you add another small DB-wide utility.
+"""
+
 from __future__ import annotations
 
 from datetime import UTC, datetime

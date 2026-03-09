@@ -1,3 +1,9 @@
+"""Handle login, refresh, logout, and current-user auth endpoints.
+
+Edit this file when auth endpoint behavior, cookies, or refresh-session rules change.
+Copy the route and helper pattern here when you add another small auth endpoint group.
+"""
+
 from __future__ import annotations
 
 from datetime import UTC, datetime, timedelta

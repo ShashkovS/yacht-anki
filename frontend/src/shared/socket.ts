@@ -1,3 +1,9 @@
+/*
+This file keeps the small frontend websocket client with reconnect logic.
+Edit this file when websocket connection flow or client-side message handling changes.
+Copy this file as a starting point when you add another small websocket client helper.
+*/
+
 import type { WsMessage } from "./types";
 import { getWsUrl } from "./api";
 

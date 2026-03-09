@@ -1,3 +1,9 @@
+/*
+This file shows the login page and posts username and password to the backend.
+Edit this file when login UI, login errors, or login redirect behavior changes.
+Copy this file as a starting point when you add another simple form page.
+*/
+
 import { FormEvent, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "../app/auth";

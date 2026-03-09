@@ -1,3 +1,9 @@
+"""Register UTC ISO datetime adapters and converters for SQLite code paths.
+
+Edit this file when SQLite datetime encoding or decoding rules change.
+Copy the helper style here when you add another small SQLite codec helper.
+"""
+
 from __future__ import annotations
 
 import sqlite3

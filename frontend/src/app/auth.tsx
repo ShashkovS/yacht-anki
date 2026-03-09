@@ -1,3 +1,9 @@
+/*
+This file keeps the frontend auth state, login helpers, and session loading logic.
+Edit this file when login, logout, refresh, or current-user browser behavior changes.
+Copy the provider and hook pattern here when you add another small shared frontend context.
+*/
+
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { ApiError, postJson } from "../shared/api";
 import type { User } from "../shared/types";

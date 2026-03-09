@@ -1,3 +1,9 @@
+"""Build the shared JSON API response shape and read JSON request bodies.
+
+Edit this file when the common success or error envelope changes.
+Copy the helper style here when you add another small shared HTTP utility.
+"""
+
 from __future__ import annotations
 
 from typing import Any

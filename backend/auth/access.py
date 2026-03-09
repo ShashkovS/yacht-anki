@@ -1,3 +1,9 @@
+"""Read the signed access cookie and enforce logged-in or admin access.
+
+Edit this file when access-cookie checks or role rules change.
+Copy the helper pattern here when you add another small auth guard.
+"""
+
 from __future__ import annotations
 
 from typing import Any

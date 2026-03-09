@@ -1,3 +1,9 @@
+/*
+This file tests the login page form and login-page redirect behavior.
+Edit this file when login form behavior or login-page routing changes.
+Copy a test pattern here when you add tests for another page with a form.
+*/
+
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";

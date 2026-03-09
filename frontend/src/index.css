@@ -1,3 +1,9 @@
+/*
+This file keeps the shared frontend CSS and small global style choices.
+Edit this file when global colors, fonts, or page-wide CSS rules change.
+Copy a style pattern here when you add another shared global style block.
+*/
+
 @import "tailwindcss";
 
 :root {

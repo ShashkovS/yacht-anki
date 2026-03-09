@@ -22,3 +22,15 @@
   does.
 - That file header should also say when the file should be edited, and whether it can be copied as a starting point for
   adding a new table, endpoint, page, test, or similar feature.
+- Use module docstrings for Python files.
+- Use short top-of-file comments for TS, TSX, JS, CJS, CSS, HTML, env examples, TOML, and the Makefile when the file
+  format allows comments.
+- If the file format does not support comments cleanly, skip the header instead of breaking the file.
+- Keep every file header short. Answer only: what this file does, when to edit it, and when to copy it.
+- When a student adds a new feature, prefer the pattern: route -> db/helper file -> page/component -> unit tests ->
+  e2e test if the browser flow changed.
+- Extend an existing file only when the new code belongs to the same small feature block. Start a sibling file when the
+  new code would make the old file feel crowded or mixed.
+- Add Python packages with `uv add` for runtime deps and `uv add --dev` for dev-only deps.
+- Add frontend packages with `npm install` for runtime deps and `npm install -D` for dev-only deps.
+- Do not edit dependency lists by hand unless there is a strong reason and it is explained.

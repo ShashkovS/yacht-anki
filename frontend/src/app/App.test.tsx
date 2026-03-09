@@ -1,3 +1,9 @@
+/*
+This file tests the main app router and route guards.
+Edit this file when top-level routes or auth redirects change.
+Copy a test pattern here when you add another route or route guard.
+*/
+
 vi.mock("../pages/DashboardPage", () => ({
   DashboardPage: () => <h2>Dashboard</h2>
 }));

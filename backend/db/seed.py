@@ -1,3 +1,9 @@
+"""Seed simple default data for local development only.
+
+Edit this file when dev-only starter users or other dev seed data changes.
+Copy the small helper style here when you add another dev-only seed step.
+"""
+
 from __future__ import annotations
 
 import aiosqlite

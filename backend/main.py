@@ -1,3 +1,9 @@
+"""Build and run the backend aiohttp application.
+
+Edit this file when startup, cleanup, or top-level route setup changes.
+Do not copy this file. Change it when the whole backend app boot flow changes.
+"""
+
 from __future__ import annotations
 
 from aiohttp import web

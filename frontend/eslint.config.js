@@ -1,3 +1,9 @@
+/*
+This file keeps the small ESLint setup for the frontend project.
+Edit this file when project-wide lint rules or ignored paths change.
+Copy a rule pattern here when you add another simple frontend lint rule.
+*/
+
 import js from "@eslint/js";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";

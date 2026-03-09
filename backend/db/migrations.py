@@ -1,3 +1,9 @@
+"""Run yoyo migrations before the backend starts using the database.
+
+Edit this file when migration startup flow or migration helper wiring changes.
+Do not copy this file. Change it when the project-wide migration process changes.
+"""
+
 from __future__ import annotations
 
 from pathlib import Path

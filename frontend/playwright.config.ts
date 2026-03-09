@@ -1,3 +1,9 @@
+/*
+This file configures Playwright e2e tests and the temporary dev servers they use.
+Edit this file when browser test setup, ports, or e2e server env values change.
+Copy a config pattern here when you add another shared e2e setting.
+*/
+
 import { defineConfig } from "@playwright/test";
 import path from "node:path";
 import os from "node:os";

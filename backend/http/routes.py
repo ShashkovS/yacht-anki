@@ -1,3 +1,9 @@
+"""Handle non-auth JSON endpoints such as health, notes, and admin user list.
+
+Edit this file when app endpoints outside the auth and websocket groups change.
+Copy the route pattern here when you add another endpoint group backed by backend/db code.
+"""
+
 from __future__ import annotations
 
 from aiohttp import web

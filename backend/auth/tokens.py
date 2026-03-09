@@ -1,3 +1,9 @@
+"""Create and read signed access tokens and hashed refresh-token helpers.
+
+Edit this file when token payloads, signatures, or refresh-token hashing changes.
+Copy the helper style here when you add another small token utility.
+"""
+
 from __future__ import annotations
 
 from datetime import UTC, datetime, timedelta

@@ -1,3 +1,9 @@
+"""Test note endpoint behavior against a temporary backend test database.
+
+Edit this file when note routes or note queries change.
+Copy a test pattern here when you add tests for another small CRUD feature.
+"""
+
 from __future__ import annotations
 
 import pytest
