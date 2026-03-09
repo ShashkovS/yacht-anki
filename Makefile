@@ -80,7 +80,6 @@ deps-update-latest:
 format:
 	uv run ruff format .
 	cd frontend && npm run format
-	cd frontend && npm exec eslint . --fix
 
 test:
 	uv run pytest

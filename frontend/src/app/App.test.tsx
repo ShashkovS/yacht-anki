@@ -8,11 +8,11 @@ import "@testing-library/jest-dom/vitest";
 import { describe, expect, it, vi } from "vitest";
 
 vi.mock("../pages/DashboardPage", () => ({
-  DashboardPage: () => <h2>Dashboard</h2>
+  DashboardPage: () => <h2>Dashboard</h2>,
 }));
 
 vi.mock("../pages/AdminPage", () => ({
-  AdminPage: () => <h2>Admin page</h2>
+  AdminPage: () => <h2>Admin page</h2>,
 }));
 
 import { render, screen } from "@testing-library/react";
