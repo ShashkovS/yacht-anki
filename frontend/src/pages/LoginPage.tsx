@@ -11,8 +11,8 @@ import { useAuth } from "../app/auth";
 export function LoginPage() {
   const { user, login } = useAuth();
   const navigate = useNavigate();
-  const [username, setUsername] = useState("user");
-  const [password, setPassword] = useState("user");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
 
@@ -38,7 +38,7 @@ export function LoginPage() {
   return (
     <section className="mx-auto max-w-md rounded-3xl border border-slate-200/80 bg-white/85 p-8 shadow-lg shadow-slate-200/70">
       <h2 className="text-2xl font-semibold text-slate-900">Login</h2>
-      <p className="mt-2 text-sm text-slate-600">Use the default dev users or create your own data later.</p>
+      <p className="mt-2 text-sm text-slate-600">In dev mode, example users are shown on the home page. Enter them here yourself if you want to test login.</p>
       <form className="mt-6 space-y-4" onSubmit={onSubmit}>
         <label className="block">
           <span className="mb-2 block text-sm font-medium text-slate-700">Username</span>

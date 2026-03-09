@@ -28,6 +28,19 @@ const adminUser: User = {
 };
 
 describe("LoginPage", () => {
+  it("starts with empty username and password fields", () => {
+    render(
+      <MemoryRouter>
+        <AuthContext.Provider value={anonymousValue}>
+          <LoginPage />
+        </AuthContext.Provider>
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByLabelText("Username")).toHaveValue("");
+    expect(screen.getByLabelText("Password")).toHaveValue("");
+  });
+
   it("submits username and password through auth context", async () => {
     const login = vi.fn().mockResolvedValue(undefined);
     render(

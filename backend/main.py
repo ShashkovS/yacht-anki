@@ -9,7 +9,7 @@ from __future__ import annotations
 from aiohttp import web
 
 from backend.auth.routes import setup_auth_routes
-from backend.config import Settings, load_settings
+from backend.config import Settings, load_settings, validate_settings
 from backend.db.connection import open_db
 from backend.db.migrations import run_migrations
 from backend.db.seed import seed_dev_data
@@ -34,7 +34,9 @@ async def on_cleanup(app: web.Application) -> None:
 
 def create_app(settings: Settings | None = None) -> web.Application:
     app = web.Application(middlewares=[error_middleware, cors_middleware])
-    app["settings"] = settings or load_settings()
+    resolved_settings = settings or load_settings()
+    validate_settings(resolved_settings)
+    app["settings"] = resolved_settings
     app["ws_hub"] = WebSocketHub()
 
     setup_auth_routes(app)

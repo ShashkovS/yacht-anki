@@ -37,6 +37,18 @@ async def get_user_by_username(db: aiosqlite.Connection, username: str) -> aiosq
     return await cursor.fetchone()
 
 
+async def user_exists(db: aiosqlite.Connection, username: str) -> bool:
+    cursor = await db.execute(
+        """
+        SELECT 1
+        FROM users
+        WHERE username = ?
+        """,
+        (username,),
+    )
+    return await cursor.fetchone() is not None
+
+
 async def get_user_by_id(db: aiosqlite.Connection, user_id: int) -> aiosqlite.Row | None:
     cursor = await db.execute(
         """

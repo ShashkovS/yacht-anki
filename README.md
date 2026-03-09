@@ -35,11 +35,13 @@ These users are created only in `dev` mode and only if they do not exist:
 - `admin` / `admin`
 
 Passwords are stored as Argon2 hashes, never as plain text.
+These are tracked example credentials for local development only.
 
 ## Security note
 
 This template uses `HttpOnly` cookies with `SameSite=Lax`.
-It also checks allowed origins for write endpoints.
+It also checks allowed origins for write endpoints in local dev.
+The real simplified CSRF barrier is `SameSite=Lax` cookies plus JSON `POST` requests from JavaScript.
 This is intentionally simple and does not include a full CSRF framework.
 
 ## Project layout
@@ -191,6 +193,7 @@ If an old Docker e2e stack is still alive, the command stops it first and starts
 
 In production, the frontend build should be served by nginx or Traefik.
 The backend should stay behind the same reverse proxy and use secure cookies.
+Production is intentionally same-origin in this template. Dev-only CORS exists only for localhost-style frontend/backend splits.
 
 ## Docker and Dokploy
 
@@ -260,6 +263,7 @@ Important notes:
 - SQLite data is stored in the `sqlite_data` named volume.
 - `make back-docker` starts only the backend container.
 - `make front-docker` starts the frontend container and also starts the backend dependency if it is not running yet.
+- Docker local testing uses different ports only for testing convenience. It is not the recommended production topology for this template.
 - This compose file is designed for Dokploy Docker Compose deployment. Set the `DOCKER_*` env values in Dokploy instead of editing the file.
 - The Docker e2e helper tries `docker compose` first and falls back to `docker-compose`.
 - `npm run test:e2e:docker` always restarts its own Docker test stack before the tests begin and uses free ports so it does not collide with your usual local Docker stack.

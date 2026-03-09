@@ -6,6 +6,8 @@ Copy this file as a starting point when you add queries for another table.
 
 from __future__ import annotations
 
+from typing import Any
+
 import aiosqlite
 
 from backend.db.connection import utc_now_text

@@ -15,6 +15,7 @@ from dotenv import load_dotenv
 
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
+DEFAULT_COOKIE_SECRET = "change-this-secret"
 
 
 @dataclass(slots=True)
@@ -59,9 +60,9 @@ def load_settings() -> Settings:
     db_path = Path(os.getenv("DB_PATH", "./dev.sqlite3")).expanduser()
     if not db_path.is_absolute():
         db_path = ROOT_DIR / db_path
-    cookie_secret = os.getenv("COOKIE_SECRET", "change-this-secret")
+    cookie_secret = os.getenv("COOKIE_SECRET", DEFAULT_COOKIE_SECRET)
     frontend_origin = os.getenv("FRONTEND_ORIGIN", "http://localhost:5173").rstrip("/")
-    return Settings(
+    settings = Settings(
         mode=mode,
         host=host,
         port=port,
@@ -69,3 +70,10 @@ def load_settings() -> Settings:
         cookie_secret=cookie_secret,
         frontend_origin=frontend_origin,
     )
+    validate_settings(settings)
+    return settings
+
+
+def validate_settings(settings: Settings) -> None:
+    if settings.mode == "prod" and settings.cookie_secret == DEFAULT_COOKIE_SECRET:
+        raise ValueError("Refusing to start in prod with the default COOKIE_SECRET. Set a real secret in .env or your deploy env.")

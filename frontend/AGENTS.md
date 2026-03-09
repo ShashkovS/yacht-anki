@@ -6,6 +6,8 @@
 - Keep auth flow explicit: login, load current user, logout, refresh.
 - Prefer simple pages over generic abstractions.
 - Keep all text in simple English for B2-level students.
+- Do not try to "improve" this template by moving it to production cross-origin API calls unless the backend architecture changes too.
+- Keep browser API calls POST-based in this template, even for read actions, because that is a deliberate teaching simplification here.
 - Add frontend unit tests for new UI states, route guards, forms, and client-side helpers.
 - Add or update Playwright tests when a feature changes login, routing, API wiring, cookies, or any flow a real user clicks through.
 - After frontend changes, open the live app and exercise the changed flow in a real browser session.

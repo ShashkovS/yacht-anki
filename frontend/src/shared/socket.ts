@@ -18,16 +18,22 @@ export function createUserSocket(options: CreateSocketOptions) {
   let ws: WebSocket | null = null;
   let stopped = false;
   let reconnectTimer: number | null = null;
+  let reconnectDelayMs = 1500;
 
   const connect = () => {
     options.onStatus("connecting");
     ws = new WebSocket(getWsUrl());
-    ws.onopen = () => options.onStatus("connected");
+    ws.onopen = () => {
+      reconnectDelayMs = 1500;
+      options.onStatus("connected");
+    };
     ws.onmessage = (event) => options.onMessage(JSON.parse(event.data) as WsMessage);
+    ws.onerror = () => console.warn("WebSocket error.");
     ws.onclose = () => {
       options.onStatus("disconnected");
       if (!stopped) {
-        reconnectTimer = window.setTimeout(connect, 1500);
+        reconnectTimer = window.setTimeout(connect, reconnectDelayMs);
+        reconnectDelayMs = Math.min(reconnectDelayMs * 2, 30000);
       }
     };
   };

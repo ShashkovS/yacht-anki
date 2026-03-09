@@ -31,3 +31,22 @@ async def test_notes_crud(client, create_user, auth_headers) -> None:
 
     delete_response = await client.post("/notes/delete", json={"id": note["id"]}, headers=auth_headers)
     assert delete_response.status == 200
+
+
+@pytest.mark.asyncio
+async def test_notes_are_isolated_per_user(client, create_user, auth_headers) -> None:
+    await create_user("user", "user")
+    await create_user("second", "second")
+
+    await login(client, "user", "user", auth_headers)
+    save_response = await client.post("/notes/save", json={"text": "Private note"}, headers=auth_headers)
+    note_id = (await save_response.json())["data"]["note"]["id"]
+
+    await login(client, "second", "second", auth_headers)
+
+    list_response = await client.post("/notes/list", json={})
+    listed_notes = (await list_response.json())["data"]["notes"]
+    assert listed_notes == []
+
+    delete_response = await client.post("/notes/delete", json={"id": note_id}, headers=auth_headers)
+    assert delete_response.status == 404

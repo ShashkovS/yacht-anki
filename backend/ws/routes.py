@@ -6,10 +6,11 @@ Copy the route pattern here when you add another websocket endpoint.
 
 from __future__ import annotations
 
+import json
+
 from aiohttp import WSMsgType, web
 
 from backend.auth.access import require_user
-from backend.http.json_api import AppError
 
 
 async def websocket_handler(request: web.Request) -> web.WebSocketResponse:
@@ -25,9 +26,14 @@ async def websocket_handler(request: web.Request) -> web.WebSocketResponse:
         async for message in ws:
             if message.type != WSMsgType.TEXT:
                 continue
-            data = message.json()
+            try:
+                data = json.loads(message.data)
+            except json.JSONDecodeError:
+                await ws.send_json({"type": "error", "code": "bad_request", "message": "WebSocket message must be valid JSON."})
+                continue
             if not isinstance(data, dict):
-                raise AppError(400, "bad_request", "WebSocket message must be an object.")
+                await ws.send_json({"type": "error", "code": "bad_request", "message": "WebSocket message must be an object."})
+                continue
             message_type = data.get("type")
             if message_type == "ping":
                 await ws.send_json({"type": "pong"})

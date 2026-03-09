@@ -5,6 +5,10 @@
 - Prefer the simplest working design over clever abstractions.
 - Prefer explicit functions, explicit SQL, and explicit routes.
 - Do not add heavy frameworks or hidden magic.
+- Keep the current simplified web model unless the user asks for an architecture change:
+  - production is same-origin behind nginx or Traefik;
+  - dev-only CORS is for localhost splits;
+  - browser API calls stay POST-based for this template.
 - Keep all user-facing text in simple English.
 - When adding backend DB code, place SQL only under `backend/db`.
 - When adding frontend pages, keep routing and auth flow direct and beginner-friendly.

@@ -6,6 +6,8 @@
 - Store timestamps as UTC ISO strings and convert explicitly in Python.
 - Use `STRICT` tables, `foreign_keys = ON`, and `journal_mode = WAL`.
 - Return only the shared JSON envelope shape.
+- Keep production same-origin for this template. Do not add cross-origin production CORS unless the architecture changes.
+- Keep browser-facing JSON endpoints as POST routes in this template unless the user explicitly changes that rule.
 - Do not introduce ORM, DI, pydantic, or generic service layers.
 - Add backend tests for each new endpoint, auth rule, DB branch, and error path that matters.
 - If a backend change affects browser behavior, make sure frontend/e2e coverage exists too.

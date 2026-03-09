@@ -7,7 +7,7 @@ Copy the helper style here when you add another small token utility.
 from __future__ import annotations
 
 from datetime import UTC, datetime, timedelta
-from hashlib import sha256
+import hmac
 from secrets import token_urlsafe
 from typing import Any
 
@@ -52,5 +52,5 @@ def create_refresh_token_pair() -> tuple[str, str]:
     return session_id, raw_token
 
 
-def hash_refresh_token(raw_token: str) -> str:
-    return sha256(raw_token.encode("utf-8")).hexdigest()
+def hash_refresh_token(settings: Settings, raw_token: str) -> str:
+    return hmac.digest(settings.cookie_secret.encode("utf-8"), raw_token.encode("utf-8"), "sha256").hex()

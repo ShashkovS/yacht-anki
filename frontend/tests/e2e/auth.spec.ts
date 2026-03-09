@@ -9,6 +9,10 @@ import { expect, test } from "@playwright/test";
 test("user can login, manage notes, and logout", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("link", { name: "Open login page" }).click();
+  await expect(page.getByLabel("Username")).toHaveValue("");
+  await expect(page.getByLabel("Password")).toHaveValue("");
+  await page.getByLabel("Username").fill("user");
+  await page.getByLabel("Password").fill("user");
   await page.getByRole("button", { name: "Login" }).click();
 
   await expect(page.getByRole("heading", { name: "Dashboard" })).toBeVisible();
@@ -23,6 +27,8 @@ test("user can login, manage notes, and logout", async ({ page }) => {
 
 test("normal user cannot access admin page", async ({ page }) => {
   await page.goto("/login");
+  await page.getByLabel("Username").fill("user");
+  await page.getByLabel("Password").fill("user");
   await page.getByRole("button", { name: "Login" }).click();
   await expect(page.getByRole("heading", { name: "Dashboard" })).toBeVisible();
   await page.goto("/admin");

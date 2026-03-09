@@ -77,7 +77,7 @@ async def login(request: web.Request) -> web.Response:
 
     session_id, raw_token = create_refresh_token_pair()
     expires_at = (datetime.now(tz=UTC) + timedelta(seconds=settings.refresh_ttl_seconds)).isoformat(timespec="seconds")
-    await create_session(db, session_id, user_row["id"], hash_refresh_token(raw_token), expires_at)
+    await create_session(db, session_id, user_row["id"], hash_refresh_token(settings, raw_token), expires_at)
 
     user = row_to_user(user_row)
     response = ok({"user": user})
@@ -95,7 +95,7 @@ async def refresh(request: web.Request) -> web.Response:
     session_id, raw_token = parsed_cookie
     db = request.app["db"]
     session = await get_session(db, session_id)
-    if session is None or session["token_hash"] != hash_refresh_token(raw_token):
+    if session is None or session["token_hash"] != hash_refresh_token(settings, raw_token):
         raise AppError(401, "not_authenticated", "Refresh session is invalid.")
 
     if datetime.fromisoformat(session["expires_at"]) <= datetime.now(tz=UTC):
@@ -107,11 +107,9 @@ async def refresh(request: web.Request) -> web.Response:
         await delete_session(db, session_id)
         raise AppError(401, "not_authenticated", "User does not exist.")
 
-    new_session_id, new_raw_token = create_refresh_token_pair()
-    if new_session_id != session_id:
-        new_session_id = session_id
+    _, new_raw_token = create_refresh_token_pair()
     expires_at = (datetime.now(tz=UTC) + timedelta(seconds=settings.refresh_ttl_seconds)).isoformat(timespec="seconds")
-    await rotate_session(db, session_id, hash_refresh_token(new_raw_token), expires_at)
+    await rotate_session(db, session_id, hash_refresh_token(settings, new_raw_token), expires_at)
 
     user = row_to_user(user_row)
     response = ok({"user": user})
