@@ -21,6 +21,16 @@ async def test_websocket_requires_login(client) -> None:
 
 
 @pytest.mark.asyncio
+async def test_websocket_rejects_wrong_origin(client, create_user, auth_headers) -> None:
+    await create_user("user", "user")
+    await login(client, "user", "user", auth_headers)
+
+    with pytest.raises(WSServerHandshakeError) as error:
+        await client.ws_connect("/ws", headers={"Origin": "http://evil.example"})
+    assert error.value.status == 403
+
+
+@pytest.mark.asyncio
 async def test_websocket_bad_message_returns_json_error(client, create_user, auth_headers) -> None:
     await create_user("user", "user")
     await login(client, "user", "user", auth_headers)

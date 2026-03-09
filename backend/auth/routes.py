@@ -95,7 +95,10 @@ async def refresh(request: web.Request) -> web.Response:
     session_id, raw_token = parsed_cookie
     db = request.app["db"]
     session = await get_session(db, session_id)
-    if session is None or session["token_hash"] != hash_refresh_token(settings, raw_token):
+    if session is None:
+        raise AppError(401, "not_authenticated", "Refresh session is invalid.")
+    if session["token_hash"] != hash_refresh_token(settings, raw_token):
+        await delete_session(db, session_id)
         raise AppError(401, "not_authenticated", "Refresh session is invalid.")
 
     if datetime.fromisoformat(session["expires_at"]) <= datetime.now(tz=UTC):

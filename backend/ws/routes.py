@@ -11,9 +11,11 @@ import json
 from aiohttp import WSMsgType, web
 
 from backend.auth.access import require_user
+from backend.http.middleware import require_allowed_origin
 
 
 async def websocket_handler(request: web.Request) -> web.WebSocketResponse:
+    require_allowed_origin(request)
     user = require_user(request)
     ws = web.WebSocketResponse(heartbeat=30.0)
     await ws.prepare(request)
