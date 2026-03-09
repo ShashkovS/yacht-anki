@@ -24,7 +24,7 @@ This repository is a small teaching template for school projects.
 Preferred way:
 
 ```bash
-git clone <your-repo-url> templatePWA
+git clone git@github.com:leaders-tech/templatePWA.git templatePWA
 cd templatePWA
 make setup
 ```
@@ -32,7 +32,7 @@ make setup
 Manual way:
 
 ```bash
-git clone <your-repo-url> templatePWA
+git clone git@github.com:leaders-tech/templatePWA.git templatePWA
 cd templatePWA
 uv sync --all-groups
 cd frontend
