@@ -4,9 +4,11 @@ Edit this file when login form behavior or login-page routing changes.
 Copy a test pattern here when you add tests for another page with a form.
 */
 
+import "@testing-library/jest-dom/vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
+import { describe, expect, it, vi } from "vitest";
 import { LoginPage } from "./LoginPage";
 import { AuthContext } from "../app/auth";
 import type { User } from "../shared/types";

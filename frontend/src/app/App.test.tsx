@@ -4,6 +4,9 @@ Edit this file when top-level routes or auth redirects change.
 Copy a test pattern here when you add another route or route guard.
 */
 
+import "@testing-library/jest-dom/vitest";
+import { describe, expect, it, vi } from "vitest";
+
 vi.mock("../pages/DashboardPage", () => ({
   DashboardPage: () => <h2>Dashboard</h2>
 }));

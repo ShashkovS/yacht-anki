@@ -4,6 +4,7 @@ Edit this file when websocket client behavior or reconnect rules change.
 Copy a test pattern here when you add another small realtime helper.
 */
 
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createUserSocket } from "./socket";
 
 class FakeWebSocket {

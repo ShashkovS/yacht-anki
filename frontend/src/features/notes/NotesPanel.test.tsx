@@ -4,8 +4,10 @@ Edit this file when note form behavior or note list rendering changes.
 Copy a test pattern here when you add another small feature panel.
 */
 
+import "@testing-library/jest-dom/vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { NotesPanel } from "./NotesPanel";
 
 describe("NotesPanel", () => {
