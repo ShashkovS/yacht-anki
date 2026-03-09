@@ -4,7 +4,7 @@ Edit this file when Vite plugins, frontend test setup, or build settings change.
 Copy a config pattern here when you add another shared frontend build setting.
 */
 
-import { defineConfig } from "vite";
+import { defineConfig } from "vitest/config";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import { VitePWA } from "vite-plugin-pwa";

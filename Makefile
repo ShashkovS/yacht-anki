@@ -3,7 +3,16 @@
 # Copy an existing target pattern here when you add another simple root command.
 .DEFAULT_GOAL := help
 
-.PHONY: help setup back back-once front open format test
+DOCKER_PROJECT_NAME := templatepwa_local
+DOCKER_FRONTEND_PORT := 8088
+DOCKER_BACKEND_PORT := 8089
+DOCKER_APP_MODE := dev
+DOCKER_COOKIE_SECRET := local-docker-secret
+DOCKER_FRONTEND_ORIGIN := http://localhost:$(DOCKER_FRONTEND_PORT)
+DOCKER_VITE_BACKEND_URL := http://localhost:$(DOCKER_BACKEND_PORT)
+DOCKER_COMPOSE := ./scripts/docker-compose.sh -p $(DOCKER_PROJECT_NAME) -f docker-compose.yml
+
+.PHONY: help setup back back-once front open back-docker front-docker open-docker stop-docker clean-docker format test test-e2e-docker
 
 help:
 	@printf "Available commands:\n"
@@ -12,8 +21,14 @@ help:
 	@printf "  make back-once Run the backend server without auto-reload\n"
 	@printf "  make front   Run the frontend dev server\n"
 	@printf "  make open    Open the frontend in a browser\n"
+	@printf "  make back-docker Start the backend container for local Docker testing\n"
+	@printf "  make front-docker Start the frontend container for local Docker testing\n"
+	@printf "  make open-docker Open the Docker frontend in a browser\n"
+	@printf "  make stop-docker Stop the local Docker test containers\n"
+	@printf "  make clean-docker Stop the local Docker test containers and delete their images and data\n"
 	@printf "  make format  Format backend and frontend code\n"
 	@printf "  make test    Run backend, frontend unit, and e2e tests\n"
+	@printf "  make test-e2e-docker Run e2e tests against Docker containers\n"
 
 setup:
 	uv sync --all-groups
@@ -33,6 +48,21 @@ front:
 open:
 	open http://localhost:5173
 
+back-docker:
+	DOCKER_APP_MODE=$(DOCKER_APP_MODE) DOCKER_COOKIE_SECRET=$(DOCKER_COOKIE_SECRET) DOCKER_FRONTEND_PORT=$(DOCKER_FRONTEND_PORT) DOCKER_BACKEND_PORT=$(DOCKER_BACKEND_PORT) DOCKER_FRONTEND_ORIGIN=$(DOCKER_FRONTEND_ORIGIN) DOCKER_VITE_BACKEND_URL=$(DOCKER_VITE_BACKEND_URL) $(DOCKER_COMPOSE) up -d --build backend
+
+front-docker:
+	DOCKER_APP_MODE=$(DOCKER_APP_MODE) DOCKER_COOKIE_SECRET=$(DOCKER_COOKIE_SECRET) DOCKER_FRONTEND_PORT=$(DOCKER_FRONTEND_PORT) DOCKER_BACKEND_PORT=$(DOCKER_BACKEND_PORT) DOCKER_FRONTEND_ORIGIN=$(DOCKER_FRONTEND_ORIGIN) DOCKER_VITE_BACKEND_URL=$(DOCKER_VITE_BACKEND_URL) $(DOCKER_COMPOSE) up -d --build frontend
+
+open-docker:
+	open http://localhost:$(DOCKER_FRONTEND_PORT)
+
+stop-docker:
+	DOCKER_APP_MODE=$(DOCKER_APP_MODE) DOCKER_COOKIE_SECRET=$(DOCKER_COOKIE_SECRET) DOCKER_FRONTEND_PORT=$(DOCKER_FRONTEND_PORT) DOCKER_BACKEND_PORT=$(DOCKER_BACKEND_PORT) DOCKER_FRONTEND_ORIGIN=$(DOCKER_FRONTEND_ORIGIN) DOCKER_VITE_BACKEND_URL=$(DOCKER_VITE_BACKEND_URL) $(DOCKER_COMPOSE) down --remove-orphans
+
+clean-docker:
+	DOCKER_APP_MODE=$(DOCKER_APP_MODE) DOCKER_COOKIE_SECRET=$(DOCKER_COOKIE_SECRET) DOCKER_FRONTEND_PORT=$(DOCKER_FRONTEND_PORT) DOCKER_BACKEND_PORT=$(DOCKER_BACKEND_PORT) DOCKER_FRONTEND_ORIGIN=$(DOCKER_FRONTEND_ORIGIN) DOCKER_VITE_BACKEND_URL=$(DOCKER_VITE_BACKEND_URL) $(DOCKER_COMPOSE) down -v --remove-orphans --rmi local
+
 format:
 	uv run ruff format .
 	cd frontend && npm run format
@@ -42,3 +72,6 @@ test:
 	uv run pytest
 	cd frontend && npm run test
 	cd frontend && npm run test:e2e
+
+test-e2e-docker:
+	cd frontend && npm run test:e2e:docker
