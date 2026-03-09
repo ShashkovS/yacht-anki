@@ -13,37 +13,6 @@ This repository is a small teaching template for school projects.
 - Use simple English in the UI and docs.
 - Avoid unnecessary production-style features.
 
-## Adding libraries
-
-Python:
-
-- add a runtime package with `uv add package-name`
-- add a dev-only package with `uv add --dev package-name`
-
-Frontend:
-
-- add a runtime package with `npm install package-name`
-- add a dev-only package with `npm install -D package-name`
-
-Use these commands instead of editing dependency lists by hand.
-
-## Default dev users
-
-These users are created only in `dev` mode and only if they do not exist:
-
-- `user` / `user`
-- `admin` / `admin`
-
-Passwords are stored as Argon2 hashes, never as plain text.
-These are tracked example credentials for local development only.
-
-## Security note
-
-This template uses `HttpOnly` cookies with `SameSite=Lax`.
-It also checks allowed origins for write endpoints in local dev.
-The real simplified CSRF barrier is `SameSite=Lax` cookies plus JSON `POST` requests from JavaScript.
-This is intentionally simple and does not include a full CSRF framework.
-
 ## Project layout
 
 - `backend` backend app, auth, HTTP handlers, WebSocket, DB access, migrations, tests.
@@ -122,6 +91,76 @@ make back
 make back-once
 make open
 ```
+
+
+
+## Adding libraries
+
+Python:
+
+- add a runtime package with `uv add package-name`
+- add a dev-only package with `uv add --dev package-name`
+
+Frontend:
+
+- add a runtime package with `npm install package-name`
+- add a dev-only package with `npm install -D package-name`
+
+Use these commands instead of editing dependency lists by hand.
+
+## Update dependencies
+
+Safe update:
+
+```bash
+make deps-update-safe
+```
+
+This does:
+
+- backend: runs `uv add --bounds major ...` for all current Python deps, so `pyproject.toml` and `uv.lock` stay inside the current major version
+- frontend: runs `npm update`, so `package-lock.json` moves forward inside the current `package.json` semver ranges
+
+Latest update:
+
+```bash
+make deps-update-latest
+```
+
+This does:
+
+- backend: runs `uv add --bounds lower ...` for all current Python deps, so `pyproject.toml` and `uv.lock` move to the newest available versions
+
+Frontend latest-version bumps are intentionally manual for now:
+
+- `npm-check-updates` is not used by the root commands
+- newest frontend version jumps often hit peer dependency conflicts
+- for the frontend, use `make deps-update-safe` for the supported automatic path
+- if you want a risky latest bump, edit `frontend/package.json` yourself, then run `npm install`, `make test`, and `make test-e2e-docker`
+
+After either command, run:
+
+```bash
+make test
+make test-e2e-docker
+```
+
+## Default dev users
+
+These users are created only in `dev` mode and only if they do not exist:
+
+- `user` / `user`
+- `admin` / `admin`
+
+Passwords are stored as Argon2 hashes, never as plain text.
+These are tracked example credentials for local development only.
+
+## Security note
+
+This template uses `HttpOnly` cookies with `SameSite=Lax`.
+It also checks allowed origins for write endpoints in local dev.
+The real simplified CSRF barrier is `SameSite=Lax` cookies plus JSON `POST` requests from JavaScript.
+This is intentionally simple and does not include a full CSRF framework.
 
 ## Format
 
