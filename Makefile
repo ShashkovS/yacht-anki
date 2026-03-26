@@ -36,7 +36,7 @@ help:
 
 setup:
 	uv sync --all-groups
-	cd frontend && npm install
+	cd frontend && npm install && npx playwright install
 	test -f .env || cp .env.example .env
 	cd frontend && test -f .env.development.local || cp .env.example .env.development.local
 
