@@ -10,6 +10,8 @@
 - Keep browser-facing JSON endpoints as POST routes in this template unless the user explicitly changes that rule.
 - Do not introduce ORM, DI, pydantic, or generic service layers.
 - Add backend tests for each new endpoint, auth rule, DB branch, and error path that matters.
+- After every change, run `uv run pytest` and make sure all tests pass before calling the task done.
+- Do not skip or delete a failing test — fix the code or update the test to match the new correct behavior.
 - If a backend change affects browser behavior, make sure frontend/e2e coverage exists too.
 - Start each backend source file with a short simple-English docstring that says what the file does, when to edit it, and whether it can be copied for a similar backend feature.
 - Normal backend growth pattern:

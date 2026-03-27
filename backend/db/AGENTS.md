@@ -7,6 +7,7 @@
 - Keep queries small, named clearly, and close to the table they work with.
 - Prefer explicit `INSERT`, `UPDATE`, `DELETE`, and careful `ON CONFLICT`.
 - Add or update tests whenever DB schema or query behavior changes, including success paths and important failure paths.
+- After every DB change, run `uv run pytest` and confirm all tests pass before calling the task done.
 - Start each DB file with a short simple-English docstring that says what table or query group it owns, when to edit it, and whether it can be copied to add another table or query module.
 - Usual pattern for a new table:
   - add a new migration file in `backend/migrations`;

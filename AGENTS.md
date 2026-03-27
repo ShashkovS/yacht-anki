@@ -14,6 +14,8 @@
 - When adding frontend pages, keep routing and auth flow direct and beginner-friendly.
 - Cover new behavior densely with tests: backend unit tests, frontend unit tests, and Playwright e2e tests where the
   feature crosses the browser boundary.
+- Before calling any task done, run the full test suite (`make test`) and make sure every test passes.
+  If a test breaks, fix it — do not skip or delete it.
 - For auth, routing, cookies, WebSockets, startup, and other browser-sensitive flows, do not stop at tests. Also verify
   the real running app in a live browser session.
 - After frontend, auth, routing, cookie, or WebSocket changes, verify the result in a live browser session, not only
