@@ -1,168 +1,244 @@
 # Template PWA
 
-This repository is a small teaching template for school projects.
+This is a teaching template for school projects. It has a frontend (the part users see in a browser) and a backend (the server that stores data).
 
-- Frontend: Vite, React, Tailwind 4, TypeScript, PWA plugin.
-- Backend: aiohttp, SQLite, yoyo migrations, cookie auth, WebSocket.
-- Tests: pytest, Vitest, Playwright.
+**What is inside:**
 
-## Main ideas
+- **Frontend** — React app with TypeScript, built with Vite, styled with Tailwind CSS.
+- **Backend** — Python web server using aiohttp, stores data in a SQLite file.
+- **Tests** — automated checks that verify the app works correctly.
 
-- Keep the code small and direct.
-- Keep SQL in `backend/db`.
-- Use simple English in the UI and docs.
-- Avoid unnecessary production-style features.
+---
 
-## Project layout
+## Words you will see in this guide
 
-- `backend` backend app, auth, HTTP handlers, WebSocket, DB access, migrations, tests.
-- `frontend` frontend app, unit tests, and Playwright tests.
-- `backend/db` all SQLite code.
+| Word | What it means |
+|------|---------------|
+| **terminal** | A text window where you type commands. On Mac it is called Terminal, on Windows it is called Command Prompt or PowerShell. |
+| **git** | A tool that downloads and tracks code. Every command starts with `git`. |
+| **npm** | Node Package Manager — downloads JavaScript libraries that the frontend needs. |
+| **uv** | A tool that downloads Python libraries that the backend needs. |
+| **make** | A shortcut tool. `make setup` is just a shorter way to run several commands at once. |
+| **uv run** | Runs a Python command inside the project's own Python environment. |
+| **localhost** | Your own computer. `http://localhost:5173` means "open port 5173 on my own machine". |
 
-## Start from zero
+---
 
-Preferred way:
+## Project folders
+
+```
+templatePWA/
+├── backend/        ← Python server code
+│   └── db/         ← Database (SQLite) code
+└── frontend/       ← React app code
+```
+
+---
+
+## Before you start — check your tools
+
+Do this once on a new machine before cloning anything.
+
+### Check uv (Python package manager)
 
 ```bash
-git clone git@github.com:leaders-tech/templatePWA.git templatePWA
+uv -V
+```
+
+If you get "command not found", install it:
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+Then install a fresh Python:
+
+```bash
+uv python install 3.14
+```
+
+### Check npm (JavaScript package manager)
+
+```bash
+npm -v
+```
+
+If you get "command not found", install Node.js via nvm:
+
+```bash
+# Install nvm:
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.4/install.sh | bash
+# Load nvm without restarting the terminal:
+. "$HOME/.nvm/nvm.sh"
+# Install Node.js:
+nvm install 24
+```
+
+---
+
+## First-time setup
+
+Do this once when you first clone the project.
+
+### Step 1 — Download the project
+
+Open a terminal and run:
+
+```bash
+git clone https://github.com/leaders-tech/templatePWA.git templatePWA
 cd templatePWA
+```
+
+`git clone` copies the project to your computer. `cd templatePWA` moves into that folder.
+
+### Step 2 — Install everything
+
+The easiest way (one command does it all):
+
+```bash
 make setup
 ```
 
-Manual way:
+That is it. `make setup` installs Python libraries, installs JavaScript libraries, installs browser drivers for tests, and creates the `.env` config files.
+
+<details>
+<summary>What does make setup do exactly? (click to expand)</summary>
+
+If you are curious, it runs these steps one by one:
 
 ```bash
-git clone git@github.com:leaders-tech/templatePWA.git templatePWA
-cd templatePWA
-uv sync --all-groups
+uv sync --all-groups       # installs Python libraries
 cd frontend
-npm install
+npm install                # installs JavaScript libraries
+npx playwright install     # installs browsers for end-to-end tests
 cp .env.example .env.development.local
 cd ..
 cp .env.example .env
 ```
 
-`make setup` does the same install and env-file setup from the project root.
+You do not need to run these yourself — `make setup` does it for you.
+</details>
 
-## Run in development
+---
 
-Backend:
+## Running the app in development
 
-```bash
-uv run python -m backend.main
-```
+You need **two terminals** open at the same time — one for the backend, one for the frontend.
 
-Backend with auto-reload:
-
-```bash
-uv run python -m backend.dev
-```
-
-Frontend:
+### Terminal 1 — start the backend (Python server)
 
 ```bash
-cd frontend
-npm run dev
+make back
 ```
 
-Or with the default backend URL already set:
+The backend will be available at `http://localhost:8000`.
+
+> **With auto-reload:** `make back` already watches for file changes. If you want to run it without auto-reload, use `uv run python -m backend.main`.
+
+### Terminal 2 — start the frontend (React app)
 
 ```bash
 make front
 ```
 
-Open:
+The frontend will be available at `http://localhost:5173`.
 
-- frontend: `http://localhost:5173`
-- backend: `http://localhost:8000`
+Open `http://localhost:5173` in your browser to see the app.
 
-The frontend reads the backend address from `VITE_BACKEND_URL`.
-`make front` sets `VITE_BACKEND_URL=http://localhost:8000` for local development.
-If you run `npm run dev` manually, set it in `frontend/.env.development.local`.
-This template does not use Vite proxy rules for API paths.
-Use the same hostname on both sides in development.
-Do not mix `localhost` and `127.0.0.1` when using cookie auth, or the browser may stop sending the auth cookies.
+### Default login credentials (development only)
 
-You can also use:
+| Username | Password |
+|----------|----------|
+| user     | user     |
+| admin    | admin    |
 
-```bash
-make setup
-make back
-make back-once
-make open
+These accounts exist only in development mode. They are not in production.
+
+---
+
+## How the frontend talks to the backend
+
+The frontend needs to know the backend address. `make front` sets this automatically.
+
+If you start the frontend with `npm run dev` instead, create the file `frontend/.env.development.local` and put this inside:
+
+```
+VITE_BACKEND_URL=http://localhost:8000
 ```
 
+> **Important:** Always use `localhost` for both. Do not mix `localhost` and `127.0.0.1` — the browser may stop sending login cookies if you do.
 
+---
 
-## Adding libraries
+## Adding a new library
 
-Python:
-
-- add a runtime package with `uv add package-name`
-- add a dev-only package with `uv add --dev package-name`
-
-Frontend:
-
-- add a runtime package with `npm install package-name`
-- add a dev-only package with `npm install -D package-name`
-
-Use these commands instead of editing dependency lists by hand.
-
-## Update dependencies
-
-Safe update:
+### Python library (for the backend)
 
 ```bash
-make deps-update-safe
+uv add package-name
 ```
 
-This does:
-
-- backend: runs `uv add --bounds major ...` for all current Python deps, so `pyproject.toml` and `uv.lock` stay inside the current major version
-- frontend: runs `npm update`, so `package-lock.json` moves forward inside the current `package.json` semver ranges
-
-Latest update:
+For a library only used in development (like a testing tool):
 
 ```bash
-make deps-update-latest
+uv add --dev package-name
 ```
 
-This does:
+### JavaScript library (for the frontend)
 
-- backend: runs `uv add --bounds lower ...` for all current Python deps, so `pyproject.toml` and `uv.lock` move to the newest available versions
+```bash
+cd frontend
+npm install package-name
+```
 
-Frontend latest-version bumps are intentionally manual for now:
+For a library only used in development:
 
-- `npm-check-updates` is not used by the root commands
-- newest frontend version jumps often hit peer dependency conflicts
-- for the frontend, use `make deps-update-safe` for the supported automatic path
-- if you want a risky latest bump, edit `frontend/package.json` yourself, then run `npm install`, `make test`, and `make test-e2e-docker`
+```bash
+cd frontend
+npm install -D package-name
+```
 
-After either command, run:
+> Do not edit the dependency files by hand. Use these commands instead — they also update the lock files automatically.
+
+---
+
+## Running tests
+
+### Backend tests
+
+```bash
+uv run pytest
+```
+
+### Frontend unit tests
+
+```bash
+cd frontend
+npm test
+```
+
+### End-to-end tests (browser automation)
+
+```bash
+cd frontend
+npm run test:e2e
+```
+
+Playwright opens a real browser, clicks through the app, and checks that everything works.
+
+### Run all tests at once
+
+From the project root:
 
 ```bash
 make test
-make test-e2e-docker
 ```
 
-## Default dev users
+---
 
-These users are created only in `dev` mode and only if they do not exist:
+## Formatting code
 
-- `user` / `user`
-- `admin` / `admin`
-
-Passwords are stored as Argon2 hashes, never as plain text.
-These are tracked example credentials for local development only.
-
-## Security note
-
-This template uses `HttpOnly` cookies with `SameSite=Lax`.
-It also checks allowed origins for write endpoints in local dev.
-The real simplified CSRF barrier is `SameSite=Lax` cookies plus JSON `POST` requests from JavaScript.
-This is intentionally simple and does not include a full CSRF framework.
-
-## Format
+Formatting makes code look consistent (correct indentation, spacing, etc.).
 
 Python:
 
@@ -177,73 +253,51 @@ cd frontend
 npm run format
 ```
 
-Or from the repo root:
+Or both at once:
 
 ```bash
 make format
 ```
 
-## Tests
+---
 
-Backend:
+## Useful make shortcuts
 
-```bash
-uv run pytest
-```
+| Command | What it does |
+|---------|--------------|
+| `make setup` | First-time install of everything |
+| `make back` | Start backend with auto-reload |
+| `make back-once` | Start backend without auto-reload |
+| `make front` | Start frontend dev server |
+| `make open` | Open the app in the browser |
+| `make format` | Format all code |
+| `make test` | Run all tests |
 
-Frontend unit tests:
+---
 
-```bash
-cd frontend
-npm test
-```
+## Updating dependencies
 
-E2E tests:
-
-```bash
-cd frontend
-npm run test:e2e
-```
-
-Docker deployment e2e tests:
+Safe update (stays within the same major versions — recommended):
 
 ```bash
-cd frontend
-npm run test:e2e:docker
+make deps-update-safe
 ```
 
-Or run everything from the repo root:
+After updating, always run tests to make sure nothing broke:
 
 ```bash
 make test
-```
-
-Docker deployment e2e from the repo root:
-
-```bash
 make test-e2e-docker
 ```
 
-Playwright starts a temporary backend on port `9010`, a temporary frontend on port `4173`, and uses a temporary SQLite database file.
-The Docker e2e flow picks free local ports, starts a clean Docker deployment stack, runs the same browser checks against the container build, and removes the test containers when the run finishes.
-If an old Docker e2e stack is still alive, the command stops it first and starts a clean one.
+---
 
-## Production note
+## Docker (optional, for deployment)
 
-In production, the frontend build should be served by nginx or Traefik.
-The backend should stay behind the same reverse proxy and use secure cookies.
-Production is intentionally same-origin in this template. Dev-only CORS exists only for localhost-style frontend/backend splits.
+Docker packages the app into containers so it runs the same way everywhere.
+You do not need Docker for local development. Use it when you want to test how the app behaves in production.
 
-## Docker and Dokploy
-
-Files:
-
-- `backend/Dockerfile` builds the aiohttp backend image.
-- `frontend/Dockerfile` builds the static frontend image.
-- `frontend/nginx.conf` serves the frontend as a single-page app.
-- `docker-compose.yml` connects both containers and keeps SQLite data in a named volume.
-
-Preferred local Docker test:
+Quick local test with Docker:
 
 ```bash
 make back-docker
@@ -251,58 +305,36 @@ make front-docker
 make open-docker
 ```
 
-These `make` commands use Docker in `dev` mode on purpose, so the default demo users are available for quick testing.
+Open in browser:
+- Frontend: `http://localhost:8088`
+- Backend health check: `http://localhost:8089/health`
 
-Useful Docker commands from the repo root:
+Stop and remove containers:
 
 ```bash
 make stop-docker
 make clean-docker
 ```
 
-- `make stop-docker` stops and removes the local Docker test containers.
-- `make clean-docker` also removes the named volume and the local images built from `docker-compose.yml`.
+---
 
-Open:
+## Security notes (for learning)
 
-- frontend: `http://localhost:8088`
-- backend health: `http://localhost:8089/health`
+- Passwords are stored as Argon2 hashes — not as plain text.
+- Login uses `HttpOnly` cookies so JavaScript cannot read them.
+- `SameSite=Lax` cookies protect against most cross-site request attacks.
+- In production, the frontend should be served by nginx or Traefik behind a reverse proxy.
 
-Manual Docker Compose commands:
+---
 
-```bash
-DOCKER_COOKIE_SECRET=change-this-now docker compose build
-DOCKER_COOKIE_SECRET=change-this-now docker compose up
-```
+## Production deployment
 
-Container ports are different from local dev ports on purpose:
+This template is designed for [Dokploy](https://dokploy.com/) with Docker Compose.
+Set these environment variables in Dokploy instead of editing the `docker-compose.yml` file:
 
-- frontend container: `8080`
-- backend container: `8081`
-- published compose ports: `8088` and `8089`
-
-Important env values for Docker and Dokploy:
-
-- `DOCKER_COOKIE_SECRET` must be set to a real secret in production.
-- `DOCKER_FRONTEND_ORIGIN` should match the public frontend URL, for example `http://localhost:8088` or your Dokploy URL.
-- `DOCKER_VITE_BACKEND_URL` is the public backend URL that the frontend build will call.
-- `DOCKER_APP_MODE=prod` is the default.
-
-Quick local Docker demo with default users:
-
-```bash
-DOCKER_APP_MODE=dev DOCKER_COOKIE_SECRET=change-this-now docker compose up --build
-```
-
-Use this only for local testing. In production, the default demo users should stay disabled.
-
-Important notes:
-
-- The frontend uses `VITE_BACKEND_URL` at build time. If the public backend URL changes, rebuild the frontend image.
-- SQLite data is stored in the `sqlite_data` named volume.
-- `make back-docker` starts only the backend container.
-- `make front-docker` starts the frontend container and also starts the backend dependency if it is not running yet.
-- Docker local testing uses different ports only for testing convenience. It is not the recommended production topology for this template.
-- This compose file is designed for Dokploy Docker Compose deployment. Set the `DOCKER_*` env values in Dokploy instead of editing the file.
-- The Docker e2e helper tries `docker compose` first and falls back to `docker-compose`.
-- `npm run test:e2e:docker` always restarts its own Docker test stack before the tests begin and uses free ports so it does not collide with your usual local Docker stack.
+| Variable | What it is |
+|----------|------------|
+| `DOCKER_COOKIE_SECRET` | Secret key for signing cookies — use a long random string |
+| `DOCKER_FRONTEND_ORIGIN` | Public URL of the frontend, e.g. `https://myapp.example.com` |
+| `DOCKER_VITE_BACKEND_URL` | Public URL of the backend API |
+| `DOCKER_APP_MODE` | `prod` for production, `dev` to enable demo accounts |

@@ -19,9 +19,6 @@ export function HomePage() {
           <Link className="rounded-full bg-sky-400 px-5 py-3 font-semibold text-slate-950" to="/login">
             Open login page
           </Link>
-          <a className="rounded-full border border-white/20 px-5 py-3 font-semibold text-white" href="https://vite.dev/" rel="noreferrer" target="_blank">
-            Vite docs
-          </a>
         </div>
       </div>
       <div className="rounded-3xl border border-slate-200/80 bg-white/80 p-8 shadow-lg shadow-slate-200/60">
