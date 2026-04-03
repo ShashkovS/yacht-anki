@@ -11,10 +11,16 @@ DOCKER_COOKIE_SECRET := local-docker-secret
 DOCKER_FRONTEND_ORIGIN := http://localhost:$(DOCKER_FRONTEND_PORT)
 DOCKER_VITE_BACKEND_URL := http://localhost:$(DOCKER_BACKEND_PORT)
 DOCKER_COMPOSE := ./scripts/docker-compose.sh -p $(DOCKER_PROJECT_NAME) -f docker-compose.yml
+WIFI_IP := $(shell ipconfig getifaddr en0 2>/dev/null)
+LAN_FRONTEND_PORT := 4173
+LAN_BACKEND_PORT := 4174
+LAN_FRONTEND_URL := http://$(WIFI_IP):$(LAN_FRONTEND_PORT)
+LAN_BACKEND_URL := http://$(WIFI_IP):$(LAN_BACKEND_PORT)
 PY_RUNTIME_DEPS := $(shell python3 -c 'import re, tomllib, pathlib; data = tomllib.loads(pathlib.Path("pyproject.toml").read_text()); print(" ".join(re.match(r"[A-Za-z0-9._-]+", dep).group(0) for dep in data["project"]["dependencies"]))')
 PY_DEV_DEPS := $(shell python3 -c 'import re, tomllib, pathlib; data = tomllib.loads(pathlib.Path("pyproject.toml").read_text()); print(" ".join(re.match(r"[A-Za-z0-9._-]+", dep).group(0) for dep in data["dependency-groups"]["dev"]))')
+CHECK_WIFI_IP = @test -n "$(WIFI_IP)" || (echo "Wi-Fi IP was not found on en0. Connect to Wi-Fi or use normal make back / make front."; exit 1)
 
-.PHONY: help setup back back-once front open back-docker front-docker open-docker stop-docker clean-docker format test test-e2e-docker deps-update-safe deps-update-latest
+.PHONY: help setup back back-once front open back-lan front-lan open-lan back-docker front-docker open-docker stop-docker clean-docker format test test-e2e-docker deps-update-safe deps-update-latest
 
 help:
 	@printf "Available commands:\n"
@@ -23,6 +29,9 @@ help:
 	@printf "  make back-once Run the backend server without auto-reload\n"
 	@printf "  make front   Run the frontend dev server\n"
 	@printf "  make open    Open the frontend in a browser\n"
+	@printf "  make back-lan Run the backend for testing on the same Wi-Fi\n"
+	@printf "  make front-lan Run the frontend for testing on the same Wi-Fi\n"
+	@printf "  make open-lan Open the Wi-Fi frontend URL in a browser\n"
 	@printf "  make back-docker Start the backend container for local Docker testing\n"
 	@printf "  make front-docker Start the frontend container for local Docker testing\n"
 	@printf "  make open-docker Open the Docker frontend in a browser\n"
@@ -51,6 +60,19 @@ front:
 
 open:
 	open http://localhost:5173
+
+back-lan:
+	$(CHECK_WIFI_IP)
+	APP_HOST=0.0.0.0 APP_PORT=$(LAN_BACKEND_PORT) FRONTEND_ORIGIN=$(LAN_FRONTEND_URL) uv run python -m backend.dev
+
+front-lan:
+	$(CHECK_WIFI_IP)
+	cd frontend && VITE_BACKEND_URL=$(LAN_BACKEND_URL) npm run dev -- --host 0.0.0.0 --port $(LAN_FRONTEND_PORT)
+
+open-lan:
+	$(CHECK_WIFI_IP)
+	@echo "Open $(LAN_FRONTEND_URL)"
+	open $(LAN_FRONTEND_URL)
 
 back-docker:
 	DOCKER_APP_MODE=$(DOCKER_APP_MODE) DOCKER_COOKIE_SECRET=$(DOCKER_COOKIE_SECRET) DOCKER_FRONTEND_PORT=$(DOCKER_FRONTEND_PORT) DOCKER_BACKEND_PORT=$(DOCKER_BACKEND_PORT) DOCKER_FRONTEND_ORIGIN=$(DOCKER_FRONTEND_ORIGIN) DOCKER_VITE_BACKEND_URL=$(DOCKER_VITE_BACKEND_URL) $(DOCKER_COMPOSE) up -d --build backend

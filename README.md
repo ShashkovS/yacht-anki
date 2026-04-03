@@ -145,6 +145,40 @@ The frontend will be available at `http://localhost:5173`.
 
 Open `http://localhost:5173` in your browser to see the app.
 
+### Share the app on the same Wi-Fi
+
+If you want to test the app from another phone, tablet, or laptop on the same Wi-Fi, use the LAN commands instead of the normal localhost commands.
+
+In one terminal:
+
+```bash
+make back-lan
+```
+
+In another terminal:
+
+```bash
+make front-lan
+```
+
+To open the correct Wi-Fi URL on this Mac:
+
+```bash
+make open-lan
+```
+
+In LAN mode, the app uses these ports:
+
+- frontend: `http://<wifi-ip>:4173`
+- backend: `http://<wifi-ip>:4174`
+
+Important notes:
+
+- Open the real Wi-Fi IP, not `0.0.0.0`.
+- This helper is for macOS and expects the Wi-Fi interface to be `en0`.
+- If the Wi-Fi IP cannot be found, use the normal localhost commands instead.
+- Use this only on a trusted local network. The dev demo users can be reached from other devices on that Wi-Fi.
+
 ### Default login credentials (development only)
 
 | Username | Password |
@@ -167,6 +201,11 @@ VITE_BACKEND_URL=http://localhost:8000
 ```
 
 > **Important:** Always use `localhost` for both. Do not mix `localhost` and `127.0.0.1` — the browser may stop sending login cookies if you do.
+
+In LAN mode, use the same Wi-Fi IP on both sides:
+
+- frontend URL: `http://<wifi-ip>:4173`
+- backend URL: `http://<wifi-ip>:4174`
 
 ---
 

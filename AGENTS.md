@@ -40,3 +40,6 @@
 - Add Python packages with `uv add` for runtime deps and `uv add --dev` for dev-only deps.
 - Add frontend packages with `npm install` for runtime deps and `npm install -D` for dev-only deps.
 - Do not edit dependency lists by hand unless there is a strong reason and it is explained.
+- Keep LAN dev mode intentionally simple: prefer the explicit macOS Wi-Fi `en0` helper over generic network auto-detection.
+- Keep LAN ports separate from the default localhost ports unless the user asks otherwise.
+- Do not expand LAN mode into a multi-interface discovery system unless the user asks for broader network support.
