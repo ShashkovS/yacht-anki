@@ -1,7 +1,7 @@
-"""Test backend auth flows, roles, cookies, and auth-related CORS behavior.
+"""Test backend auth flows, cookies, and auth-related CORS behavior.
 
-Edit this file when login, refresh, logout, or admin-access behavior changes.
-Copy a test pattern here when you add another auth rule or auth endpoint.
+Edit this file when login, refresh, logout, or current-user auth rules change.
+Copy a test pattern here when you add another auth endpoint or auth edge case.
 """
 
 from __future__ import annotations
@@ -9,9 +9,10 @@ from __future__ import annotations
 from datetime import UTC, datetime, timedelta
 
 import pytest
+from yarl import URL
 
-from backend.auth.tokens import build_access_token
 from backend.auth.passwords import hash_password, verify_password
+from backend.auth.tokens import build_access_token
 from backend.config import DEFAULT_COOKIE_SECRET, Settings
 from backend.db.refresh_sessions import count_sessions
 from backend.db.seed import seed_dev_data
@@ -28,16 +29,19 @@ def test_password_hashing() -> None:
 
 
 @pytest.mark.asyncio
-async def test_login_success_and_me(client, create_user, auth_headers) -> None:
+async def test_login_success_and_me(client, create_user, auth_headers, extract_cookie) -> None:
     await create_user("user", "user")
     response = await client.post("/auth/login", json={"username": "user", "password": "user"}, headers=auth_headers)
     assert response.status == 200
     payload = await response.json()
     assert payload["ok"] is True
     assert payload["data"]["user"]["username"] == "user"
+    assert extract_cookie(client, "template_session", "/") == "1"
 
     me_response = await client.post("/auth/me", json={})
     assert me_response.status == 200
+    me_payload = await me_response.json()
+    assert me_payload["data"]["user"]["username"] == "user"
 
 
 @pytest.mark.asyncio
@@ -48,8 +52,8 @@ async def test_login_invalid_credentials(client, create_user, auth_headers) -> N
 
 
 @pytest.mark.asyncio
-async def test_requires_auth(client) -> None:
-    response = await client.post("/notes/list", json={})
+async def test_auth_me_requires_login(client) -> None:
+    response = await client.post("/auth/me", json={})
     assert response.status == 401
 
 
@@ -97,21 +101,12 @@ async def test_auth_error_keeps_cors_headers_for_localhost_origin(client) -> Non
 
 
 @pytest.mark.asyncio
-async def test_admin_forbidden_for_normal_user(client, create_user, auth_headers) -> None:
+async def test_non_json_login_request_returns_400(client, create_user, auth_headers) -> None:
     await create_user("user", "user")
-    await login(client, "user", "user", auth_headers)
-    response = await client.post("/admin/users/list", json={})
-    assert response.status == 403
-
-
-@pytest.mark.asyncio
-async def test_non_json_write_request_returns_400(client, create_user, auth_headers) -> None:
-    await create_user("user", "user")
-    await login(client, "user", "user", auth_headers)
 
     response = await client.post(
-        "/notes/save",
-        data="text=bad",
+        "/auth/login",
+        data="username=user&password=user",
         headers={"Origin": "http://127.0.0.1:5173", "Content-Type": "application/x-www-form-urlencoded"},
     )
     assert response.status == 400
@@ -181,6 +176,8 @@ async def test_logout_removes_refresh_session(client, create_user, auth_headers,
     response = await client.post("/auth/logout", json={}, headers=auth_headers)
     assert response.status == 200
     assert await count_sessions(db) == 0
+    cookies = client.session.cookie_jar.filter_cookies(URL("http://127.0.0.1:8081/"))
+    assert "template_session" not in cookies
 
 
 @pytest.mark.asyncio

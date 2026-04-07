@@ -41,11 +41,21 @@ def _set_auth_cookies(response: web.StreamResponse, settings: Settings, user: di
         secure=settings.secure_cookies,
         path="/auth",
     )
+    response.set_cookie(
+        settings.session_cookie_name,
+        "1",
+        max_age=settings.refresh_ttl_seconds,
+        httponly=False,
+        samesite="Lax",
+        secure=settings.secure_cookies,
+        path="/",
+    )
 
 
 def clear_auth_cookies(response: web.StreamResponse, settings: Settings) -> None:
     response.del_cookie(settings.access_cookie_name, path="/")
     response.del_cookie(settings.refresh_cookie_name, path="/auth")
+    response.del_cookie(settings.session_cookie_name, path="/")
 
 
 def _parse_refresh_cookie(raw_value: str | None) -> tuple[str, str] | None:

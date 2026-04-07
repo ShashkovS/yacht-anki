@@ -3,7 +3,7 @@
 # Copy an existing target pattern here when you add another simple root command.
 .DEFAULT_GOAL := help
 
-DOCKER_PROJECT_NAME := templatepwa_local
+DOCKER_PROJECT_NAME := yachtanki_local
 DOCKER_FRONTEND_PORT := 8088
 DOCKER_BACKEND_PORT := 8089
 DOCKER_APP_MODE := dev

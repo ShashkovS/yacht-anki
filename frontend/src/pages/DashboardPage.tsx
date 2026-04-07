@@ -1,36 +1,13 @@
 /*
-This file shows the logged-in dashboard and connects the notes panel to the websocket.
-Edit this file when dashboard layout or logged-in live updates change.
-Copy this file as a starting point when you add another logged-in page.
+This file shows the logged-in dashboard for the yacht training app.
+Edit this file when the first logged-in overview or empty-state copy changes.
+Copy this file as a starting point when you add another simple logged-in page.
 */
 
-import { useEffect, useState } from "react";
 import { useAuth } from "../app/auth";
-import { createUserSocket, type SocketStatus } from "../shared/socket";
-import type { WsMessage } from "../shared/types";
-import { NotesPanel } from "../features/notes/NotesPanel";
 
 export function DashboardPage() {
   const { user } = useAuth();
-  const [socketStatus, setSocketStatus] = useState<SocketStatus>("idle");
-  const [refreshKey, setRefreshKey] = useState(0);
-
-  useEffect(() => {
-    if (!user) {
-      return;
-    }
-    const socket = createUserSocket({
-      onMessage(message: WsMessage) {
-        if (message.type === "notes.changed") {
-          setRefreshKey((current) => current + 1);
-        }
-      },
-      onStatus(status) {
-        setSocketStatus(status);
-      },
-    });
-    return () => socket.stop();
-  }, [user]);
 
   if (!user) {
     return null;
@@ -38,13 +15,31 @@ export function DashboardPage() {
 
   return (
     <section className="space-y-6">
-      <div className="rounded-3xl border border-sky-200 bg-sky-50/80 p-6">
-        <h2 className="text-2xl font-semibold text-slate-900">Dashboard</h2>
-        <p className="mt-2 text-slate-700">
-          Logged in as <strong>{user.username}</strong>. Role: {user.is_admin ? "admin" : "user"}.
+      <div className="overflow-hidden rounded-[2rem] border border-sky-950/10 bg-[linear-gradient(135deg,rgba(12,74,110,0.96),rgba(15,118,110,0.92))] p-8 text-white shadow-[0_24px_80px_rgba(12,74,110,0.28)]">
+        <p className="inline-flex rounded-full border border-white/20 bg-white/10 px-3 py-1 text-sm">Фаза 01</p>
+        <h2 className="mt-4 text-3xl font-semibold tracking-tight">Личный кабинет экипажа</h2>
+        <p className="mt-3 max-w-2xl text-base leading-7 text-sky-50/90">
+          Вы вошли как <strong>{user.username}</strong>. Основа приложения готова: авторизация, база данных и PWA-каркас уже на месте.
         </p>
       </div>
-      <NotesPanel refreshKey={refreshKey} socketStatus={socketStatus} />
+
+      <div className="grid gap-4 md:grid-cols-[1.2fr_0.8fr]">
+        <article className="rounded-[2rem] border border-slate-200/80 bg-white/90 p-6 shadow-lg shadow-slate-200/60">
+          <h3 className="text-xl font-semibold text-slate-950">Пока здесь пусто</h3>
+          <p className="mt-3 text-sm leading-7 text-slate-700">
+            В следующих фазах здесь появятся колоды, очередь повторения, диаграммы яхтенных ситуаций и статистика подготовки.
+          </p>
+        </article>
+
+        <article className="rounded-[2rem] border border-amber-200/80 bg-amber-50/90 p-6 shadow-lg shadow-amber-100/70">
+          <h3 className="text-xl font-semibold text-slate-950">Что уже работает</h3>
+          <ul className="mt-3 space-y-2 text-sm leading-7 text-slate-700">
+            <li>Вход и выход по cookie-сессии.</li>
+            <li>Новая схема БД под колоды, карточки и FSRS-прогресс.</li>
+            <li>Русскоязычный каркас приложения без шаблонных заметок и WebSocket.</li>
+          </ul>
+        </article>
+      </div>
     </section>
   );
 }

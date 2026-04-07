@@ -28,7 +28,7 @@ export function LoginPage() {
       await login(username, password);
       navigate("/dashboard");
     } catch (submitError) {
-      const message = submitError instanceof Error ? submitError.message : "Login failed.";
+      const message = submitError instanceof Error ? submitError.message : "Не удалось войти.";
       setError(message);
     } finally {
       setBusy(false);
@@ -36,12 +36,14 @@ export function LoginPage() {
   };
 
   return (
-    <section className="mx-auto max-w-md rounded-3xl border border-slate-200/80 bg-white/85 p-8 shadow-lg shadow-slate-200/70">
-      <h2 className="text-2xl font-semibold text-slate-900">Login</h2>
-      <p className="mt-2 text-sm text-slate-600">In dev mode, example users are shown on the home page. Enter them here yourself if you want to test login.</p>
+    <section className="mx-auto max-w-md rounded-[2rem] border border-slate-200/80 bg-white/92 p-8 shadow-[0_24px_80px_rgba(148,163,184,0.22)]">
+      <h2 className="text-3xl font-semibold tracking-tight text-slate-950">Вход</h2>
+      <p className="mt-3 text-sm leading-7 text-slate-600">
+        В dev-режиме можно использовать тестовые учётки с главной страницы. После входа откроется пустой кабинет будущего яхтенного тренажёра.
+      </p>
       <form className="mt-6 space-y-4" onSubmit={onSubmit}>
         <label className="block">
-          <span className="mb-2 block text-sm font-medium text-slate-700">Username</span>
+          <span className="mb-2 block text-sm font-medium text-slate-700">Логин</span>
           <input
             className="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3"
             onChange={(event) => setUsername(event.target.value)}
@@ -49,7 +51,7 @@ export function LoginPage() {
           />
         </label>
         <label className="block">
-          <span className="mb-2 block text-sm font-medium text-slate-700">Password</span>
+          <span className="mb-2 block text-sm font-medium text-slate-700">Пароль</span>
           <input
             className="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3"
             onChange={(event) => setPassword(event.target.value)}
@@ -58,8 +60,8 @@ export function LoginPage() {
           />
         </label>
         {error ? <p className="rounded-2xl bg-rose-50 px-4 py-3 text-sm text-rose-700">{error}</p> : null}
-        <button className="w-full rounded-2xl bg-slate-900 px-4 py-3 font-semibold text-white" disabled={busy} type="submit">
-          {busy ? "Logging in..." : "Login"}
+        <button className="w-full rounded-2xl bg-slate-950 px-4 py-3 font-semibold text-white" disabled={busy} type="submit">
+          {busy ? "Входим..." : "Войти"}
         </button>
       </form>
     </section>

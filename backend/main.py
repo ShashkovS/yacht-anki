@@ -15,8 +15,6 @@ from backend.db.migrations import run_migrations
 from backend.db.seed import seed_dev_data
 from backend.http.middleware import cors_middleware, error_middleware
 from backend.http.routes import setup_api_routes
-from backend.ws.hub import WebSocketHub
-from backend.ws.routes import setup_ws_routes
 
 
 async def on_startup(app: web.Application) -> None:
@@ -37,11 +35,9 @@ def create_app(settings: Settings | None = None) -> web.Application:
     resolved_settings = settings or load_settings()
     validate_settings(resolved_settings)
     app["settings"] = resolved_settings
-    app["ws_hub"] = WebSocketHub()
 
     setup_auth_routes(app)
     setup_api_routes(app)
-    setup_ws_routes(app)
 
     app.on_startup.append(on_startup)
     app.on_cleanup.append(on_cleanup)

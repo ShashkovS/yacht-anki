@@ -1,6 +1,6 @@
-# Template PWA
+# Yacht Anki
 
-This is a teaching template for school projects. It has a frontend (the part users see in a browser) and a backend (the server that stores data).
+This is a small training app for sailing crews preparing for Fareast 28R races. It has a frontend (the part users see in a browser) and a backend (the server that stores data).
 
 **What is inside:**
 
@@ -27,7 +27,7 @@ This is a teaching template for school projects. It has a frontend (the part use
 ## Project folders
 
 ```
-templatePWA/
+yacht-anki/
 ├── backend/        ← Python server code
 │   └── db/         ← Database (SQLite) code
 └── frontend/       ← React app code
@@ -85,11 +85,11 @@ Do this once when you first clone the project.
 Open a terminal and run:
 
 ```bash
-git clone https://github.com/leaders-tech/templatePWA.git templatePWA
-cd templatePWA
+git clone <repo-url> yacht-anki
+cd yacht-anki
 ```
 
-`git clone` copies the project to your computer. `cd templatePWA` moves into that folder.
+`git clone` copies the project to your computer. `cd yacht-anki` moves into that folder.
 
 ### Step 2 — Install everything
 

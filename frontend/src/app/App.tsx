@@ -5,50 +5,44 @@ Copy the route pattern here when you add another top-level page.
 */
 
 import { NavLink, Navigate, Route, Routes } from "react-router-dom";
-import { useAuth } from "./auth";
+import { DashboardPage } from "../pages/DashboardPage";
 import { HomePage } from "../pages/HomePage";
 import { LoginPage } from "../pages/LoginPage";
-import { DashboardPage } from "../pages/DashboardPage";
-import { AdminPage } from "../pages/AdminPage";
+import { useAuth } from "./auth";
 
 function Layout({ children }: { children: React.ReactNode }) {
   const { user, logout } = useAuth();
 
   return (
-    <div className="min-h-screen">
-      <header className="border-b border-slate-200/70 bg-white/70 backdrop-blur">
-        <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-4">
+    <div className="min-h-screen bg-transparent">
+      <header className="border-b border-sky-950/10 bg-white/65 backdrop-blur-xl">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4">
           <div>
-            <h1 className="text-xl font-semibold text-slate-900">Template PWA</h1>
-            <p className="text-sm text-slate-600">Simple starter for school projects.</p>
+            <p className="text-sm font-medium uppercase tracking-[0.24em] text-teal-700">Yacht Anki</p>
+            <h1 className="text-xl font-semibold tracking-tight text-slate-950">Тренажёр для экипажа Fareast 28R</h1>
           </div>
           <nav className="flex items-center gap-3 text-sm font-medium text-slate-700">
-            <NavLink className="rounded-full px-3 py-2 hover:bg-slate-100" to="/">
-              Home
+            <NavLink className="rounded-full px-3 py-2 transition hover:bg-slate-100" to="/">
+              Главная
             </NavLink>
             {user ? (
               <>
-                <NavLink className="rounded-full px-3 py-2 hover:bg-slate-100" to="/dashboard">
-                  Dashboard
+                <NavLink className="rounded-full px-3 py-2 transition hover:bg-slate-100" to="/dashboard">
+                  Кабинет
                 </NavLink>
-                {user.is_admin && (
-                  <NavLink className="rounded-full px-3 py-2 hover:bg-slate-100" to="/admin">
-                    Admin
-                  </NavLink>
-                )}
-                <button className="rounded-full bg-slate-900 px-4 py-2 text-white" onClick={() => void logout()}>
-                  Logout
+                <button className="rounded-full bg-slate-950 px-4 py-2 text-white transition hover:bg-slate-800" onClick={() => void logout()}>
+                  Выйти
                 </button>
               </>
             ) : (
-              <NavLink className="rounded-full bg-slate-900 px-4 py-2 text-white" to="/login">
-                Login
+              <NavLink className="rounded-full bg-slate-950 px-4 py-2 text-white transition hover:bg-slate-800" to="/login">
+                Войти
               </NavLink>
             )}
           </nav>
         </div>
       </header>
-      <main className="mx-auto max-w-5xl px-4 py-8">{children}</main>
+      <main className="mx-auto max-w-6xl px-4 py-8">{children}</main>
     </div>
   );
 }
@@ -56,24 +50,10 @@ function Layout({ children }: { children: React.ReactNode }) {
 function RequireAuth({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
   if (loading) {
-    return <p className="text-slate-600">Loading session...</p>;
+    return <p className="text-slate-600">Проверяем сессию...</p>;
   }
   if (!user) {
     return <Navigate to="/login" replace />;
-  }
-  return <>{children}</>;
-}
-
-function RequireAdmin({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useAuth();
-  if (loading) {
-    return <p className="text-slate-600">Loading session...</p>;
-  }
-  if (!user) {
-    return <Navigate to="/login" replace />;
-  }
-  if (!user.is_admin) {
-    return <Navigate to="/dashboard" replace />;
   }
   return <>{children}</>;
 }
@@ -92,17 +72,9 @@ export function App() {
             </RequireAuth>
           }
         />
-        <Route
-          path="/admin"
-          element={
-            <RequireAdmin>
-              <AdminPage />
-            </RequireAdmin>
-          }
-        />
       </Routes>
     </Layout>
   );
 }
 
-export { RequireAdmin, RequireAuth };
+export { RequireAuth };

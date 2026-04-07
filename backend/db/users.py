@@ -1,4 +1,4 @@
-"""Store and load user rows for login and admin features.
+"""Store and load user rows for auth and dev seed helpers.
 
 Edit this file when the users table or user query behavior changes.
 Copy this file as a starting point when you add queries for another table.

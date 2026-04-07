@@ -28,6 +28,7 @@ class Settings:
     frontend_origin: str
     access_cookie_name: str = "template_access"
     refresh_cookie_name: str = "template_refresh"
+    session_cookie_name: str = "template_session"
     access_ttl_seconds: int = 2 * 60 * 60
     refresh_ttl_seconds: int = 60 * 24 * 60 * 60
 

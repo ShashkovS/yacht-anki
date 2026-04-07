@@ -4,7 +4,7 @@
 - Keep components small and readable — one file, one job.
 - Use plain React state and small hooks. Do not add state managers (no Redux, Zustand, Jotai, etc.).
 - Do not add a UI component library (no MUI, Ant Design, etc.). Tailwind CSS is already here.
-- Keep all user-facing text in simple English.
+- Keep all user-facing text in simple Russian unless the screen is explicitly for developers.
 - Keep browser API calls POST-based in this template — that is a deliberate teaching choice.
 
 ## File layout
@@ -27,13 +27,6 @@
 - A protected page should redirect to `/login` when `useAuth().user` is `null`.
 - Do not call `/auth/me` yourself — `AuthProvider` in `App.tsx` loads the session on startup automatically.
 
-## Real-time updates (WebSocket)
-
-- WebSocket connection logic lives in `src/shared/socket.ts`.
-- The socket connects after login and disconnects on logout — do not manage the connection manually.
-- To react to live server events, add a `useEffect` listener in the component that needs live data.
-- Check the browser console for WebSocket errors after any auth or routing change.
-
 ## Tests — always keep them green
 
 - Unit tests use Vitest + React Testing Library.
@@ -41,7 +34,7 @@
 - End-to-end tests use Playwright and live in `frontend/tests/e2e/`.
   Run: `cd frontend && npm run test:e2e`
 - Every new page needs at least one unit test.
-- Every new user flow (login, save a note, etc.) needs an e2e test.
+- Every new user flow (login, start review, answer a card, etc.) needs an e2e test.
 - **Always run `npm test` before calling a task done. Fix broken tests before moving on.**
 - Do not delete a test just to make the suite pass — update it to match the new correct behavior.
 

@@ -9,9 +9,9 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
-import { LoginPage } from "./LoginPage";
 import { AuthContext } from "../app/auth";
 import type { User } from "../shared/types";
+import { LoginPage } from "./LoginPage";
 
 const anonymousValue = {
   user: null,
@@ -39,8 +39,8 @@ describe("LoginPage", () => {
       </MemoryRouter>,
     );
 
-    expect(screen.getByLabelText("Username")).toHaveValue("");
-    expect(screen.getByLabelText("Password")).toHaveValue("");
+    expect(screen.getByLabelText("Логин")).toHaveValue("");
+    expect(screen.getByLabelText("Пароль")).toHaveValue("");
   });
 
   it("submits username and password through auth context", async () => {
@@ -53,13 +53,13 @@ describe("LoginPage", () => {
       </MemoryRouter>,
     );
 
-    const usernameInput = screen.getByLabelText("Username");
-    const passwordInput = screen.getByLabelText("Password");
+    const usernameInput = screen.getByLabelText("Логин");
+    const passwordInput = screen.getByLabelText("Пароль");
     await userEvent.clear(usernameInput);
     await userEvent.type(usernameInput, "admin");
     await userEvent.clear(passwordInput);
     await userEvent.type(passwordInput, "admin");
-    await userEvent.click(screen.getByRole("button", { name: "Login" }));
+    await userEvent.click(screen.getByRole("button", { name: "Войти" }));
 
     expect(login).toHaveBeenCalledWith("admin", "admin");
   });
@@ -73,6 +73,6 @@ describe("LoginPage", () => {
       </MemoryRouter>,
     );
 
-    expect(screen.queryByText("Login")).not.toBeInTheDocument();
+    expect(screen.queryByText("Вход")).not.toBeInTheDocument();
   });
 });

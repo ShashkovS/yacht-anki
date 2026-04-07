@@ -14,11 +14,11 @@ export default defineConfig({
     VitePWA({
       registerType: "autoUpdate",
       manifest: {
-        name: "Template PWA",
-        short_name: "TemplatePWA",
-        description: "Small starter app for school projects.",
-        theme_color: "#0e1a2b",
-        background_color: "#eff6ff",
+        name: "Yacht Anki",
+        short_name: "YachtAnki",
+        description: "Тренажёр по яхтенным терминам, манёврам и правилам гонок.",
+        theme_color: "#082f49",
+        background_color: "#f4f7f8",
         display: "standalone",
         start_url: "/",
         icons: [

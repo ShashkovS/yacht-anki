@@ -4,9 +4,11 @@ Edit this file when login, logout, refresh, or current-user browser behavior cha
 Copy the provider and hook pattern here when you add another small shared frontend context.
 */
 
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { ApiError, postJson } from "../shared/api";
 import type { User } from "../shared/types";
+
+const SESSION_HINT_COOKIE = "template_session";
 
 type AuthContextValue = {
   user: User | null;
@@ -19,6 +21,9 @@ type AuthContextValue = {
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 async function loadCurrentUser(): Promise<User | null> {
+  if (!document.cookie.split(/;\s*/).some((entry) => entry.startsWith(`${SESSION_HINT_COOKIE}=`))) {
+    return null;
+  }
   try {
     const data = await postJson<{ user: User }>("/auth/me");
     return data.user;
@@ -39,8 +44,13 @@ async function loadCurrentUser(): Promise<User | null> {
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const didStartSessionLoad = useRef(false);
 
   useEffect(() => {
+    if (didStartSessionLoad.current) {
+      return;
+    }
+    didStartSessionLoad.current = true;
     loadCurrentUser()
       .then(setUser)
       .finally(() => setLoading(false));

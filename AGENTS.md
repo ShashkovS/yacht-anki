@@ -1,7 +1,7 @@
-# Template PWA Agent Notes
+# Yacht Anki Agent Notes
 
-- The main user of this template is a school student who does not understand the technology deeply yet.
-- Keep the template small and easy to read.
+- The main user of this app is a school student who does not understand the technology deeply yet.
+- Keep the app small and easy to read.
 - Prefer the simplest working design over clever abstractions.
 - Prefer explicit functions, explicit SQL, and explicit routes.
 - Do not add heavy frameworks or hidden magic.
@@ -9,7 +9,7 @@
   - production is same-origin behind nginx or Traefik;
   - dev-only CORS is for localhost splits;
   - browser API calls stay POST-based for this template.
-- Keep all user-facing text in simple English.
+- Keep all user-facing text in simple Russian unless a page is explicitly for developers.
 - When adding backend DB code, place SQL only under `backend/db`.
 - When adding frontend pages, keep routing and auth flow direct and beginner-friendly.
 - Cover new behavior densely with tests: backend unit tests, frontend unit tests, and Playwright e2e tests where the
@@ -35,6 +35,7 @@
 - Keep every file header short. Answer only: what this file does, when to edit it, and when to copy it.
 - When a student adds a new feature, prefer the pattern: route -> db/helper file -> page/component -> unit tests ->
   e2e test if the browser flow changed.
+- Do not reintroduce the old template notes, websocket demo, or admin demo pages unless a later phase explicitly requires it.
 - Extend an existing file only when the new code belongs to the same small feature block. Start a sibling file when the
   new code would make the old file feel crowded or mixed.
 - Add Python packages with `uv add` for runtime deps and `uv add --dev` for dev-only deps.

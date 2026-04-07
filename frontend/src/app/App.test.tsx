@@ -1,25 +1,20 @@
 /*
-This file tests the main app router and route guards.
+This file tests the main app router and auth guards.
 Edit this file when top-level routes or auth redirects change.
 Copy a test pattern here when you add another route or route guard.
 */
 
 import "@testing-library/jest-dom/vitest";
-import { describe, expect, it, vi } from "vitest";
-
-vi.mock("../pages/DashboardPage", () => ({
-  DashboardPage: () => <h2>Dashboard</h2>,
-}));
-
-vi.mock("../pages/AdminPage", () => ({
-  AdminPage: () => <h2>Admin page</h2>,
-}));
-
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import { App } from "./App";
-import { AuthContext } from "./auth";
+import { describe, expect, it, vi } from "vitest";
 import type { User } from "../shared/types";
+import { AuthContext } from "./auth";
+import { App } from "./App";
+
+vi.mock("../pages/DashboardPage", () => ({
+  DashboardPage: () => <h2>Личный кабинет экипажа</h2>,
+}));
 
 const userValue: User = {
   id: 2,
@@ -50,11 +45,11 @@ function renderApp(path: string, user: User | null) {
 describe("App routes", () => {
   it("redirects anonymous users to login", () => {
     renderApp("/dashboard", null);
-    expect(screen.getByRole("heading", { name: "Login" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Вход" })).toBeInTheDocument();
   });
 
-  it("redirects normal users away from admin page", () => {
-    renderApp("/admin", userValue);
-    expect(screen.getByRole("heading", { name: "Dashboard" })).toBeInTheDocument();
+  it("shows the dashboard for logged-in users", () => {
+    renderApp("/dashboard", userValue);
+    expect(screen.getByRole("heading", { name: "Личный кабинет экипажа" })).toBeInTheDocument();
   });
 });
