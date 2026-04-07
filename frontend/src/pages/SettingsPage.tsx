@@ -5,7 +5,10 @@ Copy this file as a starting point when you add another authenticated settings f
 */
 
 import { useEffect, useMemo, useState } from "react";
+import { useAuth } from "../app/auth";
+import { useOfflineStatus } from "../app/offline";
 import { postJson } from "../shared/api";
+import { loadApiSnapshot, saveApiSnapshot } from "../shared/offlineStore";
 import type { UserSettings } from "../shared/types";
 
 type SettingsFormState = {
@@ -32,38 +35,57 @@ function parseNonNegativeInteger(rawValue: string, fieldLabel: string): number {
 }
 
 export function SettingsPage() {
+  const { user } = useAuth();
+  const { isOnline } = useOfflineStatus();
   const [savedSettings, setSavedSettings] = useState<UserSettings | null>(null);
   const [form, setForm] = useState<SettingsFormState | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [loadedFromCache, setLoadedFromCache] = useState(false);
 
   useEffect(() => {
+    if (!user) {
+      setLoading(false);
+      return;
+    }
     let cancelled = false;
     setLoading(true);
     setError("");
-    postJson<UserSettings>("/settings/get")
-      .then((data) => {
+    setLoadedFromCache(false);
+    const snapshotKey = `settings:${user.username}`;
+    (async () => {
+      try {
+        const data = await postJson<UserSettings>("/settings/get");
+        await saveApiSnapshot(snapshotKey, data);
         if (!cancelled) {
           setSavedSettings(data);
           setForm(toFormState(data));
         }
-      })
-      .catch((loadError) => {
+      } catch (loadError) {
+        const cached = await loadApiSnapshot<UserSettings>(snapshotKey);
+        if (cached) {
+          if (!cancelled) {
+            setSavedSettings(cached);
+            setForm(toFormState(cached));
+            setLoadedFromCache(true);
+          }
+          return;
+        }
         if (!cancelled) {
           setError(loadError instanceof Error ? loadError.message : "Не удалось загрузить настройки.");
         }
-      })
-      .finally(() => {
+      } finally {
         if (!cancelled) {
           setLoading(false);
         }
-      });
+      }
+    })();
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [user]);
 
   const isDirty = useMemo(() => {
     if (!savedSettings || !form) {
@@ -89,6 +111,9 @@ export function SettingsPage() {
     setError("");
     setSuccessMessage("");
     try {
+      if (!isOnline) {
+        throw new Error("Сохранение настроек доступно только при подключении к сети.");
+      }
       if (form.desiredRetention < 0.7 || form.desiredRetention > 0.97) {
         throw new Error("Целевой retention должен быть в диапазоне 0.70–0.97.");
       }
@@ -102,8 +127,12 @@ export function SettingsPage() {
         new_cards_per_day: newCardsPerDay,
         reviews_per_day: reviewsPerDay,
       });
+      if (user) {
+        await saveApiSnapshot(`settings:${user.username}`, saved);
+      }
       setSavedSettings(saved);
       setForm(toFormState(saved));
+      setLoadedFromCache(false);
       setSuccessMessage("Настройки сохранены.");
     } catch (submitError) {
       setError(submitError instanceof Error ? submitError.message : "Не удалось сохранить настройки.");
@@ -119,6 +148,7 @@ export function SettingsPage() {
         <h2 className="mt-4 text-3xl font-semibold tracking-tight">Настройки</h2>
         <p className="mt-3 max-w-2xl text-sm leading-7 text-sky-50/90">Здесь задаются целевой retention и ограничения на размер очереди. Новые значения применятся при следующей загрузке review.</p>
       </div>
+      {loadedFromCache ? <p className="rounded-2xl bg-amber-50 px-4 py-3 text-sm text-amber-900">Показаны последние сохранённые настройки. Изменения можно сохранить только онлайн.</p> : null}
 
       <form className="space-y-6 rounded-[2rem] border border-slate-200/80 bg-white/92 p-6 shadow-lg shadow-slate-200/60" onSubmit={onSubmit}>
         <div className="space-y-3">
@@ -191,7 +221,7 @@ export function SettingsPage() {
         {successMessage ? <p className="rounded-2xl bg-emerald-50 px-4 py-3 text-sm text-emerald-800">{successMessage}</p> : null}
 
         <div className="flex flex-wrap items-center gap-3">
-          <button className="rounded-full bg-slate-950 px-5 py-3 font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60" disabled={!isDirty || saving} type="submit">
+          <button className="rounded-full bg-slate-950 px-5 py-3 font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60" disabled={!isDirty || saving || !isOnline} type="submit">
             {saving ? "Сохраняем..." : "Сохранить"}
           </button>
           <p className="text-sm text-slate-600">Очередь применит новые лимиты при следующем открытии review.</p>

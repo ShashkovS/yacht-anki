@@ -11,7 +11,7 @@
 - **Frontend**: React 19, TypeScript, Vite, Tailwind CSS, react-konva, ts-fsrs
 - **БД**: SQLite (STRICT tables, WAL mode)
 - **Тесты**: pytest (backend), vitest (frontend unit), playwright (e2e)
-- **Деплой**: Docker + docker-compose
+- **Деплой**: Docker + docker-compose, production same-origin через nginx proxy
 
 ## Ключевые архитектурные решения
 
@@ -21,6 +21,8 @@
 - **Визуализация** — react-konva, 2D Canvas, вид сверху, процедурный рендер из DiagramSpec JSON
 - **Язык интерфейса** — только русский
 - **API** — POST-based JSON, конверт `{ok: true, data: ...}`
+- **Offline review** — IndexedDB cache + replay через тот же `POST /review/submit`
+- **Нет import/export progress UI** — прогресс живёт в аккаунте, а не в локальных JSON-файлах
 
 ## Документация по фазам
 
@@ -35,7 +37,7 @@
 | `docs/phase05.md` | UI ревью | Страницы повторения, колод, дашборд |
 | `docs/phase06.md` | Контент | ~65 карточек по 3 колодам из исследований |
 | `docs/phase07.md` | Статистика | StatsPage, SettingsPage, агрегации |
-| `docs/phase08.md` | Полировка | Оффлайн, импорт/экспорт, мобильная оптимизация |
+| `docs/phase08.md` | Полировка | Offline review, PWA, mobile UX, same-origin prod |
 
 ## Порядок работы
 
@@ -84,6 +86,11 @@
 - Источник терминов и правил: `docs/v1.md` и `docs/v2.md`
 - DiagramSpec — JSON в сидах, не в коде компонентов
 - Карточки загружаются через `backend/db/seed.py` при старте в dev-режиме
+
+### Оффлайн и PWA
+- Service worker кэширует app shell и статические ассеты
+- Pending review answers хранятся в IndexedDB и при reconnect replay-ятся через `POST /review/submit`
+- Offline review работает только для уже загруженной очереди на этом устройстве
 
 ## Схема базы данных
 

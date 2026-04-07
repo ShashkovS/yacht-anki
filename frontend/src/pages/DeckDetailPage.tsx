@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getCardStatusLabel } from "../features/review/reviewCardHelpers";
 import { postJson } from "../shared/api";
+import { loadApiSnapshot, saveApiSnapshot } from "../shared/offlineStore";
 import type { CardsListResponse, DeckDetail } from "../shared/types";
 
 type DeckGetResponse = {
@@ -20,6 +21,7 @@ export function DeckDetailPage() {
   const [cards, setCards] = useState<CardsListResponse["cards"]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [loadedFromCache, setLoadedFromCache] = useState(false);
 
   useEffect(() => {
     if (!slug) {
@@ -29,26 +31,38 @@ export function DeckDetailPage() {
     }
 
     let cancelled = false;
-    Promise.all([
-      postJson<DeckGetResponse>("/decks/get", { slug }),
-      postJson<CardsListResponse>("/cards/list", { deck_slug: slug }),
-    ])
-      .then(([deckResponse, cardsResponse]) => {
+    setLoadedFromCache(false);
+    const snapshotKey = `deck:${slug}`;
+    (async () => {
+      try {
+        const [deckResponse, cardsResponse] = await Promise.all([
+          postJson<DeckGetResponse>("/decks/get", { slug }),
+          postJson<CardsListResponse>("/cards/list", { deck_slug: slug }),
+        ]);
+        await saveApiSnapshot(snapshotKey, { deck: deckResponse.deck, cards: cardsResponse.cards });
         if (!cancelled) {
           setDeck(deckResponse.deck);
           setCards(cardsResponse.cards);
         }
-      })
-      .catch((loadError) => {
+      } catch (loadError) {
+        const cached = await loadApiSnapshot<{ deck: DeckDetail; cards: CardsListResponse["cards"] }>(snapshotKey);
+        if (cached) {
+          if (!cancelled) {
+            setDeck(cached.deck);
+            setCards(cached.cards);
+            setLoadedFromCache(true);
+          }
+          return;
+        }
         if (!cancelled) {
           setError(loadError instanceof Error ? loadError.message : "Не удалось загрузить колоду.");
         }
-      })
-      .finally(() => {
+      } finally {
         if (!cancelled) {
           setLoading(false);
         }
-      });
+      }
+    })();
 
     return () => {
       cancelled = true;
@@ -65,6 +79,7 @@ export function DeckDetailPage() {
 
   return (
     <section className="space-y-6">
+      {loadedFromCache ? <p className="rounded-2xl bg-amber-50 px-4 py-3 text-sm text-amber-900">Показана последняя сохранённая версия колоды. Для обновления нужна сеть.</p> : null}
       <article className="rounded-[2rem] border border-sky-950/10 bg-[linear-gradient(135deg,rgba(12,74,110,0.96),rgba(15,118,110,0.92))] p-8 text-white shadow-[0_24px_80px_rgba(12,74,110,0.24)]">
         <p className="inline-flex rounded-full border border-white/20 bg-white/10 px-3 py-1 text-sm">{deck.card_count} карт.</p>
         <h2 className="mt-4 text-3xl font-semibold tracking-tight">{deck.title}</h2>
@@ -82,7 +97,7 @@ export function DeckDetailPage() {
       <div className="space-y-3">
         {cards.map((card) => (
           <article key={card.id} className="rounded-[1.5rem] border border-slate-200/80 bg-white/92 p-5 shadow-sm">
-            <div className="flex flex-wrap items-start justify-between gap-4">
+            <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-start sm:justify-between">
               <div>
                 <h3 className="text-lg font-semibold text-slate-950">{card.prompt}</h3>
                 <p className="mt-2 text-sm text-slate-600">{card.template_type}</p>

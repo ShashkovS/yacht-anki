@@ -13,8 +13,8 @@ services:
       DB_PATH: /data/app.sqlite3
       COOKIE_SECRET: ${DOCKER_COOKIE_SECRET:-change-this-in-prod}
       FRONTEND_ORIGIN: ${DOCKER_FRONTEND_ORIGIN:-http://localhost:8088}
-    ports:
-      - "${DOCKER_BACKEND_PORT:-8089}:8081"
+    expose:
+      - "8081"
     restart: unless-stopped
     volumes:
       - sqlite_data:/data
@@ -23,8 +23,6 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-      args:
-        VITE_BACKEND_URL: ${DOCKER_VITE_BACKEND_URL:-http://localhost:8089}
     depends_on:
       - backend
     ports:

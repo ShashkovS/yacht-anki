@@ -9,6 +9,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { AuthContext } from "../app/auth";
 import { ReviewPage } from "./ReviewPage";
 import { loadReviewSession, submitCurrentReview } from "../shared/reviewSession";
 
@@ -19,6 +20,15 @@ vi.mock("../shared/reviewSession", () => ({
 
 vi.mock("../features/review/ReviewCardView", () => ({
   ReviewCardView: () => <div data-testid="review-card-view">review-body</div>,
+}));
+
+vi.mock("../app/offline", () => ({
+  useOfflineStatus: () => ({
+    isOnline: true,
+    pendingReviewCount: 0,
+    syncing: false,
+    refreshPendingReviewCount: vi.fn(),
+  }),
 }));
 
 const mockedLoadReviewSession = vi.mocked(loadReviewSession);
@@ -84,6 +94,7 @@ function makeSession() {
       submittedCount: 0,
       totalElapsedMs: 0,
     },
+    loadedFromCache: false,
   };
 }
 
@@ -93,9 +104,11 @@ describe("ReviewPage", () => {
 
     render(
       <MemoryRouter initialEntries={["/review"]}>
-        <Routes>
-          <Route path="/review" element={<ReviewPage />} />
-        </Routes>
+        <AuthContext.Provider value={{ user: { id: 1, username: "user", is_admin: false, created_at: "", updated_at: "" }, loading: false, login: vi.fn(), logout: vi.fn(), reloadUser: vi.fn() }}>
+          <Routes>
+            <Route path="/review" element={<ReviewPage />} />
+          </Routes>
+        </AuthContext.Provider>
       </MemoryRouter>,
     );
 
@@ -118,9 +131,11 @@ describe("ReviewPage", () => {
 
     render(
       <MemoryRouter initialEntries={["/review"]}>
-        <Routes>
-          <Route path="/review" element={<ReviewPage />} />
-        </Routes>
+        <AuthContext.Provider value={{ user: { id: 1, username: "user", is_admin: false, created_at: "", updated_at: "" }, loading: false, login: vi.fn(), logout: vi.fn(), reloadUser: vi.fn() }}>
+          <Routes>
+            <Route path="/review" element={<ReviewPage />} />
+          </Routes>
+        </AuthContext.Provider>
       </MemoryRouter>,
     );
 
@@ -128,7 +143,7 @@ describe("ReviewPage", () => {
     await userEvent.click(screen.getByRole("button", { name: "Показать ответ" }));
     await userEvent.click(screen.getByRole("button", { name: /Хорошо/ }));
 
-    expect(mockedSubmitCurrentReview).toHaveBeenCalledWith(session, 3);
+    expect(mockedSubmitCurrentReview).toHaveBeenCalledWith(session, 3, "user");
     expect(await screen.findByText("Q2")).toBeInTheDocument();
   });
 
@@ -137,13 +152,15 @@ describe("ReviewPage", () => {
 
     render(
       <MemoryRouter initialEntries={["/review?deck=terms"]}>
-        <Routes>
-          <Route path="/review" element={<ReviewPage />} />
-        </Routes>
+        <AuthContext.Provider value={{ user: { id: 1, username: "user", is_admin: false, created_at: "", updated_at: "" }, loading: false, login: vi.fn(), logout: vi.fn(), reloadUser: vi.fn() }}>
+          <Routes>
+            <Route path="/review" element={<ReviewPage />} />
+          </Routes>
+        </AuthContext.Provider>
       </MemoryRouter>,
     );
 
     expect(await screen.findByText("Всё на сегодня!")).toBeInTheDocument();
-    expect(mockedLoadReviewSession).toHaveBeenCalledWith({ deckSlug: "terms" });
+    expect(mockedLoadReviewSession).toHaveBeenCalledWith({ userKey: "user", deckSlug: "terms" });
   });
 });

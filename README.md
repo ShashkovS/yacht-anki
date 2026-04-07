@@ -346,7 +346,7 @@ make open-docker
 
 Open in browser:
 - Frontend: `http://localhost:8088`
-- Backend health check: `http://localhost:8089/health`
+- Health check through the same origin: `http://localhost:8088/health`
 
 Stop and remove containers:
 
@@ -363,6 +363,17 @@ make clean-docker
 - Login uses `HttpOnly` cookies so JavaScript cannot read them.
 - `SameSite=Lax` cookies protect against most cross-site request attacks.
 - In production, the frontend should be served by nginx or Traefik behind a reverse proxy.
+- This app uses same-origin production traffic: the browser talks to the frontend origin, and nginx proxies API routes to the backend container.
+
+---
+
+## PWA and offline review
+
+- The app can be installed as a PWA from a supported browser.
+- Static frontend files are cached for offline reopen.
+- Review can continue offline only if the queue was loaded on that same device while online earlier.
+- Offline review answers are stored locally and replayed to the backend after the connection returns.
+- Login and loading a brand-new review queue still require a network connection.
 
 ---
 
@@ -375,5 +386,6 @@ Set these environment variables in Dokploy instead of editing the `docker-compos
 |----------|------------|
 | `DOCKER_COOKIE_SECRET` | Secret key for signing cookies — use a long random string |
 | `DOCKER_FRONTEND_ORIGIN` | Public URL of the frontend, e.g. `https://myapp.example.com` |
-| `DOCKER_VITE_BACKEND_URL` | Public URL of the backend API |
 | `DOCKER_APP_MODE` | `prod` for production, `dev` to enable demo accounts |
+
+In production Docker Compose, the backend is internal by default. The public app should be opened through the frontend container only.

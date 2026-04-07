@@ -162,8 +162,9 @@ def create_review_log_row(db) -> Callable[..., Awaitable[None]]:
         elapsed_days: float | None = 1.0,
         elapsed_ms: int = 4500,
         reviewed_at: str | None = "2026-01-01T12:00:00+00:00",
+        client_event_id: str | None = None,
     ) -> None:
-        await create_review_log(db, user_id, card_id, rating, scheduled_days, elapsed_days, elapsed_ms, reviewed_at)
+        await create_review_log(db, user_id, card_id, rating, scheduled_days, elapsed_days, elapsed_ms, reviewed_at, client_event_id)
 
     return _create_review_log_row
 

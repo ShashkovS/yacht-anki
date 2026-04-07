@@ -22,6 +22,7 @@ async def create_review_log(
     elapsed_days: float | None,
     elapsed_ms: int,
     reviewed_at: str | None = None,
+    client_event_id: str | None = None,
     *,
     commit: bool = True,
 ) -> None:
@@ -35,14 +36,44 @@ async def create_review_log(
             scheduled_days,
             elapsed_days,
             elapsed_ms,
-            reviewed_at
+            reviewed_at,
+            client_event_id
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         """,
-        (user_id, card_id, rating, scheduled_days, elapsed_days, elapsed_ms, effective_reviewed_at),
+        (user_id, card_id, rating, scheduled_days, elapsed_days, elapsed_ms, effective_reviewed_at, client_event_id),
     )
     if commit:
         await db.commit()
+
+
+async def get_review_log_by_client_event_id(
+    db: aiosqlite.Connection,
+    user_id: int,
+    client_event_id: str,
+) -> dict[str, object] | None:
+    cursor = await db.execute(
+        """
+        SELECT id, user_id, card_id, rating, scheduled_days, elapsed_days, elapsed_ms, reviewed_at, client_event_id
+        FROM review_log
+        WHERE user_id = ? AND client_event_id = ?
+        """,
+        (user_id, client_event_id),
+    )
+    row = await cursor.fetchone()
+    if row is None:
+        return None
+    return {
+        "id": row["id"],
+        "user_id": row["user_id"],
+        "card_id": row["card_id"],
+        "rating": row["rating"],
+        "scheduled_days": row["scheduled_days"],
+        "elapsed_days": row["elapsed_days"],
+        "elapsed_ms": row["elapsed_ms"],
+        "reviewed_at": row["reviewed_at"],
+        "client_event_id": row["client_event_id"],
+    }
 
 
 async def count_streak_days(db: aiosqlite.Connection, user_id: int, deck_slug: str | None = None) -> int:

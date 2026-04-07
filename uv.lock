@@ -472,7 +472,7 @@ wheels = [
 ]
 
 [[package]]
-name = "templatepwa"
+name = "yachtanki"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [

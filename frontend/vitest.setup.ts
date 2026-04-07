@@ -5,6 +5,7 @@ Copy the setup style here when you add another global frontend test helper.
 */
 
 import "@testing-library/jest-dom/vitest";
+import "fake-indexeddb/auto";
 
 class ResizeObserverMock {
   observe() {}

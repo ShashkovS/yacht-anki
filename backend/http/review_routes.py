@@ -24,7 +24,7 @@ from backend.db.card_states import (
 )
 from backend.db.cards import get_card_by_id
 from backend.db.decks import get_deck_by_slug
-from backend.db.review_log import count_streak_days, create_review_log
+from backend.db.review_log import count_streak_days, create_review_log, get_review_log_by_client_event_id
 from backend.db.user_settings import ensure_user_settings
 from backend.db.connection import parse_utc_text, utc_now_text
 from backend.http.json_api import AppError, ok, read_json
@@ -73,6 +73,24 @@ def _read_due_at(payload: dict[str, object]) -> str:
     except ValueError as error:
         raise AppError(400, "bad_request", "due_at must be an ISO datetime string.") from error
     return value
+
+
+def _read_reviewed_at(payload: dict[str, object]) -> str:
+    value = payload.get("reviewed_at")
+    if not isinstance(value, str):
+        raise AppError(400, "bad_request", "reviewed_at must be an ISO datetime string.")
+    try:
+        datetime.fromisoformat(value)
+    except ValueError as error:
+        raise AppError(400, "bad_request", "reviewed_at must be an ISO datetime string.") from error
+    return value
+
+
+def _read_client_event_id(payload: dict[str, object]) -> str:
+    value = payload.get("client_event_id")
+    if not isinstance(value, str) or not value.strip():
+        raise AppError(400, "bad_request", "client_event_id must be a non-empty string.")
+    return value.strip()
 
 
 def _read_elapsed_ms(payload: dict[str, object]) -> int:
@@ -136,6 +154,8 @@ async def review_submit(request: web.Request) -> web.Response:
     fsrs_state = _read_fsrs_state(payload)
     phase = _read_phase(payload)
     due_at = _read_due_at(payload)
+    reviewed_at = _read_reviewed_at(payload)
+    client_event_id = _read_client_event_id(payload)
     elapsed_ms = _read_elapsed_ms(payload)
 
     db = request.app["db"]
@@ -143,8 +163,23 @@ async def review_submit(request: web.Request) -> web.Response:
     if card is None:
         raise AppError(404, "not_found", "Card does not exist.")
 
+    existing_log = await get_review_log_by_client_event_id(db, user["id"], client_event_id)
+    if existing_log is not None:
+        card_state = await get_card_state(db, user["id"], card_id)
+        if card_state is None:
+            raise AppError(409, "conflict", "Review event already exists but card state is missing.")
+        return ok(
+            {
+                "card_state": {
+                    "card_id": card["id"],
+                    "phase": card_state["phase"],
+                    "due_at": card_state["due_at"],
+                    "last_reviewed_at": card_state["last_reviewed_at"],
+                }
+            }
+        )
+
     previous_state = await get_card_state(db, user["id"], card_id)
-    reviewed_at = utc_now_text()
     scheduled_days = (parse_utc_text(due_at) - parse_utc_text(reviewed_at)).total_seconds() / 86400
     elapsed_days = compute_elapsed_days(previous_state["last_reviewed_at"] if previous_state else None, reviewed_at)
 
@@ -167,6 +202,7 @@ async def review_submit(request: web.Request) -> web.Response:
         elapsed_days,
         elapsed_ms,
         reviewed_at,
+        client_event_id,
         commit=False,
     )
     await db.commit()

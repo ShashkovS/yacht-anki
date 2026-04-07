@@ -14,20 +14,23 @@ import { ReviewPage } from "../pages/ReviewPage";
 import { SettingsPage } from "../pages/SettingsPage";
 import { StatsPage } from "../pages/StatsPage";
 import { useAuth } from "./auth";
+import { useOfflineStatus } from "./offline";
 
 function Layout({ children }: { children: React.ReactNode }) {
   const { user, logout } = useAuth();
+  const { isOnline, pendingReviewCount, syncing } = useOfflineStatus();
   const navLinkClassName = "rounded-full px-3 py-2 transition hover:bg-slate-100";
+  const showOfflineBanner = !isOnline || pendingReviewCount > 0;
 
   return (
     <div className="min-h-screen bg-transparent">
       <header className="border-b border-sky-950/10 bg-white/65 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4">
+        <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <p className="text-sm font-medium uppercase tracking-[0.24em] text-teal-700">Yacht Anki</p>
             <h1 className="text-xl font-semibold tracking-tight text-slate-950">Тренажёр для экипажа Fareast 28R</h1>
           </div>
-          <nav className="flex items-center gap-3 text-sm font-medium text-slate-700">
+          <nav className="flex flex-wrap items-center gap-2 text-sm font-medium text-slate-700">
             <NavLink className={navLinkClassName} to="/">
               Главная
             </NavLink>
@@ -39,6 +42,11 @@ function Layout({ children }: { children: React.ReactNode }) {
                 <NavLink className={navLinkClassName} to="/review">
                   Повторение
                 </NavLink>
+                {pendingReviewCount > 0 ? (
+                  <span className="rounded-full border border-amber-300 bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-900">
+                    Ждут sync: {pendingReviewCount}
+                  </span>
+                ) : null}
                 <NavLink className={navLinkClassName} to="/decks">
                   Колоды
                 </NavLink>
@@ -59,8 +67,20 @@ function Layout({ children }: { children: React.ReactNode }) {
             )}
           </nav>
         </div>
+        {showOfflineBanner ? (
+          <div className="border-t border-sky-950/10 bg-amber-50/90">
+            <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-3 text-sm text-amber-950 sm:flex-row sm:items-center sm:justify-between">
+              <p>
+                {!isOnline
+                  ? "Оффлайн режим: доступны последние сохранённые данные и уже загруженная очередь повторения."
+                  : `Есть несинхронизированные ответы: ${pendingReviewCount}. Они отправятся автоматически, когда сеть будет стабильной.`}
+              </p>
+              {syncing ? <span className="font-medium">Синхронизируем ответы…</span> : null}
+            </div>
+          </div>
+        ) : null}
       </header>
-      <main className="mx-auto max-w-6xl px-4 py-8">{children}</main>
+      <main className="mx-auto max-w-6xl px-4 py-6 sm:py-8">{children}</main>
     </div>
   );
 }

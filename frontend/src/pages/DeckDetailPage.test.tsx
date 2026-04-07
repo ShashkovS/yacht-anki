@@ -15,6 +15,11 @@ vi.mock("../shared/api", () => ({
   postJson: vi.fn(),
 }));
 
+vi.mock("../shared/offlineStore", () => ({
+  loadApiSnapshot: vi.fn(),
+  saveApiSnapshot: vi.fn(),
+}));
+
 const mockedPostJson = vi.mocked(postJson);
 
 afterEach(() => {

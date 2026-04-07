@@ -15,8 +15,8 @@ var frontendUrl = "http://127.0.0.1:4173";
 var dbPath =
   (_a = process.env.E2E_DB_PATH) !== null && _a !== void 0
     ? _a
-    : path.join(os.tmpdir(), "templatepwa-e2e-".concat(Date.now(), "-").concat(process.pid, ".sqlite3"));
-var uvCacheDir = path.join(os.tmpdir(), "templatepwa-uv-cache");
+    : path.join(os.tmpdir(), "yachtanki-e2e-".concat(Date.now(), "-").concat(process.pid, ".sqlite3"));
+var uvCacheDir = path.join(os.tmpdir(), "yachtanki-uv-cache");
 export default defineConfig({
   testDir: "./tests/e2e",
   use: {

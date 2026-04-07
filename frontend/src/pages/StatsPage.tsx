@@ -6,7 +6,11 @@ Copy this file as a starting point when you add another analytics-heavy page.
 
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../app/auth";
+import { useOfflineStatus } from "../app/offline";
 import { postJson } from "../shared/api";
+import { loadApiSnapshot, saveApiSnapshot } from "../shared/offlineStore";
+import { syncPendingReviewEvents } from "../shared/offlineSync";
 import type { RatingDistributionPoint, StatsResponse } from "../shared/types";
 
 const RATING_LABELS: Record<RatingDistributionPoint["rating"], string> = {
@@ -24,34 +28,55 @@ function formatAverageRating(value: number | null): string {
 }
 
 export function StatsPage() {
+  const { user } = useAuth();
+  const { isOnline } = useOfflineStatus();
   const [stats, setStats] = useState<StatsResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [loadedFromCache, setLoadedFromCache] = useState(false);
 
   useEffect(() => {
+    if (!user) {
+      setLoading(false);
+      return;
+    }
     let cancelled = false;
     setLoading(true);
     setError("");
-    postJson<StatsResponse>("/stats/get")
-      .then((data) => {
+    setLoadedFromCache(false);
+    const snapshotKey = `stats:${user.username}`;
+    (async () => {
+      try {
+        if (isOnline) {
+          await syncPendingReviewEvents(user.username);
+        }
+        const data = await postJson<StatsResponse>("/stats/get");
+        await saveApiSnapshot(snapshotKey, data);
         if (!cancelled) {
           setStats(data);
         }
-      })
-      .catch((loadError) => {
+      } catch (loadError) {
+        const cached = await loadApiSnapshot<StatsResponse>(snapshotKey);
+        if (cached) {
+          if (!cancelled) {
+            setStats(cached);
+            setLoadedFromCache(true);
+          }
+          return;
+        }
         if (!cancelled) {
           setError(loadError instanceof Error ? loadError.message : "Не удалось загрузить статистику.");
         }
-      })
-      .finally(() => {
+      } finally {
         if (!cancelled) {
           setLoading(false);
         }
-      });
+      }
+    })();
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [isOnline, user]);
 
   if (loading) {
     return <p className="text-slate-600">Загружаем статистику...</p>;
@@ -71,6 +96,7 @@ export function StatsPage() {
         <h2 className="mt-4 text-3xl font-semibold tracking-tight">Статистика</h2>
         <p className="mt-3 max-w-2xl text-sm leading-7 text-sky-50/90">Здесь видно, сколько повторений вы сделали, как меняются ответы по дням и какие карточки чаще всего дают Again.</p>
       </div>
+      {loadedFromCache ? <p className="rounded-2xl bg-amber-50 px-4 py-3 text-sm text-amber-900">Показана последняя сохранённая статистика. Для обновления нужна сеть.</p> : null}
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <article className="rounded-[2rem] border border-slate-200/80 bg-white/90 p-6 shadow-lg shadow-slate-200/60">

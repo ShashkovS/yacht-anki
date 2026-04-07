@@ -71,7 +71,7 @@ export function BoatShape({ boat, windDirectionDeg, rotatable, onBoatRotate, onB
             name={`boat-rotation-line-${boat.id}`}
             points={[boat.x, boat.y, handlePosition.x, handlePosition.y]}
             stroke="#0ea5e9"
-            strokeWidth={3}
+            strokeWidth={4}
             dash={[10, 8]}
             opacity={0.8}
           />
@@ -79,10 +79,10 @@ export function BoatShape({ boat, windDirectionDeg, rotatable, onBoatRotate, onB
             name={`boat-rotation-handle-${boat.id}`}
             x={handlePosition.x}
             y={handlePosition.y}
-            radius={18}
+            radius={24}
             fill="#ffffff"
             stroke="#0ea5e9"
-            strokeWidth={4}
+            strokeWidth={5}
             draggable
             dragBoundFunc={(position) => {
               const dx = position.x - boat.x;

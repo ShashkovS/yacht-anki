@@ -9,11 +9,26 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { AuthContext } from "../app/auth";
 import { postJson } from "../shared/api";
 import { SettingsPage } from "./SettingsPage";
 
 vi.mock("../shared/api", () => ({
   postJson: vi.fn(),
+}));
+
+vi.mock("../app/offline", () => ({
+  useOfflineStatus: () => ({
+    isOnline: true,
+    pendingReviewCount: 0,
+    syncing: false,
+    refreshPendingReviewCount: vi.fn(),
+  }),
+}));
+
+vi.mock("../shared/offlineStore", () => ({
+  loadApiSnapshot: vi.fn(),
+  saveApiSnapshot: vi.fn(),
 }));
 
 const mockedPostJson = vi.mocked(postJson);
@@ -38,7 +53,9 @@ describe("SettingsPage", () => {
 
     render(
       <MemoryRouter>
-        <SettingsPage />
+        <AuthContext.Provider value={{ user: { id: 1, username: "user", is_admin: false, created_at: "", updated_at: "" }, loading: false, login: vi.fn(), logout: vi.fn(), reloadUser: vi.fn() }}>
+          <SettingsPage />
+        </AuthContext.Provider>
       </MemoryRouter>,
     );
 
@@ -72,7 +89,9 @@ describe("SettingsPage", () => {
 
     render(
       <MemoryRouter>
-        <SettingsPage />
+        <AuthContext.Provider value={{ user: { id: 1, username: "user", is_admin: false, created_at: "", updated_at: "" }, loading: false, login: vi.fn(), logout: vi.fn(), reloadUser: vi.fn() }}>
+          <SettingsPage />
+        </AuthContext.Provider>
       </MemoryRouter>,
     );
 

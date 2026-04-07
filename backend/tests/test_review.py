@@ -138,7 +138,8 @@ async def test_review_submit_creates_state_and_log_then_updates_elapsed_days(
     user_id = await get_user_id("user")
     await login(client, "user", "user", auth_headers)
 
-    first_due_at = (datetime.now(tz=UTC) + timedelta(days=3)).isoformat(timespec="seconds")
+    first_reviewed_at = "2026-04-08T09:00:00+00:00"
+    first_due_at = "2026-04-11T09:00:00+00:00"
     first_response = await client.post(
         "/review/submit",
         json={
@@ -147,6 +148,8 @@ async def test_review_submit_creates_state_and_log_then_updates_elapsed_days(
             "fsrs_state": {"difficulty": 3, "stability": 5, "retrievability": 0.8},
             "phase": "learning",
             "due_at": first_due_at,
+            "reviewed_at": first_reviewed_at,
+            "client_event_id": "event-1",
             "elapsed_ms": 1800,
         },
         headers=auth_headers,
@@ -164,9 +167,10 @@ async def test_review_submit_creates_state_and_log_then_updates_elapsed_days(
     assert state_row is not None
     assert state_row["phase"] == "learning"
     assert "difficulty" in state_row["fsrs_state_json"]
-    first_reviewed_at = state_row["last_reviewed_at"]
+    assert state_row["last_reviewed_at"] == first_reviewed_at
 
-    second_due_at = (datetime.now(tz=UTC) + timedelta(days=8)).isoformat(timespec="seconds")
+    second_reviewed_at = "2026-04-10T09:00:00+00:00"
+    second_due_at = "2026-04-18T09:00:00+00:00"
     second_response = await client.post(
         "/review/submit",
         json={
@@ -175,6 +179,8 @@ async def test_review_submit_creates_state_and_log_then_updates_elapsed_days(
             "fsrs_state": {"difficulty": 2, "stability": 7, "retrievability": 0.9},
             "phase": "review",
             "due_at": second_due_at,
+            "reviewed_at": second_reviewed_at,
+            "client_event_id": "event-2",
             "elapsed_ms": 900,
         },
         headers=auth_headers,
@@ -188,11 +194,11 @@ async def test_review_submit_creates_state_and_log_then_updates_elapsed_days(
     updated_state_row = await updated_state_cursor.fetchone()
     assert updated_state_row is not None
     assert updated_state_row["phase"] == "review"
-    assert updated_state_row["last_reviewed_at"] is not None
+    assert updated_state_row["last_reviewed_at"] == second_reviewed_at
 
     log_rows = await (await db.execute(
         """
-        SELECT rating, scheduled_days, elapsed_days, elapsed_ms
+        SELECT rating, scheduled_days, elapsed_days, elapsed_ms, reviewed_at, client_event_id
         FROM review_log
         WHERE user_id = ? AND card_id = ?
         ORDER BY id
@@ -201,8 +207,124 @@ async def test_review_submit_creates_state_and_log_then_updates_elapsed_days(
     )).fetchall()
     assert len(log_rows) == 2
     assert log_rows[0]["elapsed_days"] is None
-    assert log_rows[1]["elapsed_days"] is not None
+    assert log_rows[0]["reviewed_at"] == first_reviewed_at
+    assert log_rows[0]["client_event_id"] == "event-1"
+    assert log_rows[1]["elapsed_days"] == 2.0
     assert log_rows[1]["elapsed_ms"] == 900
+    assert log_rows[1]["reviewed_at"] == second_reviewed_at
+    assert log_rows[1]["client_event_id"] == "event-2"
+
+
+@pytest.mark.asyncio
+async def test_review_submit_is_idempotent_by_client_event_id(
+    client,
+    create_user,
+    auth_headers,
+    create_deck_row,
+    create_card_row,
+    db,
+    get_user_id,
+) -> None:
+    await create_user("user", "user")
+    deck = await create_deck_row("submit-dedupe", "Термины", "Основные термины")
+    card = await create_card_row(deck["id"], slug="submit-dedupe-card", prompt="card", answer="answer")
+    user_id = await get_user_id("user")
+    await login(client, "user", "user", auth_headers)
+
+    payload = {
+        "card_id": card["id"],
+        "rating": 3,
+        "fsrs_state": {"difficulty": 3, "stability": 5, "retrievability": 0.8},
+        "phase": "learning",
+        "due_at": "2026-04-11T09:00:00+00:00",
+        "reviewed_at": "2026-04-08T09:00:00+00:00",
+        "client_event_id": "dedupe-event",
+        "elapsed_ms": 1800,
+    }
+
+    first_response = await client.post("/review/submit", json=payload, headers=auth_headers)
+    second_response = await client.post("/review/submit", json=payload, headers=auth_headers)
+
+    assert first_response.status == 200
+    assert second_response.status == 200
+
+    log_rows = await (await db.execute(
+        "SELECT rating, reviewed_at, client_event_id FROM review_log WHERE user_id = ? AND card_id = ?",
+        (user_id, card["id"]),
+    )).fetchall()
+    assert len(log_rows) == 1
+    assert log_rows[0]["reviewed_at"] == "2026-04-08T09:00:00+00:00"
+    assert log_rows[0]["client_event_id"] == "dedupe-event"
+
+
+@pytest.mark.asyncio
+async def test_review_submit_replay_uses_client_reviewed_at_order_for_elapsed_days(
+    client,
+    create_user,
+    auth_headers,
+    create_deck_row,
+    create_card_row,
+    db,
+    get_user_id,
+) -> None:
+    await create_user("user", "user")
+    deck = await create_deck_row("submit-replay", "Термины", "Основные термины")
+    card = await create_card_row(deck["id"], slug="submit-replay-card", prompt="card", answer="answer")
+    user_id = await get_user_id("user")
+    await login(client, "user", "user", auth_headers)
+
+    first_response = await client.post(
+        "/review/submit",
+        json={
+            "card_id": card["id"],
+            "rating": 2,
+            "fsrs_state": {"difficulty": 4, "stability": 2, "retrievability": 0.5},
+            "phase": "learning",
+            "due_at": "2026-04-08T12:00:00+00:00",
+            "reviewed_at": "2026-04-08T10:00:00+00:00",
+            "client_event_id": "offline-1",
+            "elapsed_ms": 500,
+        },
+        headers=auth_headers,
+    )
+    second_response = await client.post(
+        "/review/submit",
+        json={
+            "card_id": card["id"],
+            "rating": 3,
+            "fsrs_state": {"difficulty": 3, "stability": 4, "retrievability": 0.7},
+            "phase": "review",
+            "due_at": "2026-04-10T10:00:00+00:00",
+            "reviewed_at": "2026-04-09T10:00:00+00:00",
+            "client_event_id": "offline-2",
+            "elapsed_ms": 700,
+        },
+        headers=auth_headers,
+    )
+
+    assert first_response.status == 200
+    assert second_response.status == 200
+
+    state_row = await (await db.execute(
+        "SELECT phase, last_reviewed_at FROM card_states WHERE user_id = ? AND card_id = ?",
+        (user_id, card["id"]),
+    )).fetchone()
+    assert state_row is not None
+    assert state_row["phase"] == "review"
+    assert state_row["last_reviewed_at"] == "2026-04-09T10:00:00+00:00"
+
+    log_rows = await (await db.execute(
+        """
+        SELECT client_event_id, reviewed_at, elapsed_days
+        FROM review_log
+        WHERE user_id = ? AND card_id = ?
+        ORDER BY reviewed_at
+        """,
+        (user_id, card["id"]),
+    )).fetchall()
+    assert [row["client_event_id"] for row in log_rows] == ["offline-1", "offline-2"]
+    assert log_rows[0]["elapsed_days"] is None
+    assert log_rows[1]["elapsed_days"] == 1.0
 
 
 @pytest.mark.asyncio
@@ -218,6 +340,8 @@ async def test_review_submit_validates_payload_and_unknown_objects(client, creat
             "fsrs_state": [],
             "phase": "oops",
             "due_at": "bad-date",
+            "reviewed_at": "still-bad",
+            "client_event_id": "",
             "elapsed_ms": -1,
         },
         headers=auth_headers,
@@ -230,6 +354,8 @@ async def test_review_submit_validates_payload_and_unknown_objects(client, creat
             "fsrs_state": {"difficulty": 1},
             "phase": "learning",
             "due_at": "2026-01-01T00:00:00+00:00",
+            "reviewed_at": "2026-01-01T00:00:00+00:00",
+            "client_event_id": "missing-card",
             "elapsed_ms": 1000,
         },
         headers=auth_headers,

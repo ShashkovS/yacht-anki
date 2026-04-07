@@ -41,14 +41,19 @@ async function readApiPayload<T>(response: Response): Promise<ApiResponse<T>> {
 }
 
 export async function postJson<T>(path: string, body: unknown = {}): Promise<T> {
-  const response = await fetch(`${baseUrl}${path}`, {
-    method: "POST",
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(body),
-  });
+  let response: Response;
+  try {
+    response = await fetch(`${baseUrl}${path}`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+  } catch {
+    throw new ApiError(0, "network_error", "Сеть недоступна. Проверьте подключение и попробуйте ещё раз.");
+  }
 
   const payload = await readApiPayload<T>(response);
   if (!payload.ok) {

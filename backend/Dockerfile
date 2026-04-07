@@ -14,6 +14,7 @@ COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen --no-dev --no-install-project
 
 COPY backend ./backend
+COPY content ./content
 
 FROM python:3.14-slim-trixie AS runtime
 
@@ -30,6 +31,7 @@ RUN groupadd --gid 10001 app && \
 
 COPY --from=builder /opt/venv /opt/venv
 COPY --from=builder /app/backend /app/backend
+COPY --from=builder /app/content /app/content
 
 USER app
 

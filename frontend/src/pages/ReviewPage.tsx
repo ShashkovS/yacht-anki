@@ -6,6 +6,8 @@ Copy this file as a starting point when you add another multi-step study page.
 
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
+import { useAuth } from "../app/auth";
+import { useOfflineStatus } from "../app/offline";
 import { formatNextReview } from "../shared/fsrs";
 import { loadReviewSession, submitCurrentReview, type ReviewSession } from "../shared/reviewSession";
 import type { ReviewCard, ReviewRating } from "../shared/types";
@@ -20,6 +22,8 @@ const RATING_LABELS: Record<ReviewRating, string> = {
 const REVIEW_RATINGS: ReviewRating[] = [1, 2, 3, 4];
 
 export function ReviewPage() {
+  const { user } = useAuth();
+  const { isOnline, pendingReviewCount } = useOfflineStatus();
   const [searchParams] = useSearchParams();
   const deckSlug = searchParams.get("deck");
   const [session, setSession] = useState<ReviewSession | null>(null);
@@ -32,11 +36,15 @@ export function ReviewPage() {
   const [selectedOptionId, setSelectedOptionId] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!user) {
+      setLoading(false);
+      return;
+    }
     let cancelled = false;
     setLoading(true);
     setError("");
     setSession(null);
-    loadReviewSession({ deckSlug: deckSlug ?? undefined })
+    loadReviewSession({ userKey: user.username, deckSlug: deckSlug ?? undefined })
       .then((nextSession) => {
         if (!cancelled) {
           setSession(nextSession);
@@ -55,7 +63,7 @@ export function ReviewPage() {
     return () => {
       cancelled = true;
     };
-  }, [deckSlug]);
+  }, [deckSlug, user]);
 
   const currentCard = session?.items[session.currentIndex] ?? null;
 
@@ -76,7 +84,7 @@ export function ReviewPage() {
     setSubmitting(true);
     setError("");
     try {
-      const nextSession = await submitCurrentReview(session, rating);
+      const nextSession = await submitCurrentReview(session, rating, user?.username ?? "");
       setSession(nextSession);
     } catch (submitError) {
       setError(submitError instanceof Error ? submitError.message : "Не удалось сохранить ответ.");
@@ -143,8 +151,11 @@ export function ReviewPage() {
           <p>К повторению: {session.summary.due_count}</p>
         </div>
       </div>
+      {session.loadedFromCache ? <p className="rounded-2xl bg-amber-50 px-4 py-3 text-sm text-amber-900">Открыта последняя сохранённая очередь. Новые ответы будут синхронизированы позже.</p> : null}
+      {!isOnline ? <p className="rounded-2xl bg-slate-100 px-4 py-3 text-sm text-slate-800">Сеть недоступна. Можно продолжать только уже загруженную очередь на этом устройстве.</p> : null}
+      {pendingReviewCount > 0 && isOnline ? <p className="rounded-2xl bg-amber-50 px-4 py-3 text-sm text-amber-900">Есть ответы, которые ещё не успели синхронизироваться: {pendingReviewCount}.</p> : null}
 
-      <article className="rounded-[2rem] border border-slate-200/80 bg-white/92 p-6 shadow-[0_24px_80px_rgba(148,163,184,0.18)]">
+      <article className="rounded-[2rem] border border-slate-200/80 bg-white/92 p-5 shadow-[0_24px_80px_rgba(148,163,184,0.18)] sm:p-6">
         <div className="mb-5 flex flex-wrap items-center gap-3 text-sm">
           <span className="rounded-full border border-sky-200 bg-sky-50 px-3 py-1 font-medium text-sky-900">{activeCard.template_type}</span>
           <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-slate-700">{activeCard.deck_slug}</span>
@@ -167,17 +178,18 @@ export function ReviewPage() {
 
         {!revealed ? (
           <div className="mt-6">
-            <button className="rounded-full bg-slate-950 px-5 py-3 font-semibold text-white transition hover:bg-slate-800" onClick={() => setRevealed(true)} type="button">
+            <button className="min-h-12 rounded-full bg-slate-950 px-5 py-3 font-semibold text-white transition hover:bg-slate-800" onClick={() => setRevealed(true)} type="button">
               Показать ответ
             </button>
           </div>
         ) : (
           <div className="mt-6 space-y-4">
-            <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+            <div className="sticky bottom-3 z-10 -mx-2 rounded-[1.75rem] border border-slate-200 bg-white/96 p-2 shadow-2xl shadow-slate-300/30 backdrop-blur sm:mx-0 sm:p-3 xl:static xl:border-0 xl:bg-transparent xl:p-0 xl:shadow-none">
+              <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
               {REVIEW_RATINGS.map((rating) => (
                 <button
                   key={rating}
-                  className="rounded-[1.5rem] border border-slate-200 bg-slate-50 px-4 py-4 text-left transition hover:border-slate-300 hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
+                  className="min-h-12 rounded-[1.5rem] border border-slate-200 bg-slate-50 px-4 py-4 text-left transition hover:border-slate-300 hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
                   disabled={submitting}
                   onClick={() => void handleRate(rating)}
                   type="button"
@@ -188,6 +200,7 @@ export function ReviewPage() {
                   </span>
                 </button>
               ))}
+            </div>
             </div>
             {submitting ? <p className="text-sm text-slate-600">Сохраняем ответ...</p> : null}
           </div>

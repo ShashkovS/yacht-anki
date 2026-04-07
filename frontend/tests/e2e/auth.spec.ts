@@ -119,3 +119,44 @@ test("admin can browse seeded decks and save settings that affect the next queue
   expect(issues.consoleErrors).toEqual([]);
   expect(issues.httpErrors).toEqual([]);
 });
+
+test("user can continue review offline and sync answers after reconnect", async ({ page, context }) => {
+  await login(page, "user");
+
+  await page.getByRole("navigation").getByRole("link", { name: "Повторение", exact: true }).click();
+  await page.waitForURL("**/review");
+  await expect(page.getByText(/Карточка \d+ из \d+/)).toBeVisible();
+  await page.getByRole("button", { name: "Показать ответ" }).click();
+
+  await context.setOffline(true);
+  await expect(page.getByText("Оффлайн режим", { exact: false })).toBeVisible();
+  await page.getByRole("button", { name: /Не помню/ }).click();
+  await expect(page.getByText("Ждут sync:", { exact: false })).toBeVisible();
+
+  await context.setOffline(false);
+  await page.waitForTimeout(1500);
+  await page.reload();
+  await expect(page.getByText("Ждут sync:", { exact: false })).toHaveCount(0);
+
+  await page.getByRole("navigation").getByRole("link", { name: "Статистика", exact: true }).click();
+  await page.waitForURL("**/stats");
+  await expect(page.getByText("Активность за 30 дней")).toBeVisible();
+});
+
+test.describe("mobile viewport", () => {
+  test.use({ viewport: { width: 390, height: 844 } });
+
+  test("review stays usable on a phone-sized screen", async ({ page }) => {
+    const issues = collectBrowserIssues(page);
+    await login(page, "user");
+
+    await page.getByRole("navigation").getByRole("link", { name: "Повторение", exact: true }).click();
+    await page.waitForURL("**/review");
+    await expect(page.getByRole("button", { name: "Показать ответ" })).toBeVisible();
+    await page.getByRole("button", { name: "Показать ответ" }).click();
+    await expect(page.getByRole("button", { name: /Не помню/ })).toBeVisible();
+
+    expect(issues.consoleErrors).toEqual([]);
+    expect(issues.httpErrors).toEqual([]);
+  });
+});

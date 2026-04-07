@@ -1,5 +1,5 @@
 {
-  "name": "templatepwa-frontend",
+  "name": "yachtanki-frontend",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -36,6 +36,7 @@
     "eslint": "^9.34.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
+    "fake-indexeddb": "^6.2.5",
     "jsdom": "^27.0.0",
     "prettier": "^3.6.2",
     "typescript": "^5.9.2",

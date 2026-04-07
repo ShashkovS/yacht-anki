@@ -12,6 +12,15 @@ import type { User } from "../shared/types";
 import { AuthContext } from "./auth";
 import { App } from "./App";
 
+vi.mock("./offline", () => ({
+  useOfflineStatus: () => ({
+    isOnline: true,
+    pendingReviewCount: 0,
+    syncing: false,
+    refreshPendingReviewCount: vi.fn(),
+  }),
+}));
+
 vi.mock("../pages/DashboardPage", () => ({
   DashboardPage: () => <h2>Личный кабинет экипажа</h2>,
 }));

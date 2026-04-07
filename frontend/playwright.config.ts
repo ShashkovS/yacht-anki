@@ -13,8 +13,8 @@ const frontendRoot = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(frontendRoot, "..");
 const backendUrl = "http://127.0.0.1:9010";
 const frontendUrl = "http://127.0.0.1:4173";
-const dbPath = process.env.E2E_DB_PATH ?? path.join(os.tmpdir(), `templatepwa-e2e-${Date.now()}-${process.pid}.sqlite3`);
-const uvCacheDir = path.join(os.tmpdir(), "templatepwa-uv-cache");
+const dbPath = process.env.E2E_DB_PATH ?? path.join(os.tmpdir(), `yachtanki-e2e-${Date.now()}-${process.pid}.sqlite3`);
+const uvCacheDir = path.join(os.tmpdir(), "yachtanki-uv-cache");
 
 export default defineConfig({
   testDir: "./tests/e2e",

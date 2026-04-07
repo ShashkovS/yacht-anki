@@ -9,6 +9,7 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { App } from "./app/App";
 import { AuthProvider } from "./app/auth";
+import { OfflineProvider } from "./app/offline";
 import "./index.css";
 
 if ("serviceWorker" in navigator) {
@@ -19,7 +20,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <BrowserRouter>
       <AuthProvider>
-        <App />
+        <OfflineProvider>
+          <App />
+        </OfflineProvider>
       </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>,

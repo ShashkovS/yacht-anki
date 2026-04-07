@@ -16,6 +16,24 @@ vi.mock("../shared/api", () => ({
   postJson: vi.fn(),
 }));
 
+vi.mock("../app/offline", () => ({
+  useOfflineStatus: () => ({
+    isOnline: true,
+    pendingReviewCount: 0,
+    syncing: false,
+    refreshPendingReviewCount: vi.fn(),
+  }),
+}));
+
+vi.mock("../shared/offlineStore", () => ({
+  loadApiSnapshot: vi.fn(),
+  saveApiSnapshot: vi.fn(),
+}));
+
+vi.mock("../shared/offlineSync", () => ({
+  syncPendingReviewEvents: vi.fn().mockResolvedValue(0),
+}));
+
 const mockedPostJson = vi.mocked(postJson);
 
 afterEach(() => {
