@@ -1,5 +1,5 @@
 /*
-This file keeps the small shared TypeScript types for users and API results.
+This file keeps the shared frontend types for auth, review, and API payloads.
 Edit this file when backend JSON shapes shared with the frontend change.
 Copy a type pattern here when you add another shared API type.
 */
@@ -26,3 +26,56 @@ export type ApiFail = {
 };
 
 export type ApiResponse<T> = ApiOk<T> | ApiFail;
+
+export type ReviewRating = 1 | 2 | 3 | 4;
+
+export type CardPhase = "new" | "learning" | "review" | "relearning";
+
+export type FsrsState = {
+  due: string;
+  stability: number;
+  difficulty: number;
+  elapsed_days: number;
+  scheduled_days: number;
+  learning_steps: number;
+  reps: number;
+  lapses: number;
+  state: number;
+  last_review: string | null;
+};
+
+export type ReviewCardState = {
+  phase: CardPhase;
+  due_at: string;
+  last_reviewed_at: string | null;
+  fsrs_state: FsrsState;
+};
+
+export type ReviewCard = {
+  id: number;
+  deck_slug: string;
+  template_type: string;
+  prompt: string;
+  answer: string;
+  explanation: string;
+  diagram_spec: Record<string, unknown>;
+  tags: string[];
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
+  state?: ReviewCardState | null;
+};
+
+export type ReviewQueueItem = ReviewCard;
+
+export type UserSettings = {
+  desired_retention: number;
+  new_cards_per_day: number;
+  reviews_per_day: number | null;
+};
+
+export type ReviewQueueSummary = {
+  due_count: number;
+  new_count: number;
+  deck_slug: string | null;
+};

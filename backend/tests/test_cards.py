@@ -55,6 +55,7 @@ async def test_cards_list_adds_state_for_logged_in_user(
         "phase": "learning",
         "due_at": "2026-01-02T00:00:00+00:00",
         "last_reviewed_at": "2025-12-31T00:00:00+00:00",
+        "fsrs_state": {"difficulty": 5, "stability": 10, "retrievability": 0.9},
     }
     assert cards[1]["state"] is None
     assert new_card["id"] == cards[1]["id"]

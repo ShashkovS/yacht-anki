@@ -62,6 +62,7 @@ async def test_review_queue_orders_due_before_new_and_applies_limits(
     assert [card["prompt"] for card in payload["data"]["cards"]] == ["due 1", "new 1"]
     assert payload["data"]["summary"] == {"due_count": 1, "new_count": 1, "deck_slug": None}
     assert new_card["id"] == payload["data"]["cards"][1]["id"]
+    assert payload["data"]["cards"][0]["state"]["fsrs_state"] == {"difficulty": 5, "stability": 10, "retrievability": 0.9}
 
 
 @pytest.mark.asyncio
@@ -94,6 +95,7 @@ async def test_review_queue_and_summary_filter_by_optional_deck_slug(
     queue_payload = await queue_response.json()
     assert [card["prompt"] for card in queue_payload["data"]["cards"]] == ["rules due", "rules new"]
     assert queue_payload["data"]["summary"] == {"due_count": 1, "new_count": 1, "deck_slug": "rules"}
+    assert queue_payload["data"]["cards"][0]["state"]["fsrs_state"] == {"difficulty": 5, "stability": 10, "retrievability": 0.9}
 
     assert summary_response.status == 200
     summary = (await summary_response.json())["data"]

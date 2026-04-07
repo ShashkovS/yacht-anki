@@ -139,7 +139,8 @@ async def list_due_review_cards(
             c.updated_at,
             cs.phase AS state_phase,
             cs.due_at AS state_due_at,
-            cs.last_reviewed_at AS state_last_reviewed_at
+            cs.last_reviewed_at AS state_last_reviewed_at,
+            cs.fsrs_state_json AS state_fsrs_state_json
         FROM card_states AS cs
         JOIN cards AS c ON c.id = cs.card_id
         JOIN decks AS d ON d.id = c.deck_id

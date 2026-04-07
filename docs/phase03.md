@@ -1,67 +1,64 @@
-# Фаза 03 — Интеграция FSRS
+# Фаза 03 — Интеграция FSRS и фронтенд-сессии повторения
+
+## Статус
+- [x] Фаза реализована в коде и синхронизирована с документацией.
 
 ## Цель
-Реализовать обёртку над ts-fsrs на фронтенде и связать её с бэкенд-API для персистентности. Обеспечить корректное планирование повторений.
+Подключить `ts-fsrs` на фронтенде, научить приложение загружать пользовательские настройки повторения, локально пересчитывать следующее состояние карточки и отправлять результат в существующий backend review API.
 
-## Результат
-Фронтенд умеет рассчитывать следующий интервал по FSRS, отправлять результат на сервер и формировать очередь повторений. Всё покрыто тестами.
+## Что сделано
 
----
+### 1. Типы review-домена на фронтенде
+- [x] `frontend/src/shared/types.ts` расширен типами `ReviewRating`, `CardPhase`, `FsrsState`, `ReviewCard`, `ReviewQueueItem`, `UserSettings`.
+- [x] FSRS storage-shape зафиксирован в явном виде с ISO-датами и полями `stability`, `difficulty`, `elapsed_days`, `scheduled_days`, `learning_steps`, `reps`, `lapses`, `state`, `due`, `last_review`.
 
-## Архитектурное решение
+### 2. Чистая обёртка над `ts-fsrs`
+- [x] Добавлен `frontend/src/shared/fsrs.ts`.
+- [x] `createScheduler(desiredRetention)` использует `enable_fuzz: false` для детерминированных тестов.
+- [x] `createNewFsrsState(now)` создаёт стартовое FSRS-состояние в app storage shape.
+- [x] `scheduleReview(...)` локально считает следующее состояние, фазу и `due_at`.
+- [x] `previewNextReviews(...)` возвращает четыре preview-варианта для `Again`, `Hard`, `Good`, `Easy`.
+- [x] `formatNextReview(...)` возвращает короткую русскую строку для ближайшего интервала.
 
-FSRS-вычисления выполняются **на фронтенде** через библиотеку `ts-fsrs`. Это позволяет:
-- Работать оффлайн (фаза 08)
-- Мгновенно показывать следующий интервал после ответа
-- Не дублировать логику FSRS на Python-бэкенде
+### 3. Plain review-session слой
+- [x] Добавлен `frontend/src/shared/reviewSession.ts` как чистый модуль без React hook.
+- [x] `loadReviewSession({ deckSlug? })` параллельно вызывает `POST /settings/get` и `POST /review/queue`.
+- [x] Сессия хранит queue items, summary, current index, session stats и preview для текущей карточки.
+- [x] `submitCurrentReview(...)` локально пересчитывает FSRS, отправляет `POST /review/submit` и переключает сессию на следующую карточку.
 
-Бэкенд — чистый слой персистентности: принимает уже рассчитанное FSRS-состояние и сохраняет.
+### 4. Минимальное изменение backend wire contract
+- [x] Logged-in ответы `POST /cards/list` и `POST /review/queue` теперь возвращают `state.fsrs_state` для уже изучавшихся карточек.
+- [x] Для новых карточек `state` по-прежнему равно `null`.
+- [x] Новые endpoints в фазе 03 не добавлялись.
 
----
+## Зафиксированные контракты
 
-## 1. Фронтенд-модуль FSRS
+### Frontend FSRS state
+- [x] `FsrsState` хранит весь card-like payload, который нужен для продолжения расписания между сессиями.
+- [x] Даты в `due` и `last_review` нормализуются до ISO-строк.
 
-### Файл `src/shared/fsrs.ts`
-- Инициализация FSRS-планировщика с параметрами из user_settings (desired_retention)
-- Функция `scheduleReview(cardState, rating)` → возвращает новое FSRS-состояние и дату следующего показа
-- Функция `createNewCardState()` → начальное состояние для карточки, которую пользователь видит впервые
-- Функция `formatNextReview(due)` → человекочитаемая строка ("через 4 часа", "через 3 дня")
+### Payload карточки для logged-in пользователя
+- [x] `state` имеет форму `null | { phase, due_at, last_reviewed_at, fsrs_state }`.
+- [x] `fsrs_state` приходит как JSON-object, а не как сырая строка из SQLite.
 
-### Типы `src/shared/types.ts`
-- Типы для FSRS-состояния (difficulty, stability, retrievability)
-- Тип фазы карточки (new, learning, review, relearning)
-- Тип рейтинга (Again=1, Hard=2, Good=3, Easy=4)
-- Тип CardWithState — карточка + её текущее состояние для пользователя
+### Review submit
+- [x] Request shape `POST /review/submit` остаётся прежним: `card_id`, `rating`, `fsrs_state`, `phase`, `due_at`, `elapsed_ms`.
+- [x] Бэкенд в фазе 03 только расширяет read payloads и не меняет смысл review endpoints.
 
----
+## Тесты фазы
+- [x] Добавлен `frontend/src/shared/fsrs.test.ts`.
+- [x] Добавлен `frontend/src/shared/reviewSession.test.ts`.
+- [x] Обновлён `backend/tests/test_cards.py` для проверки `state.fsrs_state`.
+- [x] Обновлён `backend/tests/test_review.py` для проверки `state.fsrs_state` в review queue.
 
-## 2. Логика сессии повторения
+## Проверки фазы
+- [x] FSRS helper работает детерминированно на фиксированных timestamp.
+- [x] `desired_retention` влияет на интервал review-карточки.
+- [x] Review-session слой загружает очередь, считает submit локально и переключает current item.
+- [x] Backend read payloads возвращают полный `fsrs_state` для already-reviewed cards.
+- [x] `make test`
 
-### Файл `src/shared/reviewSession.ts` (или хук `useReviewSession`)
-- Загрузка очереди с бэкенда (`/review/queue`)
-- Управление текущей позицией в очереди
-- При ответе пользователя:
-  1. Рассчитать новое FSRS-состояние локально
-  2. Отправить на бэкенд (`/review/submit`)
-  3. Перейти к следующей карточке
-- Подсчёт сессионной статистики (сколько ответов, среднее время)
-
----
-
-## 3. Тестирование
-
-### Юнит-тесты фронтенда
-- `src/shared/fsrs.test.ts`
-  - Детерминированные тесты с фиксированными timestamp
-  - Проверка: новая карточка → Good → интервал растёт
-  - Проверка: Again → карточка возвращается в learning
-  - Проверка: desired_retention влияет на интервалы
-- `src/shared/reviewSession.test.ts`
-  - Мок API, проверка потока: загрузка → ответ → сабмит → следующая
-
----
-
-## Критерии завершения
-- [ ] FSRS-обёртка работает корректно с детерминированными тестами
-- [ ] Логика сессии повторения протестирована
-- [ ] `make test` проходит
+## Примечания для следующих фаз
+- Фаза 03 не добавляет review page и не меняет роутинг; UI повторения остаётся задачей фазы 05.
+- Review-session логика уже вынесена в чистый shared module, чтобы дальше использовать её и в page, и в unit tests без state manager.
+- В фазе 05 можно подключать существующие `review/queue`, `review/submit`, `settings/get` без переделки API.

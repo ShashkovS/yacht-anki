@@ -42,6 +42,7 @@ def row_to_card(row: aiosqlite.Row | None) -> dict[str, Any] | None:
                 "phase": row["state_phase"],
                 "due_at": row["state_due_at"],
                 "last_reviewed_at": row["state_last_reviewed_at"],
+                "fsrs_state": _decode_json_text(row["state_fsrs_state_json"]),
             }
     return card
 
@@ -165,7 +166,8 @@ async def list_cards_for_deck(
                 c.updated_at,
                 cs.phase AS state_phase,
                 cs.due_at AS state_due_at,
-                cs.last_reviewed_at AS state_last_reviewed_at
+                cs.last_reviewed_at AS state_last_reviewed_at,
+                cs.fsrs_state_json AS state_fsrs_state_json
             FROM cards AS c
             JOIN decks AS d ON d.id = c.deck_id
             LEFT JOIN card_states AS cs ON cs.card_id = c.id AND cs.user_id = ?
