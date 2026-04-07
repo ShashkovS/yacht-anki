@@ -22,8 +22,8 @@ type Size = {
   height: number;
 };
 
-function getMeasuredSize(element: HTMLElement | null, minHeight: number): Size {
-  const width = element?.clientWidth ?? 0;
+function getMeasuredSize(element: HTMLElement | null, minHeight: number, observedWidth?: number): Size {
+  const width = Math.max(0, Math.round(observedWidth ?? element?.getBoundingClientRect().width ?? 0));
   return {
     width,
     height: Math.max(minHeight, width > 0 ? Math.round(width * 0.7) : minHeight),
@@ -40,6 +40,16 @@ export function ResponsiveDiagram({
 }: ResponsiveDiagramProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [size, setSize] = useState<Size>({ width: 0, height: minHeight });
+
+  function updateSize(nextSize: Size) {
+    setSize((currentSize) => {
+      if (currentSize.width === nextSize.width && currentSize.height === nextSize.height) {
+        return currentSize;
+      }
+      return nextSize;
+    });
+  }
+
   const parsedSpec = useMemo(() => {
     try {
       return { spec: parseDiagramSpec(diagramSpec), error: null };
@@ -50,14 +60,15 @@ export function ResponsiveDiagram({
 
   useEffect(() => {
     const element = containerRef.current;
-    setSize(getMeasuredSize(element, minHeight));
+    updateSize(getMeasuredSize(element, minHeight));
 
     if (!element || typeof ResizeObserver === "undefined") {
       return;
     }
 
-    const observer = new ResizeObserver(() => {
-      setSize(getMeasuredSize(element, minHeight));
+    const observer = new ResizeObserver((entries) => {
+      const entry = entries[0];
+      updateSize(getMeasuredSize(element, minHeight, entry?.contentRect.width));
     });
     observer.observe(element);
 
@@ -78,17 +89,19 @@ export function ResponsiveDiagram({
   }
 
   return (
-    <div className={className} ref={containerRef}>
-      <div style={{ minHeight }}>
+    <div className={className}>
+      <div className="relative min-w-0 w-full overflow-hidden" ref={containerRef} style={{ minHeight, height: size.height }}>
         {size.width > 0 && parsedSpec.spec ? (
-          <DiagramStage
-            spec={parsedSpec.spec}
-            width={size.width}
-            height={size.height}
-            rotatableBoatId={rotatableBoatId}
-            onBoatRotate={onBoatRotate}
-            onBoatTap={onBoatTap}
-          />
+          <div className="absolute inset-0">
+            <DiagramStage
+              spec={parsedSpec.spec}
+              width={size.width}
+              height={size.height}
+              rotatableBoatId={rotatableBoatId}
+              onBoatRotate={onBoatRotate}
+              onBoatTap={onBoatTap}
+            />
+          </div>
         ) : null}
       </div>
     </div>

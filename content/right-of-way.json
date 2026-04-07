@@ -1,0 +1,1704 @@
+{
+  "slug": "right-of-way",
+  "title": "Правила расхождения",
+  "description": "Базовые гоночные ситуации: галсы, связанность, место у знака и обязанность сторониться.",
+  "builtin": true,
+  "cards": [
+    {
+      "slug": "rule10-starboard-over-port",
+      "template_type": "right_of_way",
+      "prompt": "Кто должен сторониться в этой ситуации на противоположных галсах?",
+      "answer": "Сторонится лодка B на левом галсе.",
+      "explanation": "Правило 10: левый галс уступает правому.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 360,
+            "y": 300,
+            "heading_deg": 45,
+            "sails": {
+              "main": {}
+            },
+            "label": "A"
+          },
+          {
+            "id": "bravo",
+            "x": 650,
+            "y": 380,
+            "heading_deg": 315,
+            "sails": {
+              "main": {}
+            },
+            "label": "B"
+          }
+        ],
+        "overlays": {
+          "keep_clear_boat_id": "bravo"
+        },
+        "expected_answer": {
+          "type": "select_boat",
+          "correct_boat_id": "bravo"
+        },
+        "answer_scene": {
+          "version": 1,
+          "wind": {
+            "direction_deg": 0
+          },
+          "boats": [
+            {
+              "id": "alpha",
+              "x": 360,
+              "y": 300,
+              "heading_deg": 45,
+              "sails": {
+                "main": {}
+              },
+              "label": "A",
+              "highlight": "none"
+            },
+            {
+              "id": "bravo",
+              "x": 650,
+              "y": 380,
+              "heading_deg": 315,
+              "sails": {
+                "main": {}
+              },
+              "label": "B",
+              "highlight": "answer"
+            }
+          ],
+          "overlays": {
+            "keep_clear_boat_id": "bravo"
+          }
+        }
+      },
+      "tags": [
+        "rrs"
+      ],
+      "sort_order": 1
+    },
+    {
+      "slug": "rule10-port-over-starboard",
+      "template_type": "right_of_way",
+      "prompt": "Кто должен сторониться в этой ситуации на противоположных галсах?",
+      "answer": "Сторонится лодка A на левом галсе.",
+      "explanation": "Правило 10 работает независимо от того, кто ближе к знаку.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 360,
+            "y": 320,
+            "heading_deg": 315,
+            "sails": {
+              "main": {}
+            },
+            "label": "A"
+          },
+          {
+            "id": "bravo",
+            "x": 650,
+            "y": 340,
+            "heading_deg": 45,
+            "sails": {
+              "main": {}
+            },
+            "label": "B"
+          }
+        ],
+        "overlays": {
+          "keep_clear_boat_id": "alpha"
+        },
+        "expected_answer": {
+          "type": "select_boat",
+          "correct_boat_id": "alpha"
+        },
+        "answer_scene": {
+          "version": 1,
+          "wind": {
+            "direction_deg": 0
+          },
+          "boats": [
+            {
+              "id": "alpha",
+              "x": 360,
+              "y": 320,
+              "heading_deg": 315,
+              "sails": {
+                "main": {}
+              },
+              "label": "A",
+              "highlight": "answer"
+            },
+            {
+              "id": "bravo",
+              "x": 650,
+              "y": 340,
+              "heading_deg": 45,
+              "sails": {
+                "main": {}
+              },
+              "label": "B",
+              "highlight": "none"
+            }
+          ],
+          "overlays": {
+            "keep_clear_boat_id": "alpha"
+          }
+        }
+      },
+      "tags": [
+        "rrs"
+      ],
+      "sort_order": 2
+    },
+    {
+      "slug": "rule11-windward-leeward",
+      "template_type": "right_of_way",
+      "prompt": "Какая лодка должна сторониться на одном галсе при связанности?",
+      "answer": "Сторонится наветренная лодка A.",
+      "explanation": "Правило 11: наветренная уступает подветренной.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 420,
+            "y": 260,
+            "heading_deg": 90,
+            "sails": {
+              "main": {}
+            },
+            "label": "A"
+          },
+          {
+            "id": "bravo",
+            "x": 420,
+            "y": 430,
+            "heading_deg": 90,
+            "sails": {
+              "main": {}
+            },
+            "label": "B"
+          }
+        ],
+        "overlays": {
+          "windward_boat_id": "alpha",
+          "leeward_boat_id": "bravo",
+          "keep_clear_boat_id": "alpha",
+          "overlap_pairs": [
+            {
+              "a": "alpha",
+              "b": "bravo"
+            }
+          ]
+        },
+        "expected_answer": {
+          "type": "select_boat",
+          "correct_boat_id": "alpha"
+        },
+        "answer_scene": {
+          "version": 1,
+          "wind": {
+            "direction_deg": 0
+          },
+          "boats": [
+            {
+              "id": "alpha",
+              "x": 420,
+              "y": 260,
+              "heading_deg": 90,
+              "sails": {
+                "main": {}
+              },
+              "label": "A",
+              "highlight": "answer"
+            },
+            {
+              "id": "bravo",
+              "x": 420,
+              "y": 430,
+              "heading_deg": 90,
+              "sails": {
+                "main": {}
+              },
+              "label": "B",
+              "highlight": "none"
+            }
+          ],
+          "overlays": {
+            "windward_boat_id": "alpha",
+            "leeward_boat_id": "bravo",
+            "keep_clear_boat_id": "alpha",
+            "overlap_pairs": [
+              {
+                "a": "alpha",
+                "b": "bravo"
+              }
+            ]
+          }
+        }
+      },
+      "tags": [
+        "rrs"
+      ],
+      "sort_order": 3
+    },
+    {
+      "slug": "rule11-windward-leeward-port",
+      "template_type": "right_of_way",
+      "prompt": "Какая лодка должна сторониться на левом галсе при связанности?",
+      "answer": "Сторонится наветренная лодка B.",
+      "explanation": "На одном галсе при связанности решает не нос-корма, а наветренность.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 420,
+            "y": 430,
+            "heading_deg": 270,
+            "sails": {
+              "main": {}
+            },
+            "label": "A"
+          },
+          {
+            "id": "bravo",
+            "x": 420,
+            "y": 260,
+            "heading_deg": 270,
+            "sails": {
+              "main": {}
+            },
+            "label": "B"
+          }
+        ],
+        "overlays": {
+          "windward_boat_id": "bravo",
+          "leeward_boat_id": "alpha",
+          "keep_clear_boat_id": "bravo",
+          "overlap_pairs": [
+            {
+              "a": "alpha",
+              "b": "bravo"
+            }
+          ]
+        },
+        "expected_answer": {
+          "type": "select_boat",
+          "correct_boat_id": "bravo"
+        },
+        "answer_scene": {
+          "version": 1,
+          "wind": {
+            "direction_deg": 0
+          },
+          "boats": [
+            {
+              "id": "alpha",
+              "x": 420,
+              "y": 430,
+              "heading_deg": 270,
+              "sails": {
+                "main": {}
+              },
+              "label": "A",
+              "highlight": "none"
+            },
+            {
+              "id": "bravo",
+              "x": 420,
+              "y": 260,
+              "heading_deg": 270,
+              "sails": {
+                "main": {}
+              },
+              "label": "B",
+              "highlight": "answer"
+            }
+          ],
+          "overlays": {
+            "windward_boat_id": "bravo",
+            "leeward_boat_id": "alpha",
+            "keep_clear_boat_id": "bravo",
+            "overlap_pairs": [
+              {
+                "a": "alpha",
+                "b": "bravo"
+              }
+            ]
+          }
+        }
+      },
+      "tags": [
+        "rrs"
+      ],
+      "sort_order": 4
+    },
+    {
+      "slug": "rule12-clear-astern",
+      "template_type": "right_of_way",
+      "prompt": "Какая лодка должна сторониться, если они на одном галсе и не связаны?",
+      "answer": "Сторонится лодка B чисто позади.",
+      "explanation": "Правило 12: чисто позади уступает чисто впереди.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 350,
+            "y": 350,
+            "heading_deg": 90,
+            "sails": {
+              "main": {}
+            },
+            "label": "A"
+          },
+          {
+            "id": "bravo",
+            "x": 220,
+            "y": 350,
+            "heading_deg": 90,
+            "sails": {
+              "main": {}
+            },
+            "label": "B"
+          }
+        ],
+        "overlays": {
+          "keep_clear_boat_id": "bravo"
+        },
+        "expected_answer": {
+          "type": "select_boat",
+          "correct_boat_id": "bravo"
+        },
+        "answer_scene": {
+          "version": 1,
+          "wind": {
+            "direction_deg": 0
+          },
+          "boats": [
+            {
+              "id": "alpha",
+              "x": 350,
+              "y": 350,
+              "heading_deg": 90,
+              "sails": {
+                "main": {}
+              },
+              "label": "A",
+              "highlight": "none"
+            },
+            {
+              "id": "bravo",
+              "x": 220,
+              "y": 350,
+              "heading_deg": 90,
+              "sails": {
+                "main": {}
+              },
+              "label": "B",
+              "highlight": "answer"
+            }
+          ],
+          "overlays": {
+            "keep_clear_boat_id": "bravo"
+          }
+        }
+      },
+      "tags": [
+        "rrs"
+      ],
+      "sort_order": 5
+    },
+    {
+      "slug": "rule12-clear-astern-port",
+      "template_type": "right_of_way",
+      "prompt": "Кто должен сторониться на одном галсе без связанности?",
+      "answer": "Сторонится лодка A чисто позади.",
+      "explanation": "Даже на левом галсе при отсутствии связанности уступает тот, кто чисто позади.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 220,
+            "y": 350,
+            "heading_deg": 270,
+            "sails": {
+              "main": {}
+            },
+            "label": "A"
+          },
+          {
+            "id": "bravo",
+            "x": 360,
+            "y": 350,
+            "heading_deg": 270,
+            "sails": {
+              "main": {}
+            },
+            "label": "B"
+          }
+        ],
+        "overlays": {
+          "keep_clear_boat_id": "alpha"
+        },
+        "expected_answer": {
+          "type": "select_boat",
+          "correct_boat_id": "alpha"
+        },
+        "answer_scene": {
+          "version": 1,
+          "wind": {
+            "direction_deg": 0
+          },
+          "boats": [
+            {
+              "id": "alpha",
+              "x": 220,
+              "y": 350,
+              "heading_deg": 270,
+              "sails": {
+                "main": {}
+              },
+              "label": "A",
+              "highlight": "answer"
+            },
+            {
+              "id": "bravo",
+              "x": 360,
+              "y": 350,
+              "heading_deg": 270,
+              "sails": {
+                "main": {}
+              },
+              "label": "B",
+              "highlight": "none"
+            }
+          ],
+          "overlays": {
+            "keep_clear_boat_id": "alpha"
+          }
+        }
+      },
+      "tags": [
+        "rrs"
+      ],
+      "sort_order": 6
+    },
+    {
+      "slug": "rule13-tacking",
+      "template_type": "right_of_way",
+      "prompt": "Кто должен сторониться, пока лодка A проходит левентик?",
+      "answer": "Лодка A должна сторониться, пока не выйдет на крутой бейдевинд.",
+      "explanation": "Правило 13: во время поворота оверштаг лодка теряет обычные преимущества галса.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 430,
+            "y": 340,
+            "heading_deg": 350,
+            "sails": {
+              "main": {}
+            },
+            "label": "A"
+          },
+          {
+            "id": "bravo",
+            "x": 660,
+            "y": 360,
+            "heading_deg": 45,
+            "sails": {
+              "main": {}
+            },
+            "label": "B"
+          }
+        ],
+        "overlays": {
+          "keep_clear_boat_id": "alpha"
+        },
+        "expected_answer": {
+          "type": "select_boat",
+          "correct_boat_id": "alpha"
+        },
+        "answer_scene": {
+          "version": 1,
+          "wind": {
+            "direction_deg": 0
+          },
+          "boats": [
+            {
+              "id": "alpha",
+              "x": 430,
+              "y": 340,
+              "heading_deg": 350,
+              "sails": {
+                "main": {}
+              },
+              "label": "A",
+              "highlight": "answer"
+            },
+            {
+              "id": "bravo",
+              "x": 660,
+              "y": 360,
+              "heading_deg": 45,
+              "sails": {
+                "main": {}
+              },
+              "label": "B",
+              "highlight": "none"
+            }
+          ],
+          "overlays": {
+            "keep_clear_boat_id": "alpha"
+          }
+        }
+      },
+      "tags": [
+        "rrs"
+      ],
+      "sort_order": 7
+    },
+    {
+      "slug": "rule14-avoid-contact",
+      "template_type": "right_of_way",
+      "prompt": "Что остаётся обязанностью даже у яхты с правом дороги?",
+      "answer": "Избегать контакта, если это разумно возможно.",
+      "explanation": "Право дороги не даёт права идти в столкновение.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 470,
+            "y": 330,
+            "heading_deg": 45,
+            "sails": {
+              "main": {}
+            },
+            "label": "A"
+          },
+          {
+            "id": "bravo",
+            "x": 560,
+            "y": 360,
+            "heading_deg": 315,
+            "sails": {
+              "main": {}
+            },
+            "label": "B"
+          }
+        ],
+        "overlays": {
+          "keep_clear_boat_id": "bravo"
+        },
+        "expected_answer": {
+          "type": "select_boat",
+          "correct_boat_id": "bravo"
+        },
+        "answer_scene": {
+          "version": 1,
+          "wind": {
+            "direction_deg": 0
+          },
+          "boats": [
+            {
+              "id": "alpha",
+              "x": 470,
+              "y": 330,
+              "heading_deg": 45,
+              "sails": {
+                "main": {}
+              },
+              "label": "A",
+              "highlight": "none"
+            },
+            {
+              "id": "bravo",
+              "x": 560,
+              "y": 360,
+              "heading_deg": 315,
+              "sails": {
+                "main": {}
+              },
+              "label": "B",
+              "highlight": "answer"
+            }
+          ],
+          "overlays": {
+            "keep_clear_boat_id": "bravo"
+          }
+        }
+      },
+      "tags": [
+        "rrs"
+      ],
+      "sort_order": 8
+    },
+    {
+      "slug": "rule16-course-change",
+      "template_type": "right_of_way",
+      "prompt": "Кто всё ещё должен получать место, если яхта с правом дороги меняет курс?",
+      "answer": "Лодка без права дороги должна получить место, чтобы сторониться.",
+      "explanation": "Правило 16 ограничивает яхту с правом дороги при изменении курса.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 380,
+            "y": 350,
+            "heading_deg": 90,
+            "sails": {
+              "main": {}
+            },
+            "label": "A"
+          },
+          {
+            "id": "bravo",
+            "x": 380,
+            "y": 460,
+            "heading_deg": 90,
+            "sails": {
+              "main": {}
+            },
+            "label": "B"
+          }
+        ],
+        "overlays": {
+          "windward_boat_id": "alpha",
+          "leeward_boat_id": "bravo",
+          "keep_clear_boat_id": "alpha",
+          "overlap_pairs": [
+            {
+              "a": "alpha",
+              "b": "bravo"
+            }
+          ]
+        },
+        "expected_answer": {
+          "type": "select_boat",
+          "correct_boat_id": "alpha"
+        },
+        "answer_scene": {
+          "version": 1,
+          "wind": {
+            "direction_deg": 0
+          },
+          "boats": [
+            {
+              "id": "alpha",
+              "x": 380,
+              "y": 350,
+              "heading_deg": 90,
+              "sails": {
+                "main": {}
+              },
+              "label": "A",
+              "highlight": "answer"
+            },
+            {
+              "id": "bravo",
+              "x": 380,
+              "y": 460,
+              "heading_deg": 90,
+              "sails": {
+                "main": {}
+              },
+              "label": "B",
+              "highlight": "none"
+            }
+          ],
+          "overlays": {
+            "windward_boat_id": "alpha",
+            "leeward_boat_id": "bravo",
+            "keep_clear_boat_id": "alpha",
+            "overlap_pairs": [
+              {
+                "a": "alpha",
+                "b": "bravo"
+              }
+            ]
+          }
+        }
+      },
+      "tags": [
+        "rrs"
+      ],
+      "sort_order": 9
+    },
+    {
+      "slug": "overlap-basic",
+      "template_type": "right_of_way",
+      "prompt": "Какие лодки связаны на схеме?",
+      "answer": "Лодки A и B связаны.",
+      "explanation": "Связанность значит, что ни одна лодка не находится чисто впереди или чисто позади другой.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 420,
+            "y": 320,
+            "heading_deg": 90,
+            "sails": {
+              "main": {}
+            },
+            "label": "A"
+          },
+          {
+            "id": "bravo",
+            "x": 470,
+            "y": 380,
+            "heading_deg": 90,
+            "sails": {
+              "main": {}
+            },
+            "label": "B"
+          }
+        ],
+        "overlays": {
+          "overlap_pairs": [
+            {
+              "a": "alpha",
+              "b": "bravo"
+            }
+          ]
+        },
+        "expected_answer": {
+          "type": "select_boat",
+          "correct_boat_id": "alpha"
+        },
+        "answer_scene": {
+          "version": 1,
+          "wind": {
+            "direction_deg": 0
+          },
+          "boats": [
+            {
+              "id": "alpha",
+              "x": 420,
+              "y": 320,
+              "heading_deg": 90,
+              "sails": {
+                "main": {}
+              },
+              "label": "A",
+              "highlight": "answer"
+            },
+            {
+              "id": "bravo",
+              "x": 470,
+              "y": 380,
+              "heading_deg": 90,
+              "sails": {
+                "main": {}
+              },
+              "label": "B",
+              "highlight": "none"
+            }
+          ],
+          "overlays": {
+            "overlap_pairs": [
+              {
+                "a": "alpha",
+                "b": "bravo"
+              }
+            ]
+          }
+        }
+      },
+      "tags": [
+        "rrs"
+      ],
+      "sort_order": 10
+    },
+    {
+      "slug": "clear-ahead",
+      "template_type": "right_of_way",
+      "prompt": "Какая лодка чисто впереди?",
+      "answer": "Лодка A чисто впереди.",
+      "explanation": "Траверз кормы лодки A уже впереди носа лодки B.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 360,
+            "y": 350,
+            "heading_deg": 90,
+            "sails": {
+              "main": {}
+            },
+            "label": "A"
+          },
+          {
+            "id": "bravo",
+            "x": 220,
+            "y": 350,
+            "heading_deg": 90,
+            "sails": {
+              "main": {}
+            },
+            "label": "B"
+          }
+        ],
+        "expected_answer": {
+          "type": "select_boat",
+          "correct_boat_id": "alpha"
+        },
+        "answer_scene": {
+          "version": 1,
+          "wind": {
+            "direction_deg": 0
+          },
+          "boats": [
+            {
+              "id": "alpha",
+              "x": 360,
+              "y": 350,
+              "heading_deg": 90,
+              "sails": {
+                "main": {}
+              },
+              "label": "A",
+              "highlight": "answer"
+            },
+            {
+              "id": "bravo",
+              "x": 220,
+              "y": 350,
+              "heading_deg": 90,
+              "sails": {
+                "main": {}
+              },
+              "label": "B",
+              "highlight": "none"
+            }
+          ]
+        }
+      },
+      "tags": [
+        "rrs"
+      ],
+      "sort_order": 11
+    },
+    {
+      "slug": "clear-astern",
+      "template_type": "right_of_way",
+      "prompt": "Какая лодка чисто позади?",
+      "answer": "Лодка B чисто позади.",
+      "explanation": "Чисто позади — значит находиться за траверзом кормы другой лодки.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 360,
+            "y": 350,
+            "heading_deg": 90,
+            "sails": {
+              "main": {}
+            },
+            "label": "A"
+          },
+          {
+            "id": "bravo",
+            "x": 220,
+            "y": 350,
+            "heading_deg": 90,
+            "sails": {
+              "main": {}
+            },
+            "label": "B"
+          }
+        ],
+        "expected_answer": {
+          "type": "select_boat",
+          "correct_boat_id": "bravo"
+        },
+        "answer_scene": {
+          "version": 1,
+          "wind": {
+            "direction_deg": 0
+          },
+          "boats": [
+            {
+              "id": "alpha",
+              "x": 360,
+              "y": 350,
+              "heading_deg": 90,
+              "sails": {
+                "main": {}
+              },
+              "label": "A",
+              "highlight": "none"
+            },
+            {
+              "id": "bravo",
+              "x": 220,
+              "y": 350,
+              "heading_deg": 90,
+              "sails": {
+                "main": {}
+              },
+              "label": "B",
+              "highlight": "answer"
+            }
+          ]
+        }
+      },
+      "tags": [
+        "rrs"
+      ],
+      "sort_order": 12
+    },
+    {
+      "slug": "windward-identify",
+      "template_type": "right_of_way",
+      "prompt": "Какая лодка наветренная?",
+      "answer": "Наветренная лодка A.",
+      "explanation": "Наветренная лодка ближе к ветру.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 470,
+            "y": 260,
+            "heading_deg": 90,
+            "sails": {
+              "main": {}
+            },
+            "label": "A"
+          },
+          {
+            "id": "bravo",
+            "x": 470,
+            "y": 430,
+            "heading_deg": 90,
+            "sails": {
+              "main": {}
+            },
+            "label": "B"
+          }
+        ],
+        "overlays": {
+          "windward_boat_id": "alpha",
+          "leeward_boat_id": "bravo"
+        },
+        "expected_answer": {
+          "type": "select_boat",
+          "correct_boat_id": "alpha"
+        },
+        "answer_scene": {
+          "version": 1,
+          "wind": {
+            "direction_deg": 0
+          },
+          "boats": [
+            {
+              "id": "alpha",
+              "x": 470,
+              "y": 260,
+              "heading_deg": 90,
+              "sails": {
+                "main": {}
+              },
+              "label": "A",
+              "highlight": "answer"
+            },
+            {
+              "id": "bravo",
+              "x": 470,
+              "y": 430,
+              "heading_deg": 90,
+              "sails": {
+                "main": {}
+              },
+              "label": "B",
+              "highlight": "none"
+            }
+          ],
+          "overlays": {
+            "windward_boat_id": "alpha",
+            "leeward_boat_id": "bravo"
+          }
+        }
+      },
+      "tags": [
+        "rrs"
+      ],
+      "sort_order": 13
+    },
+    {
+      "slug": "leeward-identify",
+      "template_type": "right_of_way",
+      "prompt": "Какая лодка подветренная?",
+      "answer": "Подветренная лодка B.",
+      "explanation": "Подветренная лодка находится ниже относительно направления ветра.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 470,
+            "y": 260,
+            "heading_deg": 90,
+            "sails": {
+              "main": {}
+            },
+            "label": "A"
+          },
+          {
+            "id": "bravo",
+            "x": 470,
+            "y": 430,
+            "heading_deg": 90,
+            "sails": {
+              "main": {}
+            },
+            "label": "B"
+          }
+        ],
+        "overlays": {
+          "windward_boat_id": "alpha",
+          "leeward_boat_id": "bravo"
+        },
+        "expected_answer": {
+          "type": "select_boat",
+          "correct_boat_id": "bravo"
+        },
+        "answer_scene": {
+          "version": 1,
+          "wind": {
+            "direction_deg": 0
+          },
+          "boats": [
+            {
+              "id": "alpha",
+              "x": 470,
+              "y": 260,
+              "heading_deg": 90,
+              "sails": {
+                "main": {}
+              },
+              "label": "A",
+              "highlight": "none"
+            },
+            {
+              "id": "bravo",
+              "x": 470,
+              "y": 430,
+              "heading_deg": 90,
+              "sails": {
+                "main": {}
+              },
+              "label": "B",
+              "highlight": "answer"
+            }
+          ],
+          "overlays": {
+            "windward_boat_id": "alpha",
+            "leeward_boat_id": "bravo"
+          }
+        }
+      },
+      "tags": [
+        "rrs"
+      ],
+      "sort_order": 14
+    },
+    {
+      "slug": "mark-room-inside",
+      "template_type": "right_of_way",
+      "prompt": "Какая лодка должна получить место у знака?",
+      "answer": "Внутренняя лодка A должна получить место у знака.",
+      "explanation": "Если лодки связаны при входе в зону, внутренняя получает место у знака.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 310,
+            "heading_deg": 90,
+            "sails": {
+              "main": {}
+            },
+            "label": "A"
+          },
+          {
+            "id": "bravo",
+            "x": 500,
+            "y": 400,
+            "heading_deg": 90,
+            "sails": {
+              "main": {}
+            },
+            "label": "B"
+          }
+        ],
+        "mark": {
+          "x": 650,
+          "y": 350,
+          "zone_radius": 80
+        },
+        "overlays": {
+          "overlap_pairs": [
+            {
+              "a": "alpha",
+              "b": "bravo"
+            }
+          ]
+        },
+        "expected_answer": {
+          "type": "select_boat",
+          "correct_boat_id": "alpha"
+        },
+        "answer_scene": {
+          "version": 1,
+          "wind": {
+            "direction_deg": 0
+          },
+          "boats": [
+            {
+              "id": "alpha",
+              "x": 500,
+              "y": 310,
+              "heading_deg": 90,
+              "sails": {
+                "main": {}
+              },
+              "label": "A",
+              "highlight": "answer"
+            },
+            {
+              "id": "bravo",
+              "x": 500,
+              "y": 400,
+              "heading_deg": 90,
+              "sails": {
+                "main": {}
+              },
+              "label": "B",
+              "highlight": "none"
+            }
+          ],
+          "mark": {
+            "x": 650,
+            "y": 350,
+            "zone_radius": 80
+          },
+          "overlays": {
+            "overlap_pairs": [
+              {
+                "a": "alpha",
+                "b": "bravo"
+              }
+            ]
+          }
+        }
+      },
+      "tags": [
+        "rrs"
+      ],
+      "sort_order": 15
+    },
+    {
+      "slug": "mark-room-outside-duty",
+      "template_type": "right_of_way",
+      "prompt": "Какая лодка обязана дать место у знака?",
+      "answer": "Наружная лодка B обязана дать место.",
+      "explanation": "Обязанность даёт наружная лодка, а получает — внутренняя.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 310,
+            "heading_deg": 90,
+            "sails": {
+              "main": {}
+            },
+            "label": "A"
+          },
+          {
+            "id": "bravo",
+            "x": 500,
+            "y": 400,
+            "heading_deg": 90,
+            "sails": {
+              "main": {}
+            },
+            "label": "B"
+          }
+        ],
+        "mark": {
+          "x": 650,
+          "y": 350,
+          "zone_radius": 80
+        },
+        "overlays": {
+          "overlap_pairs": [
+            {
+              "a": "alpha",
+              "b": "bravo"
+            }
+          ],
+          "keep_clear_boat_id": "bravo"
+        },
+        "expected_answer": {
+          "type": "select_boat",
+          "correct_boat_id": "bravo"
+        },
+        "answer_scene": {
+          "version": 1,
+          "wind": {
+            "direction_deg": 0
+          },
+          "boats": [
+            {
+              "id": "alpha",
+              "x": 500,
+              "y": 310,
+              "heading_deg": 90,
+              "sails": {
+                "main": {}
+              },
+              "label": "A",
+              "highlight": "none"
+            },
+            {
+              "id": "bravo",
+              "x": 500,
+              "y": 400,
+              "heading_deg": 90,
+              "sails": {
+                "main": {}
+              },
+              "label": "B",
+              "highlight": "answer"
+            }
+          ],
+          "mark": {
+            "x": 650,
+            "y": 350,
+            "zone_radius": 80
+          },
+          "overlays": {
+            "overlap_pairs": [
+              {
+                "a": "alpha",
+                "b": "bravo"
+              }
+            ],
+            "keep_clear_boat_id": "bravo"
+          }
+        }
+      },
+      "tags": [
+        "rrs"
+      ],
+      "sort_order": 16
+    },
+    {
+      "slug": "mark-room-no-overlap",
+      "template_type": "right_of_way",
+      "prompt": "Кто должен сторониться, если при входе в зону связанности не было?",
+      "answer": "Сторонится лодка B позади.",
+      "explanation": "Если связанности не было, лодка позади не получает внезапного места у знака.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 520,
+            "y": 350,
+            "heading_deg": 90,
+            "sails": {
+              "main": {}
+            },
+            "label": "A"
+          },
+          {
+            "id": "bravo",
+            "x": 360,
+            "y": 350,
+            "heading_deg": 90,
+            "sails": {
+              "main": {}
+            },
+            "label": "B"
+          }
+        ],
+        "mark": {
+          "x": 700,
+          "y": 350,
+          "zone_radius": 80
+        },
+        "overlays": {
+          "keep_clear_boat_id": "bravo"
+        },
+        "expected_answer": {
+          "type": "select_boat",
+          "correct_boat_id": "bravo"
+        },
+        "answer_scene": {
+          "version": 1,
+          "wind": {
+            "direction_deg": 0
+          },
+          "boats": [
+            {
+              "id": "alpha",
+              "x": 520,
+              "y": 350,
+              "heading_deg": 90,
+              "sails": {
+                "main": {}
+              },
+              "label": "A",
+              "highlight": "none"
+            },
+            {
+              "id": "bravo",
+              "x": 360,
+              "y": 350,
+              "heading_deg": 90,
+              "sails": {
+                "main": {}
+              },
+              "label": "B",
+              "highlight": "answer"
+            }
+          ],
+          "mark": {
+            "x": 700,
+            "y": 350,
+            "zone_radius": 80
+          },
+          "overlays": {
+            "keep_clear_boat_id": "bravo"
+          }
+        }
+      },
+      "tags": [
+        "rrs"
+      ],
+      "sort_order": 17
+    },
+    {
+      "slug": "zone-awareness",
+      "template_type": "right_of_way",
+      "prompt": "Какая область вокруг знака важна для правила 18?",
+      "answer": "Зона в три длины корпуса вокруг знака.",
+      "explanation": "Зона помогает определить момент, когда фиксируется связность для правила 18.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 520,
+            "y": 350,
+            "heading_deg": 90,
+            "sails": {
+              "main": {}
+            },
+            "label": "A"
+          },
+          {
+            "id": "bravo",
+            "x": 420,
+            "y": 430,
+            "heading_deg": 90,
+            "sails": {
+              "main": {}
+            },
+            "label": "B"
+          }
+        ],
+        "mark": {
+          "x": 700,
+          "y": 350,
+          "zone_radius": 80
+        },
+        "expected_answer": {
+          "type": "select_boat",
+          "correct_boat_id": "alpha"
+        },
+        "answer_scene": {
+          "version": 1,
+          "wind": {
+            "direction_deg": 0
+          },
+          "boats": [
+            {
+              "id": "alpha",
+              "x": 520,
+              "y": 350,
+              "heading_deg": 90,
+              "sails": {
+                "main": {}
+              },
+              "label": "A",
+              "highlight": "answer"
+            },
+            {
+              "id": "bravo",
+              "x": 420,
+              "y": 430,
+              "heading_deg": 90,
+              "sails": {
+                "main": {}
+              },
+              "label": "B",
+              "highlight": "none"
+            }
+          ],
+          "mark": {
+            "x": 700,
+            "y": 350,
+            "zone_radius": 80
+          }
+        }
+      },
+      "tags": [
+        "rrs"
+      ],
+      "sort_order": 18
+    },
+    {
+      "slug": "opposite-tacks-at-mark",
+      "template_type": "right_of_way",
+      "prompt": "Кто обычно сторонится на противоположных галсах до включения mark-room исключений?",
+      "answer": "Лодка на левом галсе.",
+      "explanation": "Базовое правило остаётся тем же: левый галс уступает правому.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 450,
+            "y": 310,
+            "heading_deg": 45,
+            "sails": {
+              "main": {}
+            },
+            "label": "A"
+          },
+          {
+            "id": "bravo",
+            "x": 640,
+            "y": 390,
+            "heading_deg": 315,
+            "sails": {
+              "main": {}
+            },
+            "label": "B"
+          }
+        ],
+        "mark": {
+          "x": 760,
+          "y": 350,
+          "zone_radius": 80
+        },
+        "overlays": {
+          "keep_clear_boat_id": "bravo"
+        },
+        "expected_answer": {
+          "type": "select_boat",
+          "correct_boat_id": "bravo"
+        },
+        "answer_scene": {
+          "version": 1,
+          "wind": {
+            "direction_deg": 0
+          },
+          "boats": [
+            {
+              "id": "alpha",
+              "x": 450,
+              "y": 310,
+              "heading_deg": 45,
+              "sails": {
+                "main": {}
+              },
+              "label": "A",
+              "highlight": "none"
+            },
+            {
+              "id": "bravo",
+              "x": 640,
+              "y": 390,
+              "heading_deg": 315,
+              "sails": {
+                "main": {}
+              },
+              "label": "B",
+              "highlight": "answer"
+            }
+          ],
+          "mark": {
+            "x": 760,
+            "y": 350,
+            "zone_radius": 80
+          },
+          "overlays": {
+            "keep_clear_boat_id": "bravo"
+          }
+        }
+      },
+      "tags": [
+        "rrs"
+      ],
+      "sort_order": 19
+    },
+    {
+      "slug": "keep-clear-basic",
+      "template_type": "right_of_way",
+      "prompt": "Какая лодка отмечена как обязанная сторониться?",
+      "answer": "Лодка B должна сторониться.",
+      "explanation": "На учебных схемах удобно сразу видеть лодку, которая должна держаться в стороне.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 380,
+            "y": 320,
+            "heading_deg": 45,
+            "sails": {
+              "main": {}
+            },
+            "label": "A"
+          },
+          {
+            "id": "bravo",
+            "x": 640,
+            "y": 380,
+            "heading_deg": 315,
+            "sails": {
+              "main": {}
+            },
+            "label": "B"
+          }
+        ],
+        "overlays": {
+          "keep_clear_boat_id": "bravo"
+        },
+        "expected_answer": {
+          "type": "select_boat",
+          "correct_boat_id": "bravo"
+        },
+        "answer_scene": {
+          "version": 1,
+          "wind": {
+            "direction_deg": 0
+          },
+          "boats": [
+            {
+              "id": "alpha",
+              "x": 380,
+              "y": 320,
+              "heading_deg": 45,
+              "sails": {
+                "main": {}
+              },
+              "label": "A",
+              "highlight": "none"
+            },
+            {
+              "id": "bravo",
+              "x": 640,
+              "y": 380,
+              "heading_deg": 315,
+              "sails": {
+                "main": {}
+              },
+              "label": "B",
+              "highlight": "answer"
+            }
+          ],
+          "overlays": {
+            "keep_clear_boat_id": "bravo"
+          }
+        }
+      },
+      "tags": [
+        "rrs"
+      ],
+      "sort_order": 20
+    }
+  ]
+}

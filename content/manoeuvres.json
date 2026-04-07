@@ -1,0 +1,856 @@
+{
+  "slug": "manoeuvres",
+  "title": "Манёвры и работа с парусами",
+  "description": "Последовательности действий и решения по триму во время манёвров.",
+  "builtin": true,
+  "cards": [
+    {
+      "slug": "head-up-main",
+      "template_type": "trim",
+      "prompt": "Что делать с гротом, если приводишься?",
+      "answer": "Выбрать грот-шкот",
+      "explanation": "При приведении парус нужно подтянуть, чтобы сохранить рабочий угол атаки.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 80,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              },
+              "jib": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ],
+        "expected_answer": {
+          "type": "choose_option",
+          "options": [
+            {
+              "id": "sheet-in",
+              "label": "Выбрать грот-шкот"
+            },
+            {
+              "id": "ease",
+              "label": "Потравить грот-шкот"
+            }
+          ],
+          "correct_option_id": "sheet-in"
+        }
+      },
+      "tags": [
+        "trim"
+      ],
+      "sort_order": 1
+    },
+    {
+      "slug": "bear-away-main",
+      "template_type": "trim",
+      "prompt": "Что делать с гротом, если уваливаешься?",
+      "answer": "Потравить грот-шкот",
+      "explanation": "Когда курс становится полнее, грот нужно открыть и дать ему выйти.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 50,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              },
+              "jib": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ],
+        "expected_answer": {
+          "type": "choose_option",
+          "options": [
+            {
+              "id": "sheet-in",
+              "label": "Выбрать грот-шкот"
+            },
+            {
+              "id": "ease",
+              "label": "Потравить грот-шкот"
+            }
+          ],
+          "correct_option_id": "ease"
+        }
+      },
+      "tags": [
+        "trim"
+      ],
+      "sort_order": 2
+    },
+    {
+      "slug": "gust-traveller",
+      "template_type": "trim",
+      "prompt": "Порыв на остром курсе: чем мягко снять лишнюю мощность без полного сброса формы?",
+      "answer": "Кареткой",
+      "explanation": "Каретка помогает быстро снять крен, не разваливая заднюю шкаторину грота полностью.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 45,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ],
+        "expected_answer": {
+          "type": "choose_option",
+          "options": [
+            {
+              "id": "traveller",
+              "label": "Опустить каретку"
+            },
+            {
+              "id": "release-halyard",
+              "label": "Травить фал"
+            }
+          ],
+          "correct_option_id": "traveller"
+        }
+      },
+      "tags": [
+        "trim"
+      ],
+      "sort_order": 3
+    },
+    {
+      "slug": "fine-tune-usage",
+      "template_type": "trim",
+      "prompt": "Когда удобнее работать fine tune?",
+      "answer": "Когда нужна маленькая точная доборка под нагрузкой",
+      "explanation": "Fine tune нужен не для грубого сброса, а для точной доводки грота.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 55,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ],
+        "expected_answer": {
+          "type": "choose_option",
+          "options": [
+            {
+              "id": "fine",
+              "label": "Для точной доборки грота"
+            },
+            {
+              "id": "reef",
+              "label": "Для рифления грота"
+            }
+          ],
+          "correct_option_id": "fine"
+        }
+      },
+      "tags": [
+        "trim"
+      ],
+      "sort_order": 4
+    },
+    {
+      "slug": "gennaker-set-course",
+      "template_type": "trim",
+      "prompt": "На каком курсе обычно ставят генакер?",
+      "answer": "На полном курсе, обычно на бакштаге",
+      "explanation": "Генакер эффективен, когда лодка уже ушла на полный курс и может его наполнить.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 125,
+            "sails": {
+              "main": {
+                "state": "eased"
+              }
+            },
+            "label": "A"
+          }
+        ],
+        "expected_answer": {
+          "type": "choose_option",
+          "options": [
+            {
+              "id": "upwind",
+              "label": "На остром бейдевинде"
+            },
+            {
+              "id": "broad",
+              "label": "На полном курсе"
+            }
+          ],
+          "correct_option_id": "broad"
+        }
+      },
+      "tags": [
+        "trim"
+      ],
+      "sort_order": 5
+    },
+    {
+      "slug": "gennaker-drop-timing",
+      "template_type": "trim",
+      "prompt": "Когда лучше готовить уборку генакера?",
+      "answer": "Заранее перед поворотом или заходом на острый курс",
+      "explanation": "Если тянуть до последней секунды, генакер мешает манёвру и перегружает экипаж.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 145,
+            "sails": {
+              "main": {
+                "state": "eased"
+              },
+              "gennaker": {
+                "visible": true,
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ],
+        "expected_answer": {
+          "type": "choose_option",
+          "options": [
+            {
+              "id": "early",
+              "label": "Заранее до манёвра"
+            },
+            {
+              "id": "late",
+              "label": "Только после поворота на ветер"
+            }
+          ],
+          "correct_option_id": "early"
+        }
+      },
+      "tags": [
+        "trim"
+      ],
+      "sort_order": 6
+    },
+    {
+      "slug": "reefing-goal",
+      "template_type": "trim",
+      "prompt": "Для чего рифят грот?",
+      "answer": "Чтобы уменьшить площадь паруса и вернуть лодке контроль",
+      "explanation": "Рифление снижает крен и нагрузку на экипаж в сильный ветер.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 40,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ],
+        "expected_answer": {
+          "type": "choose_option",
+          "options": [
+            {
+              "id": "control",
+              "label": "Уменьшить площадь и крен"
+            },
+            {
+              "id": "speed",
+              "label": "Сделать парус глубже"
+            }
+          ],
+          "correct_option_id": "control"
+        }
+      },
+      "tags": [
+        "trim"
+      ],
+      "sort_order": 7
+    },
+    {
+      "slug": "tack-steps",
+      "template_type": "manoeuvre",
+      "prompt": "Какой порядок действий при повороте оверштаг?",
+      "answer": "Поворот оверштаг начинается с подготовки и заканчивается добором на новом галсе.",
+      "explanation": "Поворот оверштаг начинается с подготовки и заканчивается добором на новом галсе.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 45,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              },
+              "jib": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ],
+        "answer_scene": {
+          "version": 1,
+          "wind": {
+            "direction_deg": 0
+          },
+          "boats": [
+            {
+              "id": "alpha",
+              "x": 500,
+              "y": 350,
+              "heading_deg": 315,
+              "sails": {
+                "main": {
+                  "state": "trimmed"
+                },
+                "jib": {
+                  "state": "trimmed"
+                }
+              },
+              "label": "A"
+            }
+          ]
+        },
+        "expected_answer": {
+          "type": "reveal_steps",
+          "steps": [
+            "Проверить обстановку и скорость лодки",
+            "Плавно переложить руль на ветер",
+            "Перебросить шкоты через левентик",
+            "Добрать паруса и стабилизировать курс на новом галсе"
+          ]
+        }
+      },
+      "tags": [
+        "manoeuvre"
+      ],
+      "sort_order": 8
+    },
+    {
+      "slug": "gybe-steps",
+      "template_type": "manoeuvre",
+      "prompt": "Какой безопасный порядок действий при фордевиндном повороте?",
+      "answer": "Нужно заранее собрать экипаж и контролировать гик.",
+      "explanation": "Нужно заранее собрать экипаж и контролировать гик.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 170,
+            "sails": {
+              "main": {
+                "state": "eased"
+              },
+              "jib": {
+                "state": "eased"
+              }
+            },
+            "label": "A"
+          }
+        ],
+        "answer_scene": {
+          "version": 1,
+          "wind": {
+            "direction_deg": 0
+          },
+          "boats": [
+            {
+              "id": "alpha",
+              "x": 500,
+              "y": 350,
+              "heading_deg": 190,
+              "sails": {
+                "main": {
+                  "state": "eased"
+                },
+                "jib": {
+                  "state": "eased"
+                }
+              },
+              "label": "A"
+            }
+          ]
+        },
+        "expected_answer": {
+          "type": "reveal_steps",
+          "steps": [
+            "Проверить место и предупредить экипаж",
+            "Подтянуть грот, чтобы сократить ход гика",
+            "Плавно провести корму через ветер",
+            "Отдать грот на новом галсе и стабилизировать курс"
+          ]
+        }
+      },
+      "tags": [
+        "manoeuvre"
+      ],
+      "sort_order": 9
+    },
+    {
+      "slug": "gennaker-hoist-steps",
+      "template_type": "manoeuvre",
+      "prompt": "Какой порядок действий при постановке генакера?",
+      "answer": "Генакер ставят после выхода на полный курс и готовности снастей.",
+      "explanation": "Генакер ставят после выхода на полный курс и готовности снастей.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 120,
+            "sails": {
+              "main": {
+                "state": "eased"
+              },
+              "jib": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ],
+        "answer_scene": {
+          "version": 1,
+          "wind": {
+            "direction_deg": 0
+          },
+          "boats": [
+            {
+              "id": "alpha",
+              "x": 500,
+              "y": 350,
+              "heading_deg": 135,
+              "sails": {
+                "main": {
+                  "state": "eased"
+                },
+                "gennaker": {
+                  "visible": true,
+                  "state": "trimmed"
+                }
+              },
+              "label": "A"
+            }
+          ]
+        },
+        "expected_answer": {
+          "type": "reveal_steps",
+          "steps": [
+            "Выйти на полный курс и стабилизировать лодку",
+            "Выдвинуть бушприт и проверить снасти",
+            "Поднять генакер фалом",
+            "Выбрать шкот и настроить парус"
+          ]
+        }
+      },
+      "tags": [
+        "manoeuvre"
+      ],
+      "sort_order": 10
+    },
+    {
+      "slug": "gennaker-drop-steps",
+      "template_type": "manoeuvre",
+      "prompt": "Какой порядок действий при уборке генакера?",
+      "answer": "Сначала разгружают парус и только потом убирают его в лодку.",
+      "explanation": "Сначала разгружают парус и только потом убирают его в лодку.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 140,
+            "sails": {
+              "main": {
+                "state": "eased"
+              },
+              "gennaker": {
+                "visible": true,
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ],
+        "answer_scene": {
+          "version": 1,
+          "wind": {
+            "direction_deg": 0
+          },
+          "boats": [
+            {
+              "id": "alpha",
+              "x": 500,
+              "y": 350,
+              "heading_deg": 80,
+              "sails": {
+                "main": {
+                  "state": "trimmed"
+                },
+                "jib": {
+                  "state": "trimmed"
+                }
+              },
+              "label": "A"
+            }
+          ]
+        },
+        "expected_answer": {
+          "type": "reveal_steps",
+          "steps": [
+            "Назначить момент и сторону уборки",
+            "Частично разгрузить генакер шкотом",
+            "Быстро собрать парус в кокпит или люк",
+            "Убрать бушприт и перейти к следующему манёвру"
+          ]
+        }
+      },
+      "tags": [
+        "manoeuvre"
+      ],
+      "sort_order": 11
+    },
+    {
+      "slug": "traveller-vs-sheet-steps",
+      "template_type": "manoeuvre",
+      "prompt": "Что делать, если нужно быстро снять крен на порыве, но сохранить форму грота?",
+      "answer": "Сначала работать кареткой, а не грубо бросать весь шкот.",
+      "explanation": "Сначала работать кареткой, а не грубо бросать весь шкот.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 40,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ],
+        "answer_scene": {
+          "version": 1,
+          "wind": {
+            "direction_deg": 0
+          },
+          "boats": [
+            {
+              "id": "alpha",
+              "x": 500,
+              "y": 350,
+              "heading_deg": 40,
+              "sails": {
+                "main": {
+                  "state": "trimmed"
+                }
+              },
+              "label": "A"
+            }
+          ]
+        },
+        "expected_answer": {
+          "type": "reveal_steps",
+          "steps": [
+            "Почувствовать перегрузку и предупредить рулевого",
+            "Слегка опустить каретку под ветер",
+            "Сохранить контроль за рулём и скоростью",
+            "Вернуть каретку, когда лодка снова под контролем"
+          ]
+        }
+      },
+      "tags": [
+        "manoeuvre"
+      ],
+      "sort_order": 12
+    },
+    {
+      "slug": "heavy-air-flattening",
+      "template_type": "manoeuvre",
+      "prompt": "Какой порядок действий помогает уплощать грот в усиливающийся ветер?",
+      "answer": "Сначала увеличивают натяжение управляющих снастей, чтобы сделать профиль площе.",
+      "explanation": "Сначала увеличивают натяжение управляющих снастей, чтобы сделать профиль площе.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 45,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ],
+        "answer_scene": {
+          "version": 1,
+          "wind": {
+            "direction_deg": 0
+          },
+          "boats": [
+            {
+              "id": "alpha",
+              "x": 500,
+              "y": 350,
+              "heading_deg": 45,
+              "sails": {
+                "main": {
+                  "state": "trimmed"
+                }
+              },
+              "label": "A"
+            }
+          ]
+        },
+        "expected_answer": {
+          "type": "reveal_steps",
+          "steps": [
+            "Добрать аутхаул и каннингхэм",
+            "Добавить натяжение ахтерштага",
+            "Проверить, что лодка остаётся управляемой",
+            "Подстроить каретку и грот-шкот под новый ветер"
+          ]
+        }
+      },
+      "tags": [
+        "manoeuvre"
+      ],
+      "sort_order": 13
+    },
+    {
+      "slug": "reefing-steps",
+      "template_type": "manoeuvre",
+      "prompt": "Какой базовый порядок действий при рифлении грота?",
+      "answer": "Рифление требует разгрузить парус, заложить риф и заново настроить грот.",
+      "explanation": "Рифление требует разгрузить парус, заложить риф и заново настроить грот.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 55,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ],
+        "answer_scene": {
+          "version": 1,
+          "wind": {
+            "direction_deg": 0
+          },
+          "boats": [
+            {
+              "id": "alpha",
+              "x": 500,
+              "y": 350,
+              "heading_deg": 55,
+              "sails": {
+                "main": {
+                  "state": "trimmed"
+                }
+              },
+              "label": "A"
+            }
+          ]
+        },
+        "expected_answer": {
+          "type": "reveal_steps",
+          "steps": [
+            "Снизить нагрузку на грот и подготовить лодку",
+            "Ослабить фал до нужной метки",
+            "Заложить риф и подтянуть нижний угол",
+            "Снова натянуть фал и настроить грот"
+          ]
+        }
+      },
+      "tags": [
+        "manoeuvre"
+      ],
+      "sort_order": 14
+    },
+    {
+      "slug": "mark-rounding-bear-away",
+      "template_type": "manoeuvre",
+      "prompt": "Что делать после огибания верхнего знака, если лодка уходит на полный курс?",
+      "answer": "Нужно увалиться и сразу открыть паруса под новый курс.",
+      "explanation": "Нужно увалиться и сразу открыть паруса под новый курс.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 50,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              },
+              "jib": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ],
+        "mark": {
+          "x": 580,
+          "y": 220,
+          "zone_radius": 80
+        },
+        "answer_scene": {
+          "version": 1,
+          "wind": {
+            "direction_deg": 0
+          },
+          "boats": [
+            {
+              "id": "alpha",
+              "x": 500,
+              "y": 350,
+              "heading_deg": 130,
+              "sails": {
+                "main": {
+                  "state": "eased"
+                },
+                "gennaker": {
+                  "visible": true,
+                  "state": "trimmed"
+                }
+              },
+              "label": "A"
+            }
+          ],
+          "mark": {
+            "x": 580,
+            "y": 220,
+            "zone_radius": 80
+          }
+        },
+        "expected_answer": {
+          "type": "reveal_steps",
+          "steps": [
+            "Завершить огибание и освободить пространство",
+            "Увалиться на более полный курс",
+            "Потравить грот и подготовить генакер",
+            "Стабилизировать спуск и роли экипажа"
+          ]
+        }
+      },
+      "tags": [
+        "manoeuvre"
+      ],
+      "sort_order": 15
+    }
+  ]
+}

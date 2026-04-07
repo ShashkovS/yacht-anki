@@ -50,6 +50,7 @@ def row_to_card(row: aiosqlite.Row | None) -> dict[str, Any] | None:
 async def create_card(
     db: aiosqlite.Connection,
     deck_id: int,
+    slug: str,
     template_type: str,
     prompt: str,
     answer: str,
@@ -63,6 +64,7 @@ async def create_card(
         """
         INSERT INTO cards (
             deck_id,
+            slug,
             template_type,
             prompt,
             answer,
@@ -73,11 +75,12 @@ async def create_card(
             created_at,
             updated_at
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         RETURNING id
         """,
         (
             deck_id,
+            slug,
             template_type,
             prompt,
             answer,
@@ -92,6 +95,105 @@ async def create_card(
     row = await cursor.fetchone()
     await db.commit()
     return await get_card_by_id(db, int(row["id"]))
+
+
+async def get_card_by_deck_and_slug(db: aiosqlite.Connection, deck_id: int, slug: str) -> dict[str, Any] | None:
+    cursor = await db.execute(
+        """
+        SELECT
+            c.id,
+            d.slug AS deck_slug,
+            c.template_type,
+            c.prompt,
+            c.answer,
+            c.explanation,
+            c.diagram_spec,
+            c.tags,
+            c.sort_order,
+            c.created_at,
+            c.updated_at
+        FROM cards AS c
+        JOIN decks AS d ON d.id = c.deck_id
+        WHERE c.deck_id = ? AND c.slug = ?
+        """,
+        (deck_id, slug),
+    )
+    row = await cursor.fetchone()
+    return row_to_card(row)
+
+
+async def update_card(
+    db: aiosqlite.Connection,
+    deck_id: int,
+    slug: str,
+    template_type: str,
+    prompt: str,
+    answer: str,
+    explanation: str,
+    diagram_spec: dict[str, Any],
+    tags: list[str] | None = None,
+    sort_order: int = 0,
+) -> dict[str, Any]:
+    now = utc_now_text()
+    cursor = await db.execute(
+        """
+        UPDATE cards
+        SET
+            template_type = ?,
+            prompt = ?,
+            answer = ?,
+            explanation = ?,
+            diagram_spec = ?,
+            tags = ?,
+            sort_order = ?,
+            updated_at = ?
+        WHERE deck_id = ? AND slug = ?
+        RETURNING id
+        """,
+        (
+            template_type,
+            prompt,
+            answer,
+            explanation,
+            json.dumps(diagram_spec),
+            json.dumps(tags or []),
+            sort_order,
+            now,
+            deck_id,
+            slug,
+        ),
+    )
+    row = await cursor.fetchone()
+    await db.commit()
+    return await get_card_by_id(db, int(row["id"]))
+
+
+async def upsert_card(
+    db: aiosqlite.Connection,
+    deck_id: int,
+    slug: str,
+    template_type: str,
+    prompt: str,
+    answer: str,
+    explanation: str,
+    diagram_spec: dict[str, Any],
+    tags: list[str] | None = None,
+    sort_order: int = 0,
+) -> dict[str, Any]:
+    existing = await get_card_by_deck_and_slug(db, deck_id, slug)
+    if existing is None:
+        return await create_card(db, deck_id, slug, template_type, prompt, answer, explanation, diagram_spec, tags, sort_order)
+    if (
+        existing["template_type"] == template_type
+        and existing["prompt"] == prompt
+        and existing["answer"] == answer
+        and existing["explanation"] == explanation
+        and existing["diagram_spec"] == diagram_spec
+        and existing["tags"] == (tags or [])
+        and existing["sort_order"] == sort_order
+    ):
+        return existing
+    return await update_card(db, deck_id, slug, template_type, prompt, answer, explanation, diagram_spec, tags, sort_order)
 
 
 async def get_card_by_id(db: aiosqlite.Connection, card_id: int) -> dict[str, Any] | None:

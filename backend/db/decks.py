@@ -51,6 +51,47 @@ async def create_deck(
     return row_to_deck(row)
 
 
+async def update_deck(
+    db: aiosqlite.Connection,
+    slug: str,
+    title: str,
+    description: str,
+    builtin: bool = True,
+) -> dict[str, Any]:
+    now = utc_now_text()
+    cursor = await db.execute(
+        """
+        UPDATE decks
+        SET title = ?, description = ?, builtin = ?, updated_at = ?
+        WHERE slug = ?
+        RETURNING id, slug, title, description, builtin, created_at, updated_at
+        """,
+        (title, description, int(builtin), now, slug),
+    )
+    row = await cursor.fetchone()
+    await db.commit()
+    return row_to_deck(row)
+
+
+async def upsert_deck(
+    db: aiosqlite.Connection,
+    slug: str,
+    title: str,
+    description: str,
+    builtin: bool = True,
+) -> dict[str, Any]:
+    existing = await get_deck_by_slug(db, slug)
+    if existing is None:
+        return await create_deck(db, slug, title, description, builtin)
+    if (
+        existing["title"] == title
+        and existing["description"] == description
+        and existing["builtin"] == bool(builtin)
+    ):
+        return existing
+    return await update_deck(db, slug, title, description, builtin)
+
+
 async def list_decks(db: aiosqlite.Connection) -> list[dict[str, Any]]:
     cursor = await db.execute(
         """

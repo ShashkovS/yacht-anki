@@ -12,16 +12,13 @@ from backend.tests.conftest import login
 
 
 @pytest.mark.asyncio
-async def test_decks_list_is_public(client, create_deck_row) -> None:
-    await create_deck_row("terms", "Термины", "Основные термины")
-    await create_deck_row("rules", "Правила", "Правила расхождения")
-
+async def test_decks_list_is_public(client) -> None:
     response = await client.post("/decks/list", json={})
 
     assert response.status == 200
     payload = await response.json()
-    assert [deck["slug"] for deck in payload["data"]["decks"]] == ["terms", "rules"]
-    assert payload["data"]["decks"][0]["card_count"] == 0
+    assert [deck["slug"] for deck in payload["data"]["decks"]] == ["terms", "manoeuvres", "right-of-way"]
+    assert [deck["card_count"] for deck in payload["data"]["decks"]] == [30, 15, 20]
     assert "progress" not in payload["data"]["decks"][0]
 
 
@@ -36,16 +33,17 @@ async def test_decks_list_adds_progress_for_logged_in_user(
     get_user_id,
 ) -> None:
     await create_user("user", "user")
-    deck = await create_deck_row("terms", "Термины", "Основные термины")
-    first_card = await create_card_row(deck["id"], sort_order=1)
-    await create_card_row(deck["id"], prompt="Второй вопрос", answer="Второй ответ", sort_order=2)
+    deck = await create_deck_row("custom-progress", "Кастомная колода", "Для теста прогресса")
+    first_card = await create_card_row(deck["id"], slug="progress-1", sort_order=1)
+    await create_card_row(deck["id"], slug="progress-2", prompt="Второй вопрос", answer="Второй ответ", sort_order=2)
     await create_card_state_row(await get_user_id("user"), first_card["id"], phase="review")
     await login(client, "user", "user", auth_headers)
 
     response = await client.post("/decks/list", json={})
 
     assert response.status == 200
-    progress = (await response.json())["data"]["decks"][0]["progress"]
+    decks = (await response.json())["data"]["decks"]
+    progress = next(deck_row["progress"] for deck_row in decks if deck_row["slug"] == "custom-progress")
     assert progress == {
         "total_cards": 2,
         "new_cards": 1,
@@ -55,12 +53,12 @@ async def test_decks_list_adds_progress_for_logged_in_user(
 
 
 @pytest.mark.asyncio
-async def test_decks_get_returns_one_deck_and_404_for_unknown_slug(client, create_deck_row) -> None:
-    await create_deck_row("terms", "Термины", "Основные термины")
-
+async def test_decks_get_returns_one_deck_and_404_for_unknown_slug(client) -> None:
     ok_response = await client.post("/decks/get", json={"slug": "terms"})
     missing_response = await client.post("/decks/get", json={"slug": "missing"})
 
     assert ok_response.status == 200
-    assert (await ok_response.json())["data"]["deck"]["slug"] == "terms"
+    payload = await ok_response.json()
+    assert payload["data"]["deck"]["slug"] == "terms"
+    assert payload["data"]["deck"]["card_count"] == 30
     assert missing_response.status == 404

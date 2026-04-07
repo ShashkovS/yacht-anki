@@ -88,6 +88,7 @@ def create_deck_row(db) -> Callable[[str, str, str, bool], Awaitable[dict[str, A
 def create_card_row(db) -> Callable[..., Awaitable[dict[str, Any]]]:
     async def _create_card_row(
         deck_id: int,
+        slug: str | None = None,
         template_type: str = "term_definition",
         prompt: str = "Что это за курс?",
         answer: str = "Бейдевинд",
@@ -99,11 +100,28 @@ def create_card_row(db) -> Callable[..., Awaitable[dict[str, Any]]]:
         return await create_card(
             db,
             deck_id,
+            slug or f"card-{sort_order}-{prompt.lower().replace(' ', '-')}",
             template_type,
             prompt,
             answer,
             explanation,
-            diagram_spec or {"wind": {"twd_deg": 0}, "boats": []},
+            diagram_spec
+            or {
+                "version": 1,
+                "wind": {"direction_deg": 0},
+                "boats": [
+                    {
+                        "id": "alpha",
+                        "x": 500,
+                        "y": 350,
+                        "heading_deg": 45,
+                        "sails": {
+                            "main": {"state": "trimmed"},
+                            "jib": {"state": "trimmed"},
+                        },
+                    }
+                ],
+            },
             tags,
             sort_order,
         )

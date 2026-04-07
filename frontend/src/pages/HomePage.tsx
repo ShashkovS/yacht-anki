@@ -16,7 +16,7 @@ export function HomePage() {
           Яхтенный тренажёр для терминов, манёвров и правил расхождения.
         </h2>
         <p className="mt-5 max-w-2xl text-base leading-7 text-sky-50/90">
-          Приложение готовит каркас для обучения экипажа: логин, прогресс пользователя и база под будущие карточки с диаграммами ветра, курсов и работы с парусами.
+          В приложении уже есть встроенные колоды по терминам, манёврам и правилам расхождения, а прогресс пользователя сохраняется между сессиями.
         </p>
         <div className="mt-8 flex flex-wrap gap-3">
           <Link className="rounded-full bg-amber-300 px-5 py-3 font-semibold text-slate-950 transition hover:bg-amber-200" to="/login">

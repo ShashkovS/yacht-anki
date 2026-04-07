@@ -15,7 +15,7 @@ from backend.auth.passwords import hash_password, verify_password
 from backend.auth.tokens import build_access_token
 from backend.config import DEFAULT_COOKIE_SECRET, Settings
 from backend.db.refresh_sessions import count_sessions
-from backend.db.seed import seed_dev_data
+from backend.db.seed import seed_dev_users
 from backend.db.users import list_users
 from backend.main import create_app, on_cleanup, on_startup
 from backend.tests.conftest import login
@@ -202,10 +202,14 @@ async def test_dev_seed_only_creates_missing_users(tmp_path, monkeypatch) -> Non
     try:
         await on_startup(app)
         assert calls == ["user", "admin"]
-        await seed_dev_data(app["db"], settings)
+        await seed_dev_users(app["db"], settings)
         users = await list_users(app["db"])
         assert [user["username"] for user in users] == ["user", "admin"]
         assert calls == ["user", "admin"]
+        deck_count = await (await app["db"].execute("SELECT COUNT(*) AS count FROM decks")).fetchone()
+        card_count = await (await app["db"].execute("SELECT COUNT(*) AS count FROM cards")).fetchone()
+        assert deck_count["count"] == 3
+        assert card_count["count"] == 65
     finally:
         await on_cleanup(app)
 

@@ -1,0 +1,1206 @@
+{
+  "slug": "terms",
+  "title": "Термины и курсы",
+  "description": "Курсы, галсы, ветер, органы управления и базовый трим яхты.",
+  "builtin": true,
+  "cards": [
+    {
+      "slug": "levyentic",
+      "template_type": "term_definition",
+      "prompt": "Что за курс, если нос почти точно на ветер?",
+      "answer": "Левентик",
+      "explanation": "В левентике паруса заполаскивают, тяга почти исчезает.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 0,
+            "sails": {
+              "main": {
+                "state": "eased"
+              },
+              "jib": {
+                "state": "luffing"
+              }
+            },
+            "label": "A"
+          }
+        ]
+      },
+      "tags": [
+        "courses"
+      ],
+      "sort_order": 1
+    },
+    {
+      "slug": "close-hauled",
+      "template_type": "term_definition",
+      "prompt": "Что за курс на этой схеме?",
+      "answer": "Крутой бейдевинд",
+      "explanation": "Это острый курс к ветру, грот и стаксель выбраны почти втугую.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 42,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              },
+              "jib": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ]
+      },
+      "tags": [
+        "courses"
+      ],
+      "sort_order": 2
+    },
+    {
+      "slug": "close-reach",
+      "template_type": "term_definition",
+      "prompt": "Как называется этот более полный острый курс?",
+      "answer": "Полный бейдевинд",
+      "explanation": "Это ещё острый курс, но полнее к ветру, чем крутой бейдевинд.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 65,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              },
+              "jib": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ]
+      },
+      "tags": [
+        "courses"
+      ],
+      "sort_order": 3
+    },
+    {
+      "slug": "beam-reach",
+      "template_type": "term_definition",
+      "prompt": "Как называется курс, когда ветер почти в борт?",
+      "answer": "Галфвинд",
+      "explanation": "На галфвинде яхта часто едет очень быстро без экстремального крена.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 90,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              },
+              "jib": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ]
+      },
+      "tags": [
+        "courses"
+      ],
+      "sort_order": 4
+    },
+    {
+      "slug": "broad-reach",
+      "template_type": "term_definition",
+      "prompt": "Как называется этот полный курс?",
+      "answer": "Бакштаг",
+      "explanation": "На бакштаге паруса вытравлены больше, чем на галфвинде, и лодка ускоряется вниз по дистанции.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 135,
+            "sails": {
+              "main": {
+                "state": "eased"
+              },
+              "jib": {
+                "state": "eased"
+              }
+            },
+            "label": "A"
+          }
+        ]
+      },
+      "tags": [
+        "courses"
+      ],
+      "sort_order": 5
+    },
+    {
+      "slug": "run",
+      "template_type": "term_definition",
+      "prompt": "Как называется курс почти точно по ветру?",
+      "answer": "Фордевинд",
+      "explanation": "На фордевинде грот сильно вытравлен, а риск непроизвольного переброса гика выше.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 180,
+            "sails": {
+              "main": {
+                "state": "eased"
+              },
+              "jib": {
+                "state": "eased"
+              }
+            },
+            "label": "A"
+          }
+        ]
+      },
+      "tags": [
+        "courses"
+      ],
+      "sort_order": 6
+    },
+    {
+      "slug": "head-up-basic",
+      "template_type": "directional",
+      "prompt": "Покажите, куда приводиться из галфвинда.",
+      "answer": "Приводиться — значит повернуть нос к ветру.",
+      "explanation": "При приведении угол к ветру уменьшается, курс становится острее.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 90,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              },
+              "jib": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ],
+        "answer_scene": {
+          "version": 1,
+          "wind": {
+            "direction_deg": 0
+          },
+          "boats": [
+            {
+              "id": "alpha",
+              "x": 500,
+              "y": 350,
+              "heading_deg": 55,
+              "sails": {
+                "main": {
+                  "state": "eased"
+                },
+                "jib": {
+                  "state": "trimmed"
+                }
+              },
+              "label": "A"
+            }
+          ]
+        },
+        "expected_answer": {
+          "type": "rotate_heading",
+          "boat_id": "alpha",
+          "heading_deg": 55,
+          "tolerance_deg": 18
+        }
+      },
+      "tags": [
+        "steering"
+      ],
+      "sort_order": 7
+    },
+    {
+      "slug": "bear-away-basic",
+      "template_type": "directional",
+      "prompt": "Покажите, куда уваливаться из бейдевинда.",
+      "answer": "Уваливаться — значит отвернуть нос от ветра.",
+      "explanation": "При уваливании угол к ветру растёт, курс становится полнее.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 45,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              },
+              "jib": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ],
+        "answer_scene": {
+          "version": 1,
+          "wind": {
+            "direction_deg": 0
+          },
+          "boats": [
+            {
+              "id": "alpha",
+              "x": 500,
+              "y": 350,
+              "heading_deg": 120,
+              "sails": {
+                "main": {
+                  "state": "eased"
+                },
+                "jib": {
+                  "state": "trimmed"
+                }
+              },
+              "label": "A"
+            }
+          ]
+        },
+        "expected_answer": {
+          "type": "rotate_heading",
+          "boat_id": "alpha",
+          "heading_deg": 120,
+          "tolerance_deg": 18
+        }
+      },
+      "tags": [
+        "steering"
+      ],
+      "sort_order": 8
+    },
+    {
+      "slug": "head-up-broad-reach",
+      "template_type": "directional",
+      "prompt": "Что значит привести лодку к ветру с бакштага?",
+      "answer": "Нос пойдёт ближе к ветру, в сторону галфвинда.",
+      "explanation": "Даже на полном курсе приведение всегда ведёт лодку к линии ветра.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 140,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              },
+              "jib": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ],
+        "answer_scene": {
+          "version": 1,
+          "wind": {
+            "direction_deg": 0
+          },
+          "boats": [
+            {
+              "id": "alpha",
+              "x": 500,
+              "y": 350,
+              "heading_deg": 100,
+              "sails": {
+                "main": {
+                  "state": "eased"
+                },
+                "jib": {
+                  "state": "trimmed"
+                }
+              },
+              "label": "A"
+            }
+          ]
+        },
+        "expected_answer": {
+          "type": "rotate_heading",
+          "boat_id": "alpha",
+          "heading_deg": 100,
+          "tolerance_deg": 18
+        }
+      },
+      "tags": [
+        "steering"
+      ],
+      "sort_order": 9
+    },
+    {
+      "slug": "bear-away-close-reach",
+      "template_type": "directional",
+      "prompt": "Что значит увалиться с полного бейдевинда?",
+      "answer": "Нос уйдёт от ветра, в сторону галфвинда или бакштага.",
+      "explanation": "Уваливание делает курс полнее и обычно требует потравить грот.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 65,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              },
+              "jib": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ],
+        "answer_scene": {
+          "version": 1,
+          "wind": {
+            "direction_deg": 0
+          },
+          "boats": [
+            {
+              "id": "alpha",
+              "x": 500,
+              "y": 350,
+              "heading_deg": 110,
+              "sails": {
+                "main": {
+                  "state": "eased"
+                },
+                "jib": {
+                  "state": "trimmed"
+                }
+              },
+              "label": "A"
+            }
+          ]
+        },
+        "expected_answer": {
+          "type": "rotate_heading",
+          "boat_id": "alpha",
+          "heading_deg": 110,
+          "tolerance_deg": 18
+        }
+      },
+      "tags": [
+        "steering"
+      ],
+      "sort_order": 10
+    },
+    {
+      "slug": "head-up-port-tack",
+      "template_type": "directional",
+      "prompt": "Куда поворачивает нос при приведении на левом галсе?",
+      "answer": "Нос идёт к ветру и курс становится острее.",
+      "explanation": "Направление ветра не меняется: приводимся всегда к стрелке ветра.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 315,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              },
+              "jib": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ],
+        "answer_scene": {
+          "version": 1,
+          "wind": {
+            "direction_deg": 0
+          },
+          "boats": [
+            {
+              "id": "alpha",
+              "x": 500,
+              "y": 350,
+              "heading_deg": 340,
+              "sails": {
+                "main": {
+                  "state": "trimmed"
+                },
+                "jib": {
+                  "state": "trimmed"
+                }
+              },
+              "label": "A"
+            }
+          ]
+        },
+        "expected_answer": {
+          "type": "rotate_heading",
+          "boat_id": "alpha",
+          "heading_deg": 340,
+          "tolerance_deg": 18
+        }
+      },
+      "tags": [
+        "steering"
+      ],
+      "sort_order": 11
+    },
+    {
+      "slug": "bear-away-port-tack",
+      "template_type": "directional",
+      "prompt": "Куда поворачивает нос при уваливании на левом галсе?",
+      "answer": "Нос уходит от ветра и курс становится полнее.",
+      "explanation": "На левом галсе уваливание уводит лодку дальше от линии ветра.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 320,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              },
+              "jib": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ],
+        "answer_scene": {
+          "version": 1,
+          "wind": {
+            "direction_deg": 0
+          },
+          "boats": [
+            {
+              "id": "alpha",
+              "x": 500,
+              "y": 350,
+              "heading_deg": 250,
+              "sails": {
+                "main": {
+                  "state": "eased"
+                },
+                "jib": {
+                  "state": "trimmed"
+                }
+              },
+              "label": "A"
+            }
+          ]
+        },
+        "expected_answer": {
+          "type": "rotate_heading",
+          "boat_id": "alpha",
+          "heading_deg": 250,
+          "tolerance_deg": 18
+        }
+      },
+      "tags": [
+        "steering"
+      ],
+      "sort_order": 12
+    },
+    {
+      "slug": "starboard-tack",
+      "template_type": "term_definition",
+      "prompt": "Какой галс у лодки на схеме?",
+      "answer": "Правый галс",
+      "explanation": "Когда ветер дует в правый борт, лодка идёт правым галсом.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 45,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              },
+              "jib": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ]
+      },
+      "tags": [
+        "tacks"
+      ],
+      "sort_order": 13
+    },
+    {
+      "slug": "port-tack",
+      "template_type": "term_definition",
+      "prompt": "Какой галс у лодки на схеме?",
+      "answer": "Левый галс",
+      "explanation": "Когда ветер дует в левый борт, это левый галс.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 315,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              },
+              "jib": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ]
+      },
+      "tags": [
+        "tacks"
+      ],
+      "sort_order": 14
+    },
+    {
+      "slug": "windward-boat",
+      "template_type": "term_definition",
+      "prompt": "Какая лодка находится наветреннее?",
+      "answer": "Наветренная — лодка A.",
+      "explanation": "Наветренная лодка ближе к источнику ветра.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 450,
+            "y": 260,
+            "heading_deg": 90,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          },
+          {
+            "id": "bravo",
+            "x": 450,
+            "y": 420,
+            "heading_deg": 90,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              }
+            },
+            "label": "B"
+          }
+        ],
+        "overlays": {
+          "windward_boat_id": "alpha",
+          "leeward_boat_id": "bravo"
+        }
+      },
+      "tags": [
+        "windward-leeward"
+      ],
+      "sort_order": 15
+    },
+    {
+      "slug": "leeward-boat",
+      "template_type": "term_definition",
+      "prompt": "Какая лодка находится подветреннее?",
+      "answer": "Подветренная — лодка B.",
+      "explanation": "Подветренная лодка находится дальше от ветра.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 430,
+            "y": 260,
+            "heading_deg": 90,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          },
+          {
+            "id": "bravo",
+            "x": 430,
+            "y": 430,
+            "heading_deg": 90,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              }
+            },
+            "label": "B"
+          }
+        ],
+        "overlays": {
+          "windward_boat_id": "alpha",
+          "leeward_boat_id": "bravo"
+        }
+      },
+      "tags": [
+        "windward-leeward"
+      ],
+      "sort_order": 16
+    },
+    {
+      "slug": "true-wind",
+      "template_type": "term_definition",
+      "prompt": "Что обозначает главная стрелка ветра на учебной схеме?",
+      "answer": "Это истинный ветер.",
+      "explanation": "Истинный ветер — внешний ветер, относительно которого считают курс яхты.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 25
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 80,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ]
+      },
+      "tags": [
+        "wind"
+      ],
+      "sort_order": 17
+    },
+    {
+      "slug": "apparent-wind",
+      "template_type": "term_definition",
+      "prompt": "Что чувствуют паруса во время хода лодки?",
+      "answer": "Паруса чувствуют вымпельный ветер.",
+      "explanation": "Вымпельный ветер складывается из истинного ветра и потока от скорости лодки.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 30
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 60,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              },
+              "jib": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ]
+      },
+      "tags": [
+        "wind"
+      ],
+      "sort_order": 18
+    },
+    {
+      "slug": "mainsheet",
+      "template_type": "term_definition",
+      "prompt": "Как называется снасть, которой выбирают и травят грот?",
+      "answer": "Это грот-шкот.",
+      "explanation": "Грот-шкот меняет положение гика и мощность грота.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 65,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              },
+              "jib": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ]
+      },
+      "tags": [
+        "controls"
+      ],
+      "sort_order": 19
+    },
+    {
+      "slug": "traveller",
+      "template_type": "term_definition",
+      "prompt": "Что помогает менять положение грота без сильного изменения натяжения задней шкаторины?",
+      "answer": "Это каретка грота (traveller).",
+      "explanation": "Каретка двигает точку приложения грот-шкота поперёк кокпита.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 90,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ]
+      },
+      "tags": [
+        "controls"
+      ],
+      "sort_order": 20
+    },
+    {
+      "slug": "vang",
+      "template_type": "term_definition",
+      "prompt": "Какая снасть держит гик вниз на полном курсе?",
+      "answer": "Это оттяжка гика.",
+      "explanation": "Оттяжка гика контролирует твист и не даёт гику слишком подниматься.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 145,
+            "sails": {
+              "main": {
+                "state": "eased"
+              }
+            },
+            "label": "A"
+          }
+        ]
+      },
+      "tags": [
+        "controls"
+      ],
+      "sort_order": 21
+    },
+    {
+      "slug": "cunningham",
+      "template_type": "term_definition",
+      "prompt": "Что двигает пузо грота вперёд и натягивает переднюю шкаторину?",
+      "answer": "Это каннингхэм.",
+      "explanation": "Каннингхэм помогает уплощать грот в усиливающийся ветер.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 50,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ]
+      },
+      "tags": [
+        "controls"
+      ],
+      "sort_order": 22
+    },
+    {
+      "slug": "outhaul",
+      "template_type": "term_definition",
+      "prompt": "Какая снасть натягивает нижнюю шкаторину грота вдоль гика?",
+      "answer": "Это аутхаул.",
+      "explanation": "Аутхаул уплощает нижнюю часть грота.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 70,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ]
+      },
+      "tags": [
+        "controls"
+      ],
+      "sort_order": 23
+    },
+    {
+      "slug": "fine-tune",
+      "template_type": "term_definition",
+      "prompt": "Для чего нужен fine tune грот-шкота?",
+      "answer": "Для тонкой и точной настройки натяжения грота.",
+      "explanation": "Fine tune удобен, когда нужно добрать грот небольшими шагами под нагрузкой.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 55,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ]
+      },
+      "tags": [
+        "controls"
+      ],
+      "sort_order": 24
+    },
+    {
+      "slug": "gennaker",
+      "template_type": "term_definition",
+      "prompt": "Как называется большой полный парус на бушприте?",
+      "answer": "Это генакер.",
+      "explanation": "Генакер ставят на полных курсах, чтобы добавить тягу вниз по дистанции.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 135,
+            "sails": {
+              "main": {
+                "state": "eased"
+              },
+              "gennaker": {
+                "visible": true,
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ]
+      },
+      "tags": [
+        "downwind"
+      ],
+      "sort_order": 25
+    },
+    {
+      "slug": "bowsprit",
+      "template_type": "term_definition",
+      "prompt": "Что выдвигают вперёд перед постановкой генакера?",
+      "answer": "Это бушприт.",
+      "explanation": "Бушприт выносит галсовый угол генакера вперёд от носа лодки.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 140,
+            "sails": {
+              "main": {
+                "state": "eased"
+              },
+              "gennaker": {
+                "visible": true,
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ]
+      },
+      "tags": [
+        "downwind"
+      ],
+      "sort_order": 26
+    },
+    {
+      "slug": "telltales",
+      "template_type": "term_definition",
+      "prompt": "Что показывают колдунчики на стакселе?",
+      "answer": "Они показывают, как поток обтекает парус.",
+      "explanation": "Если один колдунчик падает, курс или трим нужно подправить.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 45,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              },
+              "jib": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ]
+      },
+      "tags": [
+        "trim"
+      ],
+      "sort_order": 27
+    },
+    {
+      "slug": "luffing",
+      "template_type": "term_definition",
+      "prompt": "Как называется состояние, когда парус начинает хлопать и теряет форму?",
+      "answer": "Это заполаскивание паруса.",
+      "explanation": "Заполаскивание значит, что угол атаки или трим сейчас неправильный.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 10,
+            "sails": {
+              "main": {
+                "state": "luffing"
+              },
+              "jib": {
+                "state": "luffing"
+              }
+            },
+            "label": "A"
+          }
+        ]
+      },
+      "tags": [
+        "trim"
+      ],
+      "sort_order": 28
+    },
+    {
+      "slug": "trim-in",
+      "template_type": "term_definition",
+      "prompt": "Что значит выбрать шкот?",
+      "answer": "Это потянуть снасть и увеличить натяжение.",
+      "explanation": "Выбирая шкот, вы закрываете парус и делаете его работу мощнее на более остром курсе.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 55,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ]
+      },
+      "tags": [
+        "trim"
+      ],
+      "sort_order": 29
+    },
+    {
+      "slug": "ease-sheet",
+      "template_type": "term_definition",
+      "prompt": "Что значит потравить шкот?",
+      "answer": "Это отпустить снасть и уменьшить натяжение.",
+      "explanation": "Травить шкот нужно, когда курс становится полнее или порыв перегружает лодку.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 135,
+            "sails": {
+              "main": {
+                "state": "eased"
+              }
+            },
+            "label": "A"
+          }
+        ]
+      },
+      "tags": [
+        "trim"
+      ],
+      "sort_order": 30
+    }
+  ]
+}

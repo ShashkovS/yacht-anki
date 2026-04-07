@@ -20,16 +20,22 @@ async def test_review_queue_requires_login(client) -> None:
 
 
 @pytest.mark.asyncio
-async def test_review_queue_returns_empty_summary_for_new_user(client, create_user, auth_headers) -> None:
+async def test_review_queue_returns_filtered_empty_summary_for_new_user(
+    client,
+    create_user,
+    auth_headers,
+    create_deck_row,
+) -> None:
     await create_user("user", "user")
+    await create_deck_row("empty-review", "Пустая колода", "Без карточек")
     await login(client, "user", "user", auth_headers)
 
-    response = await client.post("/review/queue", json={})
+    response = await client.post("/review/queue", json={"deck_slug": "empty-review"})
 
     assert response.status == 200
     payload = await response.json()
     assert payload["data"]["cards"] == []
-    assert payload["data"]["summary"] == {"due_count": 0, "new_count": 0, "deck_slug": None}
+    assert payload["data"]["summary"] == {"due_count": 0, "new_count": 0, "deck_slug": "empty-review"}
 
 
 @pytest.mark.asyncio
@@ -44,23 +50,23 @@ async def test_review_queue_orders_due_before_new_and_applies_limits(
     get_user_id,
 ) -> None:
     await create_user("user", "user")
-    deck = await create_deck_row("terms", "Термины", "Основные термины")
-    overdue_card = await create_card_row(deck["id"], prompt="due 1", answer="A1", sort_order=1)
-    second_due_card = await create_card_row(deck["id"], prompt="due 2", answer="A2", sort_order=2)
-    new_card = await create_card_row(deck["id"], prompt="new 1", answer="A3", sort_order=3)
-    await create_card_row(deck["id"], prompt="new 2", answer="A4", sort_order=4)
+    deck = await create_deck_row("queue-rules", "Тестовая очередь", "Очередь только для теста")
+    overdue_card = await create_card_row(deck["id"], slug="due-1", prompt="due 1", answer="A1", sort_order=1)
+    second_due_card = await create_card_row(deck["id"], slug="due-2", prompt="due 2", answer="A2", sort_order=2)
+    new_card = await create_card_row(deck["id"], slug="new-1", prompt="new 1", answer="A3", sort_order=3)
+    await create_card_row(deck["id"], slug="new-2", prompt="new 2", answer="A4", sort_order=4)
     user_id = await get_user_id("user")
     await create_card_state_row(user_id, overdue_card["id"], phase="review", due_at="2000-01-01T00:00:00+00:00")
     await create_card_state_row(user_id, second_due_card["id"], phase="learning", due_at="2000-01-02T00:00:00+00:00")
     await save_user_settings_row(user_id, 0.9, 1, 1)
     await login(client, "user", "user", auth_headers)
 
-    response = await client.post("/review/queue", json={})
+    response = await client.post("/review/queue", json={"deck_slug": "queue-rules"})
 
     assert response.status == 200
     payload = await response.json()
     assert [card["prompt"] for card in payload["data"]["cards"]] == ["due 1", "new 1"]
-    assert payload["data"]["summary"] == {"due_count": 1, "new_count": 1, "deck_slug": None}
+    assert payload["data"]["summary"] == {"due_count": 1, "new_count": 1, "deck_slug": "queue-rules"}
     assert new_card["id"] == payload["data"]["cards"][1]["id"]
     assert payload["data"]["cards"][0]["state"]["fsrs_state"] == {"difficulty": 5, "stability": 10, "retrievability": 0.9}
 
@@ -77,24 +83,24 @@ async def test_review_queue_and_summary_filter_by_optional_deck_slug(
     get_user_id,
 ) -> None:
     await create_user("user", "user")
-    terms = await create_deck_row("terms", "Термины", "Основные термины")
-    rules = await create_deck_row("rules", "Правила", "Правила расхождения")
-    terms_due = await create_card_row(terms["id"], prompt="terms due", answer="A1")
-    rules_due = await create_card_row(rules["id"], prompt="rules due", answer="A2")
-    rules_new = await create_card_row(rules["id"], prompt="rules new", answer="A3")
+    terms = await create_deck_row("summary-terms", "Термины", "Основные термины")
+    rules = await create_deck_row("summary-rules", "Правила", "Правила расхождения")
+    terms_due = await create_card_row(terms["id"], slug="terms-due", prompt="terms due", answer="A1")
+    rules_due = await create_card_row(rules["id"], slug="rules-due", prompt="rules due", answer="A2")
+    rules_new = await create_card_row(rules["id"], slug="rules-new", prompt="rules new", answer="A3")
     user_id = await get_user_id("user")
     await create_card_state_row(user_id, terms_due["id"], phase="review", due_at="2000-01-01T00:00:00+00:00")
     await create_card_state_row(user_id, rules_due["id"], phase="review", due_at="2000-01-02T00:00:00+00:00")
     await create_review_log_row(user_id, rules_due["id"], reviewed_at=datetime.now(tz=UTC).isoformat(timespec="seconds"))
     await login(client, "user", "user", auth_headers)
 
-    queue_response = await client.post("/review/queue", json={"deck_slug": "rules"})
-    summary_response = await client.post("/review/summary", json={"deck_slug": "rules"})
+    queue_response = await client.post("/review/queue", json={"deck_slug": "summary-rules"})
+    summary_response = await client.post("/review/summary", json={"deck_slug": "summary-rules"})
 
     assert queue_response.status == 200
     queue_payload = await queue_response.json()
     assert [card["prompt"] for card in queue_payload["data"]["cards"]] == ["rules due", "rules new"]
-    assert queue_payload["data"]["summary"] == {"due_count": 1, "new_count": 1, "deck_slug": "rules"}
+    assert queue_payload["data"]["summary"] == {"due_count": 1, "new_count": 1, "deck_slug": "summary-rules"}
     assert queue_payload["data"]["cards"][0]["state"]["fsrs_state"] == {"difficulty": 5, "stability": 10, "retrievability": 0.9}
 
     assert summary_response.status == 200
@@ -105,7 +111,7 @@ async def test_review_queue_and_summary_filter_by_optional_deck_slug(
     assert summary["streak_days"] == 1
     assert summary["deck_progress"] == [
         {
-            "deck_slug": "rules",
+            "deck_slug": "summary-rules",
             "title": "Правила",
             "total_cards": 2,
             "new_cards": 1,
@@ -127,8 +133,8 @@ async def test_review_submit_creates_state_and_log_then_updates_elapsed_days(
     get_user_id,
 ) -> None:
     await create_user("user", "user")
-    deck = await create_deck_row("terms", "Термины", "Основные термины")
-    card = await create_card_row(deck["id"], prompt="card", answer="answer")
+    deck = await create_deck_row("submit-terms", "Термины", "Основные термины")
+    card = await create_card_row(deck["id"], slug="submit-card", prompt="card", answer="answer")
     user_id = await get_user_id("user")
     await login(client, "user", "user", auth_headers)
 

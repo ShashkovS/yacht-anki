@@ -1,4 +1,4 @@
-"""Test startup migrations and the new empty yacht-training schema.
+"""Test startup migrations and builtin training content.
 
 Edit this file when startup schema creation or dev bootstrap behavior changes.
 Copy a test pattern here when you add another startup or migration smoke test.
@@ -27,11 +27,11 @@ async def test_startup_creates_yacht_training_tables(client) -> None:
 
 
 @pytest.mark.asyncio
-async def test_new_domain_tables_start_empty(client) -> None:
+async def test_startup_seeds_builtin_decks_and_cards(client) -> None:
     db = client.app["db"]
     expected_counts = {
-        "decks": 0,
-        "cards": 0,
+        "decks": 3,
+        "cards": 65,
         "card_states": 0,
         "review_log": 0,
         "user_settings": 0,

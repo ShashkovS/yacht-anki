@@ -13,7 +13,7 @@ export function PhasePlaceholderPage({ title }: PhasePlaceholderPageProps) {
     <section className="space-y-4">
       <h2 className="text-3xl font-semibold tracking-tight text-slate-950">{title}</h2>
       <article className="rounded-[2rem] border border-slate-200/80 bg-white/92 p-6 shadow-lg shadow-slate-200/60">
-        <p className="text-base leading-7 text-slate-700">Этот экран появится в фазе 07. В phase05 маршрут уже работает и защищён авторизацией.</p>
+        <p className="text-base leading-7 text-slate-700">Этот экран появится в фазе 07. Маршрут уже работает и защищён авторизацией.</p>
       </article>
     </section>
   );

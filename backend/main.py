@@ -12,7 +12,7 @@ from backend.auth.routes import setup_auth_routes
 from backend.config import Settings, load_settings, validate_settings
 from backend.db.connection import open_db
 from backend.db.migrations import run_migrations
-from backend.db.seed import seed_dev_data
+from backend.db.seed import seed_startup_data
 from backend.http.middleware import cors_middleware, error_middleware
 from backend.http.routes import setup_api_routes
 
@@ -21,7 +21,7 @@ async def on_startup(app: web.Application) -> None:
     settings: Settings = app["settings"]
     run_migrations(settings.db_path, settings.migrations_path)
     app["db"] = await open_db(settings.db_path)
-    await seed_dev_data(app["db"], settings)
+    await seed_startup_data(app["db"], settings)
 
 
 async def on_cleanup(app: web.Application) -> None:

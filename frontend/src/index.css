@@ -28,10 +28,6 @@ body {
   min-height: 100vh;
 }
 
-a {
-  color: inherit;
-}
-
 button,
 input,
 textarea {
