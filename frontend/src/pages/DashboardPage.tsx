@@ -54,7 +54,7 @@ export function DashboardPage() {
   return (
     <section className="space-y-6">
       <div className="overflow-hidden rounded-[2rem] border border-sky-950/10 bg-[linear-gradient(135deg,rgba(12,74,110,0.96),rgba(15,118,110,0.92))] p-8 text-white shadow-[0_24px_80px_rgba(12,74,110,0.28)]">
-        <p className="inline-flex rounded-full border border-white/20 bg-white/10 px-3 py-1 text-sm">Фаза 05</p>
+        <p className="inline-flex rounded-full border border-white/20 bg-white/10 px-3 py-1 text-sm">Фаза 07</p>
         <h2 className="mt-4 text-3xl font-semibold tracking-tight">Личный кабинет экипажа</h2>
         <p className="mt-3 max-w-2xl text-base leading-7 text-sky-50/90">
           Вы вошли как <strong>{user.username}</strong>. Здесь собрана сводка по текущему повторению, новым карточкам и прогрессу по колодам.

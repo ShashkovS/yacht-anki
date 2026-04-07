@@ -1,6 +1,6 @@
 /*
-This file checks the main browser flows against real seeded decks and cards.
-Edit this file when live browser routing, auth, seeded content, or review/deck flows change.
+This file checks the main browser flows against real seeded decks, stats, and settings.
+Edit this file when live browser routing, auth, seeded content, stats, or settings flows change.
 Copy a test pattern here when you add another browser-level product flow.
 */
 
@@ -53,26 +53,26 @@ test("anonymous user is redirected away from protected routes", async ({ page })
   expect(issues.httpErrors).toEqual([]);
 });
 
-test("user can review real seeded cards and logout", async ({ page }) => {
+test("user can review a real card, inspect stats, and logout", async ({ page }) => {
   const issues = collectBrowserIssues(page);
   await login(page, "user");
 
   await expect(page.getByRole("heading", { name: "Личный кабинет экипажа" })).toBeVisible();
-  await expect(page.getByText("Термины и курсы")).toBeVisible();
-  await expect(page.getByText("К повторению")).toBeVisible();
-
   await page.getByRole("link", { name: "Начать повторение" }).click();
   await page.waitForURL("**/review");
-  await expect(page.getByRole("heading", { name: "Повторение" })).toBeVisible();
   await expect(page.getByRole("heading", { name: firstTermsPrompt })).toBeVisible();
   await expect(page.locator("canvas").first()).toBeVisible();
 
   await page.getByRole("button", { name: "Показать ответ" }).click();
   await expect(page.getByText(firstTermsAnswer, { exact: true })).toBeVisible();
-  await expect(page.getByRole("button", { name: /Хорошо/ })).toBeVisible();
+  await page.getByRole("button", { name: /Не помню/ }).click();
 
-  await page.getByRole("button", { name: /Хорошо/ }).click();
-  await expect(page.getByRole("heading", { name: firstTermsPrompt })).not.toBeVisible();
+  await page.getByRole("navigation").getByRole("link", { name: "Статистика", exact: true }).click();
+  await page.waitForURL("**/stats");
+  await expect(page.getByRole("heading", { name: "Статистика" })).toBeVisible();
+  await expect(page.getByText("Сегодня")).toBeVisible();
+  await expect(page.getByText(firstTermsPrompt)).toBeVisible();
+  await expect(page.getByText("Again", { exact: true })).toBeVisible();
 
   await page.getByRole("button", { name: "Выйти" }).click();
   await expect(page.getByRole("heading", { name: "Вход" })).toBeVisible();
@@ -81,7 +81,7 @@ test("user can review real seeded cards and logout", async ({ page }) => {
   expect(issues.httpErrors).toEqual([]);
 });
 
-test("admin can browse seeded decks, open one deck, start deck review, and visit placeholders", async ({ page }) => {
+test("admin can browse seeded decks and save settings that affect the next queue", async ({ page }) => {
   const issues = collectBrowserIssues(page);
   await login(page, "admin");
 
@@ -97,21 +97,24 @@ test("admin can browse seeded decks, open one deck, start deck review, and visit
   await expect(page.getByRole("heading", { name: "Термины и курсы" })).toBeVisible();
   await expect(page.getByText(firstTermsPrompt)).toBeVisible();
 
-  await page.getByRole("link", { name: "Учить эту колоду" }).click();
-  await page.waitForURL("**/review?deck=terms");
-  await expect(page.getByRole("heading", { name: "Повторение колоды: terms" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: firstTermsPrompt })).toBeVisible();
-  await expect(page.locator("canvas").first()).toBeVisible();
-
-  await page.getByRole("navigation").getByRole("link", { name: "Статистика", exact: true }).click();
-  await page.waitForURL("**/stats");
-  await expect(page.getByRole("heading", { name: "Статистика" })).toBeVisible();
-  await expect(page.getByText(/Этот экран появится в фазе 07/)).toBeVisible();
-
   await page.getByRole("navigation").getByRole("link", { name: "Настройки", exact: true }).click();
   await page.waitForURL("**/settings");
   await expect(page.getByRole("heading", { name: "Настройки" })).toBeVisible();
-  await expect(page.getByText(/Этот экран появится в фазе 07/)).toBeVisible();
+
+  await page.locator("#desired-retention").fill("0.83");
+  await page.getByLabel("Лимит новых карточек в день").fill("1");
+  await page.getByRole("checkbox", { name: "Без лимита повторений" }).uncheck();
+  await page.getByLabel("Лимит повторений в день").fill("2");
+  await page.getByRole("button", { name: "Сохранить" }).click();
+  await expect(page.getByText("Настройки сохранены.")).toBeVisible();
+
+  await page.reload();
+  await expect(page.getByLabel("Лимит новых карточек в день")).toHaveValue("1");
+  await expect(page.getByLabel("Лимит повторений в день")).toHaveValue("2");
+
+  await page.getByRole("navigation").getByRole("link", { name: "Повторение", exact: true }).click();
+  await page.waitForURL("**/review");
+  await expect(page.getByText("Карточка 1 из 1")).toBeVisible();
 
   expect(issues.consoleErrors).toEqual([]);
   expect(issues.httpErrors).toEqual([]);

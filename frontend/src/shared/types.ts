@@ -75,6 +75,36 @@ export type UserSettings = {
   reviews_per_day: number | null;
 };
 
+export type TodayStats = {
+  review_count: number;
+  average_rating: number | null;
+};
+
+export type DailyReviewPoint = {
+  day: string;
+  review_count: number;
+};
+
+export type RatingDistributionPoint = {
+  rating: ReviewRating;
+  count: number;
+};
+
+export type HardestCardStat = {
+  card_id: number;
+  deck_slug: string;
+  deck_title: string;
+  prompt: string;
+  again_count: number;
+  review_count: number;
+};
+
+export type OverallProgress = {
+  review_cards: number;
+  total_cards: number;
+  percent_review: number;
+};
+
 export type ReviewQueueSummary = {
   due_count: number;
   new_count: number;
@@ -96,6 +126,17 @@ export type ReviewSummary = {
   studied_cards_count: number;
   streak_days: number;
   deck_progress: DeckProgress[];
+};
+
+export type StatsResponse = {
+  today: TodayStats;
+  activity_30d: DailyReviewPoint[];
+  rating_distribution_30d: RatingDistributionPoint[];
+  deck_progress: DeckProgress[];
+  hardest_cards: HardestCardStat[];
+  overall_progress: OverallProgress;
+  streak_days: number;
+  studied_cards_count: number;
 };
 
 export type DeckListProgress = {

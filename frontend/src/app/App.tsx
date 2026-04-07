@@ -10,8 +10,9 @@ import { DecksPage } from "../pages/DecksPage";
 import { DashboardPage } from "../pages/DashboardPage";
 import { HomePage } from "../pages/HomePage";
 import { LoginPage } from "../pages/LoginPage";
-import { PhasePlaceholderPage } from "../pages/PhasePlaceholderPage";
 import { ReviewPage } from "../pages/ReviewPage";
+import { SettingsPage } from "../pages/SettingsPage";
+import { StatsPage } from "../pages/StatsPage";
 import { useAuth } from "./auth";
 
 function Layout({ children }: { children: React.ReactNode }) {
@@ -117,7 +118,7 @@ export function App() {
           path="/stats"
           element={
             <RequireAuth>
-              <PhasePlaceholderPage title="Статистика" />
+              <StatsPage />
             </RequireAuth>
           }
         />
@@ -125,7 +126,7 @@ export function App() {
           path="/settings"
           element={
             <RequireAuth>
-              <PhasePlaceholderPage title="Настройки" />
+              <SettingsPage />
             </RequireAuth>
           }
         />

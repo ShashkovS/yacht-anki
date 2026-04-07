@@ -52,7 +52,7 @@ async def test_settings_validate_input(client, create_user, auth_headers) -> Non
 
     response = await client.post(
         "/settings/save",
-        json={"desired_retention": 1.2, "new_cards_per_day": -1, "reviews_per_day": "oops"},
+        json={"desired_retention": 0.69, "new_cards_per_day": -1, "reviews_per_day": "oops"},
         headers=auth_headers,
     )
 

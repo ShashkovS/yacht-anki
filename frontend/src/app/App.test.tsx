@@ -24,8 +24,11 @@ vi.mock("../pages/DecksPage", () => ({
 vi.mock("../pages/DeckDetailPage", () => ({
   DeckDetailPage: () => <h2>Колода</h2>,
 }));
-vi.mock("../pages/PhasePlaceholderPage", () => ({
-  PhasePlaceholderPage: ({ title }: { title: string }) => <h2>{title}</h2>,
+vi.mock("../pages/StatsPage", () => ({
+  StatsPage: () => <h2>Статистика</h2>,
+}));
+vi.mock("../pages/SettingsPage", () => ({
+  SettingsPage: () => <h2>Настройки</h2>,
 }));
 
 const userValue: User = {
@@ -72,8 +75,13 @@ describe("App routes", () => {
     expect(screen.getByRole("heading", { name: "Личный кабинет экипажа" })).toBeInTheDocument();
   });
 
-  it("shows protected placeholder pages for logged-in users", () => {
+  it("shows protected stats and settings pages for logged-in users", () => {
     renderApp("/stats", userValue);
     expect(screen.getByRole("heading", { name: "Статистика" })).toBeInTheDocument();
+  });
+
+  it("shows the settings route for logged-in users", () => {
+    renderApp("/settings", userValue);
+    expect(screen.getByRole("heading", { name: "Настройки" })).toBeInTheDocument();
   });
 });

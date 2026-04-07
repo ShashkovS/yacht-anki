@@ -16,8 +16,8 @@ from backend.http.middleware import require_allowed_origin
 
 def _read_desired_retention(payload: dict[str, object]) -> float:
     value = payload.get("desired_retention")
-    if not isinstance(value, (int, float)) or value <= 0 or value >= 1:
-        raise AppError(400, "bad_request", "desired_retention must be a number between 0 and 1.")
+    if not isinstance(value, (int, float)) or value < 0.70 or value > 0.97:
+        raise AppError(400, "bad_request", "desired_retention must be a number from 0.70 to 0.97.")
     return float(value)
 
 

@@ -12,6 +12,7 @@ from backend.http.deck_routes import setup_deck_routes
 from backend.http.json_api import ok
 from backend.http.review_routes import setup_review_routes
 from backend.http.settings_routes import setup_settings_routes
+from backend.http.stats_routes import setup_stats_routes
 
 
 async def health(request: web.Request) -> web.Response:
@@ -23,3 +24,4 @@ def setup_api_routes(app: web.Application) -> None:
     setup_deck_routes(app)
     setup_review_routes(app)
     setup_settings_routes(app)
+    setup_stats_routes(app)
