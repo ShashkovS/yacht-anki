@@ -30,6 +30,7 @@ export type ApiResponse<T> = ApiOk<T> | ApiFail;
 export type ReviewRating = 1 | 2 | 3 | 4;
 
 export type CardPhase = "new" | "learning" | "review" | "relearning";
+export type CardTemplateType = "term_definition" | "directional" | "trim" | "manoeuvre" | "right_of_way";
 
 export type FsrsState = {
   due: string;
@@ -54,7 +55,7 @@ export type ReviewCardState = {
 export type ReviewCard = {
   id: number;
   deck_slug: string;
-  template_type: string;
+  template_type: CardTemplateType;
   prompt: string;
   answer: string;
   explanation: string;
@@ -78,4 +79,47 @@ export type ReviewQueueSummary = {
   due_count: number;
   new_count: number;
   deck_slug: string | null;
+};
+
+export type DeckProgress = {
+  deck_slug: string;
+  title: string;
+  total_cards: number;
+  new_cards: number;
+  learning_cards: number;
+  review_cards: number;
+};
+
+export type ReviewSummary = {
+  due_count: number;
+  new_count: number;
+  studied_cards_count: number;
+  streak_days: number;
+  deck_progress: DeckProgress[];
+};
+
+export type DeckListProgress = {
+  total_cards: number;
+  new_cards: number;
+  learning_cards: number;
+  review_cards: number;
+};
+
+export type DeckListItem = {
+  slug: string;
+  title: string;
+  description: string;
+  builtin: boolean;
+  card_count: number;
+  progress?: DeckListProgress;
+};
+
+export type DeckDetail = DeckListItem;
+
+export type CardsListResponse = {
+  deck: DeckDetail;
+  cards: ReviewCard[];
+  total_count: number;
+  limit: number;
+  offset: number;
 };

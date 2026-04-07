@@ -11,6 +11,26 @@ export const DIAGRAM_WORLD_HEIGHT = 700;
 export type SailState = "trimmed" | "eased" | "luffing";
 export type BoatHighlight = "none" | "selected" | "answer";
 export type Tack = "port" | "starboard" | "head-to-wind";
+export type ExpectedAnswer =
+  | {
+      type: "rotate_heading";
+      boat_id: string;
+      heading_deg: number;
+      tolerance_deg: number;
+    }
+  | {
+      type: "choose_option";
+      options: Array<{ id: string; label: string }>;
+      correct_option_id: string;
+    }
+  | {
+      type: "select_boat";
+      correct_boat_id: string;
+    }
+  | {
+      type: "reveal_steps";
+      steps: string[];
+    };
 
 export type SailSpec = {
   angle_deg?: number;
@@ -62,6 +82,8 @@ export type DiagramSpec = {
   boats: BoatSpec[];
   mark?: MarkSpec;
   overlays?: OverlaySpec;
+  answer_scene?: Omit<DiagramSpec, "answer_scene" | "expected_answer">;
+  expected_answer?: ExpectedAnswer;
 };
 
 export class DiagramSpecError extends Error {

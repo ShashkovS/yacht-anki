@@ -15,6 +15,18 @@ import { App } from "./App";
 vi.mock("../pages/DashboardPage", () => ({
   DashboardPage: () => <h2>Личный кабинет экипажа</h2>,
 }));
+vi.mock("../pages/ReviewPage", () => ({
+  ReviewPage: () => <h2>Повторение</h2>,
+}));
+vi.mock("../pages/DecksPage", () => ({
+  DecksPage: () => <h2>Колоды</h2>,
+}));
+vi.mock("../pages/DeckDetailPage", () => ({
+  DeckDetailPage: () => <h2>Колода</h2>,
+}));
+vi.mock("../pages/PhasePlaceholderPage", () => ({
+  PhasePlaceholderPage: ({ title }: { title: string }) => <h2>{title}</h2>,
+}));
 
 const userValue: User = {
   id: 2,
@@ -43,13 +55,25 @@ function renderApp(path: string, user: User | null) {
 }
 
 describe("App routes", () => {
-  it("redirects anonymous users to login", () => {
-    renderApp("/dashboard", null);
+  it("redirects anonymous users from protected routes to login", () => {
+    renderApp("/review", null);
     expect(screen.getByRole("heading", { name: "Вход" })).toBeInTheDocument();
   });
 
   it("shows the dashboard for logged-in users", () => {
     renderApp("/dashboard", userValue);
     expect(screen.getByRole("heading", { name: "Личный кабинет экипажа" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Повторение" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Колоды" })).toBeInTheDocument();
+  });
+
+  it("redirects logged-in users away from login", () => {
+    renderApp("/login", userValue);
+    expect(screen.getByRole("heading", { name: "Личный кабинет экипажа" })).toBeInTheDocument();
+  });
+
+  it("shows protected placeholder pages for logged-in users", () => {
+    renderApp("/stats", userValue);
+    expect(screen.getByRole("heading", { name: "Статистика" })).toBeInTheDocument();
   });
 });

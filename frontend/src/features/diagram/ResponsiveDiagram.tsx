@@ -9,7 +9,7 @@ import { DiagramStage } from "./DiagramStage";
 import { parseDiagramSpec } from "./parser";
 
 type ResponsiveDiagramProps = {
-  diagramSpec: Record<string, unknown>;
+  diagramSpec: unknown;
   minHeight?: number;
   className?: string;
   rotatableBoatId?: string;

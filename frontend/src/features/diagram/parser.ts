@@ -9,6 +9,7 @@ import {
   type BoatSpec,
   type DiagramSpec,
   DIAGRAM_SPEC_VERSION,
+  type ExpectedAnswer,
   type GennakerSpec,
   type MarkSpec,
   type OverlaySpec,
@@ -61,6 +62,13 @@ function readOptionalEnum<T extends string>(value: unknown, label: string, allow
     throw new DiagramSpecError(`${label} must be one of: ${allowed.join(", ")}.`);
   }
   return value as T;
+}
+
+function readStringArray(value: unknown, label: string): string[] {
+  if (!Array.isArray(value)) {
+    throw new DiagramSpecError(`${label} must be an array.`);
+  }
+  return value.map((item, index) => readString(item, `${label}[${index}]`));
 }
 
 function readSailSpec(value: unknown, label: string): SailSpec {
@@ -146,28 +154,86 @@ function readOptionalOverlays(value: unknown, label: string): OverlaySpec | unde
   };
 }
 
-export function parseDiagramSpec(diagramSpec: Record<string, unknown>): DiagramSpec {
-  const object = readObject(diagramSpec, "diagram_spec");
+function readExpectedAnswer(value: unknown, label: string): ExpectedAnswer {
+  const object = readObject(value, label);
+  const type = readString(object.type, `${label}.type`);
+
+  if (type === "rotate_heading") {
+    return {
+      type,
+      boat_id: readString(object.boat_id, `${label}.boat_id`),
+      heading_deg: readNumber(object.heading_deg, `${label}.heading_deg`),
+      tolerance_deg: readNumber(object.tolerance_deg, `${label}.tolerance_deg`),
+    };
+  }
+
+  if (type === "choose_option") {
+    const options = object.options;
+    if (!Array.isArray(options) || options.length === 0) {
+      throw new DiagramSpecError(`${label}.options must be a non-empty array.`);
+    }
+    return {
+      type,
+      options: options.map((option, index) => {
+        const optionObject = readObject(option, `${label}.options[${index}]`);
+        return {
+          id: readString(optionObject.id, `${label}.options[${index}].id`),
+          label: readString(optionObject.label, `${label}.options[${index}].label`),
+        };
+      }),
+      correct_option_id: readString(object.correct_option_id, `${label}.correct_option_id`),
+    };
+  }
+
+  if (type === "select_boat") {
+    return {
+      type,
+      correct_boat_id: readString(object.correct_boat_id, `${label}.correct_boat_id`),
+    };
+  }
+
+  if (type === "reveal_steps") {
+    return {
+      type,
+      steps: readStringArray(object.steps, `${label}.steps`),
+    };
+  }
+
+  throw new DiagramSpecError(`${label}.type is not supported.`);
+}
+
+function readDiagramScene(object: Record<string, unknown>, label: string): Omit<DiagramSpec, "answer_scene" | "expected_answer"> {
   const version = object.version ?? DIAGRAM_SPEC_VERSION;
   if (version !== DIAGRAM_SPEC_VERSION) {
-    throw new DiagramSpecError(`diagram_spec.version must be ${DIAGRAM_SPEC_VERSION}.`);
+    throw new DiagramSpecError(`${label}.version must be ${DIAGRAM_SPEC_VERSION}.`);
   }
 
   const boats = object.boats;
   if (!Array.isArray(boats) || boats.length === 0) {
-    throw new DiagramSpecError("diagram_spec.boats must be a non-empty array.");
+    throw new DiagramSpecError(`${label}.boats must be a non-empty array.`);
   }
 
-  const wind = readObject(object.wind, "diagram_spec.wind");
+  const wind = readObject(object.wind, `${label}.wind`);
 
   return {
     version: DIAGRAM_SPEC_VERSION,
     wind: {
-      direction_deg: readNumber(wind.direction_deg, "diagram_spec.wind.direction_deg"),
-      speed_knots: readOptionalNumber(wind.speed_knots, "diagram_spec.wind.speed_knots"),
+      direction_deg: readNumber(wind.direction_deg, `${label}.wind.direction_deg`),
+      speed_knots: readOptionalNumber(wind.speed_knots, `${label}.wind.speed_knots`),
     },
-    boats: boats.map((boat, index) => readBoatSpec(boat, `diagram_spec.boats[${index}]`)),
-    mark: readOptionalMark(object.mark, "diagram_spec.mark"),
-    overlays: readOptionalOverlays(object.overlays, "diagram_spec.overlays"),
+    boats: boats.map((boat, index) => readBoatSpec(boat, `${label}.boats[${index}]`)),
+    mark: readOptionalMark(object.mark, `${label}.mark`),
+    overlays: readOptionalOverlays(object.overlays, `${label}.overlays`),
+  };
+}
+
+export function parseDiagramSpec(diagramSpec: unknown): DiagramSpec {
+  const object = readObject(diagramSpec, "diagram_spec");
+  const scene = readDiagramScene(object, "diagram_spec");
+
+  return {
+    ...scene,
+    answer_scene: object.answer_scene === undefined ? undefined : readDiagramScene(readObject(object.answer_scene, "diagram_spec.answer_scene"), "diagram_spec.answer_scene"),
+    expected_answer: object.expected_answer === undefined ? undefined : readExpectedAnswer(object.expected_answer, "diagram_spec.expected_answer"),
   };
 }
