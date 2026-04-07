@@ -5,6 +5,7 @@ Copy this file as a starting point when you add another public-facing page.
 */
 
 import { Link } from "react-router-dom";
+import { ResponsiveDiagram, exampleDiagramSpec } from "../features/diagram";
 
 export function HomePage() {
   return (
@@ -32,10 +33,13 @@ export function HomePage() {
 
       <div className="space-y-4">
         <article className="rounded-[2rem] border border-slate-200/80 bg-white/92 p-6 shadow-lg shadow-slate-200/60">
-          <h3 className="text-xl font-semibold text-slate-950">Что будет дальше</h3>
+          <h3 className="text-xl font-semibold text-slate-950">Как будут выглядеть сцены</h3>
           <p className="mt-3 text-sm leading-7 text-slate-700">
-            В следующих фазах здесь появятся колоды, FSRS-повторения и интерактивные 2D-сцены для вопросов вроде «куда уваливаемся?» и «кто кому уступает?».
+            Движок диаграмм уже умеет рисовать ветер, лодки, паруса, знак и базовые rule-overlay для будущих карточек.
           </p>
+          <div className="mt-4">
+            <ResponsiveDiagram className="w-full" diagramSpec={exampleDiagramSpec} minHeight={280} />
+          </div>
         </article>
 
         <article className="rounded-[2rem] border border-slate-200/80 bg-white/92 p-6 shadow-lg shadow-slate-200/60" id="dev-users">
