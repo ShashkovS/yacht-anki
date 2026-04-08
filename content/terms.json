@@ -249,7 +249,7 @@
               "heading_deg": 55,
               "sails": {
                 "main": {
-                  "state": "eased"
+                  "state": "trimmed"
                 },
                 "jib": {
                   "state": "trimmed"
@@ -375,7 +375,7 @@
               "heading_deg": 100,
               "sails": {
                 "main": {
-                  "state": "eased"
+                  "state": "trimmed"
                 },
                 "jib": {
                   "state": "trimmed"
@@ -1247,6 +1247,148 @@
         "rrs"
       ],
       "sort_order": 31
+    },
+    {
+      "slug": "backstay",
+      "template_type": "term_definition",
+      "prompt": "Какая снасть изгибает мачту назад, уплощает грот и натягивает форштаг в сильный ветер?",
+      "answer": "Это ахтерштаг.",
+      "explanation": "На Fareast 28R ахтерштаг регулируемый (система 6:1). Набить ахтерштаг в сильный ветер — значит сделать грот площе и снизить провис форштага.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 45,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              },
+              "jib": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ]
+      },
+      "tags": [
+        "controls"
+      ],
+      "sort_order": 32
+    },
+    {
+      "slug": "layline",
+      "template_type": "term_definition",
+      "prompt": "Как называется линия, откуда можно одним галсом напрямую дотянуться до знака?",
+      "answer": "Это лэйлайн.",
+      "explanation": "Дойти до лэйлайна — значит дальше ходить выше нет смысла: один галс без лишних оверштагов прямо до знака. Перейти лэйлайн — потеря времени.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 300,
+            "y": 450,
+            "heading_deg": 42,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              },
+              "jib": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ],
+        "mark": {
+          "x": 500,
+          "y": 150,
+          "zone_radius": 50
+        }
+      },
+      "tags": [
+        "courses",
+        "tactics"
+      ],
+      "sort_order": 33
+    },
+    {
+      "slug": "start-line",
+      "template_type": "term_definition",
+      "prompt": "Как называется линия, которую нужно пересечь после стартового сигнала?",
+      "answer": "Это стартовая линия.",
+      "explanation": "Стартовая линия — между судейским знаком и береговым знаком. Пересечь до сигнала (OCS) — нужно вернуться и стартовать снова. Это одна из самых частых ошибок новичков.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 500,
+            "heading_deg": 315,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              },
+              "jib": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ]
+      },
+      "tags": [
+        "tactics"
+      ],
+      "sort_order": 34
+    },
+    {
+      "slug": "goosewing",
+      "template_type": "term_definition",
+      "prompt": "Как называется конфигурация, когда на фордевинде грот и стаксель вынесены на разные борта?",
+      "answer": "Это «бабочка» (goosewing).",
+      "explanation": "На фордевинде стаксель можно вынести на наветренный борт, а грот — на подветренный, чтобы поймать больше ветра. При этом важно не допустить непроизвольного переброса грота.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 180,
+            "sails": {
+              "main": {
+                "state": "eased"
+              },
+              "jib": {
+                "state": "eased"
+              }
+            },
+            "label": "A"
+          }
+        ]
+      },
+      "tags": [
+        "downwind"
+      ],
+      "sort_order": 35
     }
   ]
 }
