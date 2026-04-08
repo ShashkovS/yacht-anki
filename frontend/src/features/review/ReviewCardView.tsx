@@ -57,7 +57,7 @@ export function ReviewCardView({
         <p className="rounded-2xl bg-sky-50 px-4 py-3 text-sm leading-6 text-sky-900">Поверните лодку в правильное положение, затем откройте ответ.</p>
       ) : null}
 
-      {!revealed && card.template_type === "trim" && expectedAnswer?.type === "choose_option" ? (
+      {!revealed && (card.template_type === "trim" || card.template_type === "concept") && expectedAnswer?.type === "choose_option" ? (
         <div className="grid gap-3 sm:grid-cols-2">
           {expectedAnswer.options.map((option) => (
             <button
@@ -74,6 +74,10 @@ export function ReviewCardView({
             </button>
           ))}
         </div>
+      ) : null}
+
+      {!revealed && card.template_type === "concept" ? (
+        <p className="rounded-2xl bg-indigo-50 px-4 py-3 text-sm leading-6 text-indigo-950">Выберите правильный вариант, затем откройте ответ.</p>
       ) : null}
 
       {!revealed && card.template_type === "right_of_way" ? (

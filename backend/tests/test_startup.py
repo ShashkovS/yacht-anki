@@ -31,7 +31,7 @@ async def test_startup_seeds_builtin_decks_and_cards(client) -> None:
     db = client.app["db"]
     expected_counts = {
         "decks": 3,
-        "cards": 65,
+        "cards": 70,
         "card_states": 0,
         "review_log": 0,
         "user_settings": 0,
@@ -41,3 +41,12 @@ async def test_startup_seeds_builtin_decks_and_cards(client) -> None:
         cursor = await db.execute(f"SELECT COUNT(*) AS count FROM {table_name}")
         row = await cursor.fetchone()
         assert row["count"] == expected_count
+
+
+@pytest.mark.asyncio
+async def test_startup_seeds_concept_cards(client) -> None:
+    db = client.app["db"]
+    cursor = await db.execute("SELECT COUNT(*) AS count FROM cards WHERE template_type = 'concept'")
+    row = await cursor.fetchone()
+
+    assert row["count"] >= 1

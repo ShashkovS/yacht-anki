@@ -119,6 +119,39 @@ describe("ReviewCardView", () => {
     expect(screen.getByText(/Ваш выбор:/)).toBeInTheDocument();
   });
 
+  it("renders concept cards with neutral helper text and option reveal", () => {
+    render(
+      <ReviewCardView
+        card={makeCard({
+          template_type: "concept",
+          diagram_spec: {
+            version: 1,
+            wind: { direction_deg: 30 },
+            boats: [{ id: "alpha", x: 100, y: 100, heading_deg: 45, sails: { main: {} } }],
+            expected_answer: {
+              type: "choose_option",
+              options: [
+                { id: "rrs", label: "По наветренной стороне" },
+                { id: "helm", label: "По рулевому" },
+              ],
+              correct_option_id: "rrs",
+            },
+          },
+        })}
+        revealed={false}
+        draftHeading={null}
+        selectedBoatId={null}
+        selectedOptionId={null}
+        onRotateBoat={vi.fn()}
+        onTapBoat={vi.fn()}
+        onSelectOption={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByText("Выберите правильный вариант, затем откройте ответ.")).toBeInTheDocument();
+    expect(screen.getByText("По наветренной стороне")).toBeInTheDocument();
+  });
+
   it("renders ordered steps for manoeuvre cards", () => {
     render(
       <ReviewCardView

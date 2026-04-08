@@ -48,7 +48,7 @@ async def test_stats_get_returns_zero_filled_empty_history(client, create_user, 
     assert payload["streak_days"] == 0
     assert payload["studied_cards_count"] == 0
     assert payload["overall_progress"]["review_cards"] == 0
-    assert payload["overall_progress"]["total_cards"] == 65
+    assert payload["overall_progress"]["total_cards"] == 70
     assert payload["overall_progress"]["percent_review"] == 0.0
 
 
@@ -102,8 +102,8 @@ async def test_stats_get_returns_mixed_history_and_progress(
     assert payload["studied_cards_count"] == 2
     assert payload["overall_progress"] == {
         "review_cards": 1,
-        "total_cards": 68,
-        "percent_review": 1.5,
+        "total_cards": 73,
+        "percent_review": 1.4,
     }
     custom_deck = next(deck_row for deck_row in payload["deck_progress"] if deck_row["deck_slug"] == "stats-deck")
     assert custom_deck == {

@@ -9,6 +9,7 @@ import { expect, test, type Page } from "@playwright/test";
 const builtinDeckTitles = ["Термины и курсы", "Манёвры и работа с парусами", "Правила расхождения"];
 const firstTermsPrompt = "Что за курс, если нос почти точно на ветер?";
 const firstTermsAnswer = "Левентик";
+const firstRightOfWayConceptPrompt = "Что остаётся обязанностью даже у яхты с правом дороги?";
 
 function collectBrowserIssues(page: Page) {
   const consoleErrors: string[] = [];
@@ -71,7 +72,7 @@ test("user can review a real card, inspect stats, and logout", async ({ page }) 
   await page.waitForURL("**/stats");
   await expect(page.getByRole("heading", { name: "Статистика" })).toBeVisible();
   await expect(page.getByText("Сегодня")).toBeVisible();
-  await expect(page.getByText(firstTermsPrompt)).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Самые сложные карточки" })).toBeVisible();
   await expect(page.getByText("Again", { exact: true })).toBeVisible();
 
   await page.getByRole("button", { name: "Выйти" }).click();
@@ -120,6 +121,24 @@ test("admin can browse seeded decks and save settings that affect the next queue
   expect(issues.httpErrors).toEqual([]);
 });
 
+test("user can open a concept card in deck-scoped review", async ({ page }) => {
+  const issues = collectBrowserIssues(page);
+  await login(page, "user");
+
+  await page.goto("/review?deck=right-of-way");
+  await page.waitForURL("**/review?deck=right-of-way");
+  await expect(page.getByRole("heading", { name: firstRightOfWayConceptPrompt })).toBeVisible();
+  await expect(page.getByText("Выберите правильный вариант, затем откройте ответ.")).toBeVisible();
+  await page.getByRole("button", { name: "Избегать контакта, если это разумно возможно" }).click();
+
+  await page.getByRole("button", { name: "Показать ответ" }).click();
+  await expect(page.getByText("Правильный вариант:")).toBeVisible();
+  await expect(page.getByText("Ваш выбор: Избегать контакта, если это разумно возможно")).toBeVisible();
+
+  expect(issues.consoleErrors).toEqual([]);
+  expect(issues.httpErrors).toEqual([]);
+});
+
 test("user can continue review offline and sync answers after reconnect", async ({ page, context }) => {
   await login(page, "user");
 
@@ -140,7 +159,7 @@ test("user can continue review offline and sync answers after reconnect", async 
 
   await page.getByRole("navigation").getByRole("link", { name: "Статистика", exact: true }).click();
   await page.waitForURL("**/stats");
-  await expect(page.getByText("Активность за 30 дней")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Активность за 30 дней" })).toBeVisible();
 });
 
 test.describe("mobile viewport", () => {

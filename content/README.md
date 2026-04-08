@@ -73,6 +73,7 @@
 - `term_definition`: обычная карточка с вопросом и ответом по термину.
 - `directional`: карточка, где пользователь должен повернуть лодку в правильный курс.
 - `trim`: карточка с выбором одного варианта ответа.
+- `concept`: карточка с нейтральным выбором одного варианта ответа по правилу или термину.
 - `manoeuvre`: карточка, где после открытия показывается порядок шагов.
 - `right_of_way`: карточка, где нужно выбрать лодку, которая должна сторониться.
 
@@ -81,6 +82,7 @@
 - `term_definition`: обычно без `expected_answer`.
 - `directional`: `expected_answer.type = "rotate_heading"`.
 - `trim`: `expected_answer.type = "choose_option"`.
+- `concept`: `expected_answer.type = "choose_option"`.
 - `manoeuvre`: `expected_answer.type = "reveal_steps"`.
 - `right_of_way`: `expected_answer.type = "select_boat"`.
 
@@ -354,7 +356,7 @@
 ### `right-of-way.json`
 
 - Колода для правил расхождения и ситуаций у знака.
-- Сейчас содержит `right_of_way`.
+- Сейчас содержит `right_of_way` и `concept`.
 - Обычно использует `overlays`, `expected_answer.select_boat` и `answer_scene`.
 - В задачах у знака дополнительно используется `mark`.
 

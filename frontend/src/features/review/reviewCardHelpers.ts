@@ -111,7 +111,7 @@ export function getExpectedAnswer(card: ReviewCard, parsedSpec: DiagramSpec | nu
   if (card.template_type === "directional" && parsedSpec.expected_answer.type === "rotate_heading") {
     return parsedSpec.expected_answer;
   }
-  if (card.template_type === "trim" && parsedSpec.expected_answer.type === "choose_option") {
+  if ((card.template_type === "trim" || card.template_type === "concept") && parsedSpec.expected_answer.type === "choose_option") {
     return parsedSpec.expected_answer;
   }
   if (card.template_type === "manoeuvre" && parsedSpec.expected_answer.type === "reveal_steps") {

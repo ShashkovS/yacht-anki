@@ -851,6 +851,75 @@
         "manoeuvre"
       ],
       "sort_order": 15
+    },
+    {
+      "slug": "gennaker-gybe-steps",
+      "template_type": "manoeuvre",
+      "prompt": "Какой базовый порядок действий при повороте фордевинд с генакером?",
+      "answer": "Сначала готовят экипаж и контроль гика, затем переводят генакер и только после этого стабилизируют лодку на новом курсе.",
+      "explanation": "На учебной лодке важно заранее распределить роли и не отпускать контроль над гиком в момент перевода.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 160,
+            "sails": {
+              "main": {
+                "state": "eased"
+              },
+              "gennaker": {
+                "visible": true,
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ],
+        "answer_scene": {
+          "version": 1,
+          "wind": {
+            "direction_deg": 0
+          },
+          "boats": [
+            {
+              "id": "alpha",
+              "x": 500,
+              "y": 350,
+              "heading_deg": 200,
+              "sails": {
+                "main": {
+                  "state": "eased"
+                },
+                "gennaker": {
+                  "visible": true,
+                  "state": "trimmed"
+                }
+              },
+              "label": "A"
+            }
+          ]
+        },
+        "expected_answer": {
+          "type": "reveal_steps",
+          "steps": [
+            "Подготовить экипаж и проверить свободное пространство",
+            "Подтянуть грот и взять гик под контроль перед переводом",
+            "Перевести генакер и нагрузку на новый рабочий шкот",
+            "Провести корму через ветер и стабилизировать лодку на новом курсе"
+          ]
+        }
+      },
+      "tags": [
+        "manoeuvre",
+        "gennaker"
+      ],
+      "sort_order": 16
     }
   ]
 }

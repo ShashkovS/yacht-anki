@@ -30,7 +30,7 @@ export type ApiResponse<T> = ApiOk<T> | ApiFail;
 export type ReviewRating = 1 | 2 | 3 | 4;
 
 export type CardPhase = "new" | "learning" | "review" | "relearning";
-export type CardTemplateType = "term_definition" | "directional" | "trim" | "manoeuvre" | "right_of_way";
+export type CardTemplateType = "term_definition" | "directional" | "trim" | "manoeuvre" | "right_of_way" | "concept";
 
 export type FsrsState = {
   due: string;

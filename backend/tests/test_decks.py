@@ -18,7 +18,7 @@ async def test_decks_list_is_public(client) -> None:
     assert response.status == 200
     payload = await response.json()
     assert [deck["slug"] for deck in payload["data"]["decks"]] == ["terms", "manoeuvres", "right-of-way"]
-    assert [deck["card_count"] for deck in payload["data"]["decks"]] == [30, 15, 20]
+    assert [deck["card_count"] for deck in payload["data"]["decks"]] == [31, 16, 23]
     assert "progress" not in payload["data"]["decks"][0]
 
 
@@ -60,5 +60,5 @@ async def test_decks_get_returns_one_deck_and_404_for_unknown_slug(client) -> No
     assert ok_response.status == 200
     payload = await ok_response.json()
     assert payload["data"]["deck"]["slug"] == "terms"
-    assert payload["data"]["deck"]["card_count"] == 30
+    assert payload["data"]["deck"]["card_count"] == 31
     assert missing_response.status == 404

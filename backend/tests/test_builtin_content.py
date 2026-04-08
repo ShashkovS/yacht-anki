@@ -67,7 +67,7 @@ def test_load_builtin_catalog_contains_expected_real_counts() -> None:
     catalog = load_builtin_catalog()
 
     assert [deck["slug"] for deck in catalog] == ["terms", "manoeuvres", "right-of-way"]
-    assert [len(deck["cards"]) for deck in catalog] == [30, 15, 20]
+    assert [len(deck["cards"]) for deck in catalog] == [31, 16, 23]
 
 
 @pytest.mark.asyncio
@@ -82,7 +82,7 @@ async def test_seed_builtin_content_is_idempotent(client) -> None:
     assert deck_count is not None
     assert card_count is not None
     assert deck_count["count"] == 3
-    assert card_count["count"] == 65
+    assert card_count["count"] == 70
 
 
 @pytest.mark.asyncio
@@ -121,7 +121,7 @@ async def test_seed_builtin_content_updates_existing_card_by_slug(client, tmp_pa
     assert row is not None
     assert row["prompt"] == "Updated alpha prompt"
     assert card_count is not None
-    assert card_count["count"] == 32
+    assert card_count["count"] == 33
 
 
 @pytest.mark.asyncio

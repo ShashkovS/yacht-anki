@@ -463,7 +463,7 @@
     {
       "slug": "head-up-port-tack",
       "template_type": "directional",
-      "prompt": "Куда поворачивает нос при приведении на левом галсе?",
+      "prompt": "Куда поворачивает нос при приведении на правом галсе?",
       "answer": "Нос идёт к ветру и курс становится острее.",
       "explanation": "Направление ветра не меняется: приводимся всегда к стрелке ветра.",
       "diagram_spec": {
@@ -526,9 +526,9 @@
     {
       "slug": "bear-away-port-tack",
       "template_type": "directional",
-      "prompt": "Куда поворачивает нос при уваливании на левом галсе?",
+      "prompt": "Куда поворачивает нос при уваливании на правом галсе?",
       "answer": "Нос уходит от ветра и курс становится полнее.",
-      "explanation": "На левом галсе уваливание уводит лодку дальше от линии ветра.",
+      "explanation": "На правом галсе уваливание уводит лодку дальше от линии ветра.",
       "diagram_spec": {
         "version": 1,
         "wind": {
@@ -602,7 +602,7 @@
             "id": "alpha",
             "x": 500,
             "y": 350,
-            "heading_deg": 45,
+            "heading_deg": 315,
             "sails": {
               "main": {
                 "state": "trimmed"
@@ -636,7 +636,7 @@
             "id": "alpha",
             "x": 500,
             "y": 350,
-            "heading_deg": 315,
+            "heading_deg": 45,
             "sails": {
               "main": {
                 "state": "trimmed"
@@ -1201,6 +1201,52 @@
         "trim"
       ],
       "sort_order": 30
+    },
+    {
+      "slug": "tack-definition-rrs",
+      "template_type": "concept",
+      "prompt": "Как RRS определяет галс на учебной схеме?",
+      "answer": "По тому, какая сторона яхты находится наветреннее.",
+      "explanation": "Если возникают сомнения, смотри, с какой стороны яхта получает ветер: это и определяет галс.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 180,
+            "sails": {
+              "main": {
+                "state": "eased"
+              }
+            },
+            "label": "A"
+          }
+        ],
+        "expected_answer": {
+          "type": "choose_option",
+          "options": [
+            {
+              "id": "windward-side",
+              "label": "По наветренной стороне яхты"
+            },
+            {
+              "id": "helm-position",
+              "label": "По тому, где стоит рулевой"
+            }
+          ],
+          "correct_option_id": "windward-side"
+        }
+      },
+      "tags": [
+        "tacks",
+        "rrs"
+      ],
+      "sort_order": 31
     }
   ]
 }

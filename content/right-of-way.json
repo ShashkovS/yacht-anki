@@ -20,7 +20,7 @@
             "id": "alpha",
             "x": 360,
             "y": 300,
-            "heading_deg": 45,
+            "heading_deg": 315,
             "sails": {
               "main": {}
             },
@@ -30,7 +30,7 @@
             "id": "bravo",
             "x": 650,
             "y": 380,
-            "heading_deg": 315,
+            "heading_deg": 45,
             "sails": {
               "main": {}
             },
@@ -54,7 +54,7 @@
               "id": "alpha",
               "x": 360,
               "y": 300,
-              "heading_deg": 45,
+                "heading_deg": 315,
               "sails": {
                 "main": {}
               },
@@ -65,7 +65,7 @@
               "id": "bravo",
               "x": 650,
               "y": 380,
-              "heading_deg": 315,
+                "heading_deg": 45,
               "sails": {
                 "main": {}
               },
@@ -81,7 +81,7 @@
       "tags": [
         "rrs"
       ],
-      "sort_order": 1
+      "sort_order": 2
     },
     {
       "slug": "rule10-port-over-starboard",
@@ -99,7 +99,7 @@
             "id": "alpha",
             "x": 360,
             "y": 320,
-            "heading_deg": 315,
+            "heading_deg": 45,
             "sails": {
               "main": {}
             },
@@ -109,7 +109,7 @@
             "id": "bravo",
             "x": 650,
             "y": 340,
-            "heading_deg": 45,
+            "heading_deg": 315,
             "sails": {
               "main": {}
             },
@@ -133,7 +133,7 @@
               "id": "alpha",
               "x": 360,
               "y": 320,
-              "heading_deg": 315,
+                "heading_deg": 45,
               "sails": {
                 "main": {}
               },
@@ -144,7 +144,7 @@
               "id": "bravo",
               "x": 650,
               "y": 340,
-              "heading_deg": 45,
+                "heading_deg": 315,
               "sails": {
                 "main": {}
               },
@@ -435,8 +435,8 @@
       "slug": "rule12-clear-astern-port",
       "template_type": "right_of_way",
       "prompt": "Кто должен сторониться на одном галсе без связанности?",
-      "answer": "Сторонится лодка A чисто позади.",
-      "explanation": "Даже на левом галсе при отсутствии связанности уступает тот, кто чисто позади.",
+      "answer": "Сторонится лодка B чисто позади.",
+      "explanation": "На любом галсе при отсутствии связанности уступает тот, кто чисто позади.",
       "diagram_spec": {
         "version": 1,
         "wind": {
@@ -465,11 +465,11 @@
           }
         ],
         "overlays": {
-          "keep_clear_boat_id": "alpha"
+          "keep_clear_boat_id": "bravo"
         },
         "expected_answer": {
           "type": "select_boat",
-          "correct_boat_id": "alpha"
+          "correct_boat_id": "bravo"
         },
         "answer_scene": {
           "version": 1,
@@ -486,7 +486,7 @@
                 "main": {}
               },
               "label": "A",
-              "highlight": "answer"
+              "highlight": "none"
             },
             {
               "id": "bravo",
@@ -497,11 +497,11 @@
                 "main": {}
               },
               "label": "B",
-              "highlight": "none"
+              "highlight": "answer"
             }
           ],
           "overlays": {
-            "keep_clear_boat_id": "alpha"
+            "keep_clear_boat_id": "bravo"
           }
         }
       },
@@ -591,10 +591,10 @@
     },
     {
       "slug": "rule14-avoid-contact",
-      "template_type": "right_of_way",
+      "template_type": "concept",
       "prompt": "Что остаётся обязанностью даже у яхты с правом дороги?",
       "answer": "Избегать контакта, если это разумно возможно.",
-      "explanation": "Право дороги не даёт права идти в столкновение.",
+      "explanation": "Правило 14 действует для всех: право дороги не даёт права идти в столкновение.",
       "diagram_spec": {
         "version": 1,
         "wind": {
@@ -622,12 +622,19 @@
             "label": "B"
           }
         ],
-        "overlays": {
-          "keep_clear_boat_id": "bravo"
-        },
         "expected_answer": {
-          "type": "select_boat",
-          "correct_boat_id": "bravo"
+          "type": "choose_option",
+          "options": [
+            {
+              "id": "avoid-contact",
+              "label": "Избегать контакта, если это разумно возможно"
+            },
+            {
+              "id": "row-allows-contact",
+              "label": "Если у тебя право дороги, можно не избегать контакта"
+            }
+          ],
+          "correct_option_id": "avoid-contact"
         },
         "answer_scene": {
           "version": 1,
@@ -655,18 +662,15 @@
                 "main": {}
               },
               "label": "B",
-              "highlight": "answer"
+              "highlight": "none"
             }
-          ],
-          "overlays": {
-            "keep_clear_boat_id": "bravo"
-          }
+          ]
         }
       },
       "tags": [
         "rrs"
       ],
-      "sort_order": 8
+      "sort_order": 1
     },
     {
       "slug": "rule16-course-change",
@@ -765,8 +769,8 @@
     },
     {
       "slug": "overlap-basic",
-      "template_type": "right_of_way",
-      "prompt": "Какие лодки связаны на схеме?",
+      "template_type": "concept",
+      "prompt": "Связаны ли лодки на схеме?",
       "answer": "Лодки A и B связаны.",
       "explanation": "Связанность значит, что ни одна лодка не находится чисто впереди или чисто позади другой.",
       "diagram_spec": {
@@ -805,8 +809,18 @@
           ]
         },
         "expected_answer": {
-          "type": "select_boat",
-          "correct_boat_id": "alpha"
+          "type": "choose_option",
+          "options": [
+            {
+              "id": "yes",
+              "label": "Да, лодки связаны"
+            },
+            {
+              "id": "no",
+              "label": "Нет, не связаны"
+            }
+          ],
+          "correct_option_id": "yes"
         },
         "answer_scene": {
           "version": 1,
@@ -823,7 +837,7 @@
                 "main": {}
               },
               "label": "A",
-              "highlight": "answer"
+              "highlight": "none"
             },
             {
               "id": "bravo",
@@ -1163,9 +1177,9 @@
     {
       "slug": "mark-room-inside",
       "template_type": "right_of_way",
-      "prompt": "Какая лодка должна получить место у знака?",
-      "answer": "Внутренняя лодка A должна получить место у знака.",
-      "explanation": "Если лодки связаны при входе в зону, внутренняя получает место у знака.",
+      "prompt": "Знак надо оставить правым бортом: кто должен получить место-у-знака?",
+      "answer": "Внутренняя лодка A должна получить место-у-знака.",
+      "explanation": "Если лодки связаны при входе в зону, внутренняя получает место-у-знака.",
       "diagram_spec": {
         "version": 1,
         "wind": {
@@ -1194,7 +1208,7 @@
           }
         ],
         "mark": {
-          "x": 650,
+          "x": 560,
           "y": 350,
           "zone_radius": 80
         },
@@ -1240,7 +1254,7 @@
             }
           ],
           "mark": {
-            "x": 650,
+            "x": 560,
             "y": 350,
             "zone_radius": 80
           },
@@ -1262,9 +1276,9 @@
     {
       "slug": "mark-room-outside-duty",
       "template_type": "right_of_way",
-      "prompt": "Какая лодка обязана дать место у знака?",
-      "answer": "Наружная лодка B обязана дать место.",
-      "explanation": "Обязанность даёт наружная лодка, а получает — внутренняя.",
+      "prompt": "Знак надо оставить правым бортом: какая лодка обязана дать место-у-знака?",
+      "answer": "Наружная лодка B обязана дать место-у-знака.",
+      "explanation": "Если лодки связаны при входе в зону, наружная лодка даёт внутренней место-у-знака.",
       "diagram_spec": {
         "version": 1,
         "wind": {
@@ -1293,7 +1307,7 @@
           }
         ],
         "mark": {
-          "x": 650,
+          "x": 560,
           "y": 350,
           "zone_radius": 80
         },
@@ -1340,7 +1354,7 @@
             }
           ],
           "mark": {
-            "x": 650,
+            "x": 560,
             "y": 350,
             "zone_radius": 80
           },
@@ -1363,9 +1377,9 @@
     {
       "slug": "mark-room-no-overlap",
       "template_type": "right_of_way",
-      "prompt": "Кто должен сторониться, если при входе в зону связанности не было?",
-      "answer": "Сторонится лодка B позади.",
-      "explanation": "Если связанности не было, лодка позади не получает внезапного места у знака.",
+      "prompt": "Если при входе в зону связанности не было, кто должен дать место-у-знака?",
+      "answer": "Яхта B, которая ещё не вошла в зону, должна дать место-у-знака.",
+      "explanation": "Если первая яхта вошла в зону без связанности, поздняя связанность не создаёт новой льготы у знака.",
       "diagram_spec": {
         "version": 1,
         "wind": {
@@ -1394,7 +1408,7 @@
           }
         ],
         "mark": {
-          "x": 700,
+          "x": 595,
           "y": 350,
           "zone_radius": 80
         },
@@ -1435,7 +1449,7 @@
             }
           ],
           "mark": {
-            "x": 700,
+            "x": 595,
             "y": 350,
             "zone_radius": 80
           },
@@ -1451,9 +1465,9 @@
     },
     {
       "slug": "zone-awareness",
-      "template_type": "right_of_way",
-      "prompt": "Какая область вокруг знака важна для правила 18?",
-      "answer": "Зона в три длины корпуса вокруг знака.",
+      "template_type": "concept",
+      "prompt": "Как называется область вокруг знака, важная для правила 18?",
+      "answer": "Зона в пределах трёх длин корпуса.",
       "explanation": "Зона помогает определить момент, когда фиксируется связность для правила 18.",
       "diagram_spec": {
         "version": 1,
@@ -1483,13 +1497,23 @@
           }
         ],
         "mark": {
-          "x": 700,
+          "x": 595,
           "y": 350,
           "zone_radius": 80
         },
         "expected_answer": {
-          "type": "select_boat",
-          "correct_boat_id": "alpha"
+          "type": "choose_option",
+          "options": [
+            {
+              "id": "zone",
+              "label": "Зона"
+            },
+            {
+              "id": "mark-area",
+              "label": "Просто район знака"
+            }
+          ],
+          "correct_option_id": "zone"
         },
         "answer_scene": {
           "version": 1,
@@ -1506,7 +1530,7 @@
                 "main": {}
               },
               "label": "A",
-              "highlight": "answer"
+              "highlight": "none"
             },
             {
               "id": "bravo",
@@ -1521,7 +1545,7 @@
             }
           ],
           "mark": {
-            "x": 700,
+            "x": 595,
             "y": 350,
             "zone_radius": 80
           }
@@ -1548,7 +1572,7 @@
             "id": "alpha",
             "x": 450,
             "y": 310,
-            "heading_deg": 45,
+            "heading_deg": 315,
             "sails": {
               "main": {}
             },
@@ -1558,7 +1582,7 @@
             "id": "bravo",
             "x": 640,
             "y": 390,
-            "heading_deg": 315,
+            "heading_deg": 45,
             "sails": {
               "main": {}
             },
@@ -1587,7 +1611,7 @@
               "id": "alpha",
               "x": 450,
               "y": 310,
-              "heading_deg": 45,
+                "heading_deg": 315,
               "sails": {
                 "main": {}
               },
@@ -1598,7 +1622,7 @@
               "id": "bravo",
               "x": 640,
               "y": 390,
-              "heading_deg": 315,
+                "heading_deg": 45,
               "sails": {
                 "main": {}
               },
@@ -1637,7 +1661,7 @@
             "id": "alpha",
             "x": 380,
             "y": 320,
-            "heading_deg": 45,
+            "heading_deg": 315,
             "sails": {
               "main": {}
             },
@@ -1647,7 +1671,7 @@
             "id": "bravo",
             "x": 640,
             "y": 380,
-            "heading_deg": 315,
+            "heading_deg": 45,
             "sails": {
               "main": {}
             },
@@ -1671,7 +1695,7 @@
               "id": "alpha",
               "x": 380,
               "y": 320,
-              "heading_deg": 45,
+                "heading_deg": 315,
               "sails": {
                 "main": {}
               },
@@ -1682,7 +1706,7 @@
               "id": "bravo",
               "x": 640,
               "y": 380,
-              "heading_deg": 315,
+                "heading_deg": 45,
               "sails": {
                 "main": {}
               },
@@ -1699,6 +1723,263 @@
         "rrs"
       ],
       "sort_order": 20
+    },
+    {
+      "slug": "rule15-acquiring-row",
+      "template_type": "right_of_way",
+      "prompt": "Какая яхта должна сначала получить место для реакции, если A только что получила право дороги?",
+      "answer": "Яхта B должна получить место, чтобы успеть сторониться.",
+      "explanation": "Правило 15: яхта, получившая право дороги, сначала даёт другой яхте место, чтобы та могла сторониться.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 430,
+            "y": 330,
+            "heading_deg": 315,
+            "sails": {
+              "main": {}
+            },
+            "label": "A"
+          },
+          {
+            "id": "bravo",
+            "x": 560,
+            "y": 360,
+            "heading_deg": 45,
+            "sails": {
+              "main": {}
+            },
+            "label": "B"
+          }
+        ],
+        "overlays": {
+          "keep_clear_boat_id": "bravo"
+        },
+        "expected_answer": {
+          "type": "select_boat",
+          "correct_boat_id": "bravo"
+        },
+        "answer_scene": {
+          "version": 1,
+          "wind": {
+            "direction_deg": 0
+          },
+          "boats": [
+            {
+              "id": "alpha",
+              "x": 430,
+              "y": 330,
+              "heading_deg": 315,
+              "sails": {
+                "main": {}
+              },
+              "label": "A",
+              "highlight": "none"
+            },
+            {
+              "id": "bravo",
+              "x": 560,
+              "y": 360,
+              "heading_deg": 45,
+              "sails": {
+                "main": {}
+              },
+              "label": "B",
+              "highlight": "answer"
+            }
+          ],
+          "overlays": {
+            "keep_clear_boat_id": "bravo"
+          }
+        }
+      },
+      "tags": [
+        "rrs"
+      ],
+      "sort_order": 21
+    },
+    {
+      "slug": "rule18-2d-late-overlap",
+      "template_type": "right_of_way",
+      "prompt": "Кто всё ещё должен сторониться, если связанность возникла слишком поздно и место-у-знака не появилось?",
+      "answer": "Лодка B остаётся обязанной сторониться.",
+      "explanation": "Поздняя связанность сама по себе не создаёт место-у-знака: важен момент входа первой яхты в зону.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 520,
+            "y": 350,
+            "heading_deg": 90,
+            "sails": {
+              "main": {}
+            },
+            "label": "A"
+          },
+          {
+            "id": "bravo",
+            "x": 430,
+            "y": 420,
+            "heading_deg": 90,
+            "sails": {
+              "main": {}
+            },
+            "label": "B"
+          }
+        ],
+        "mark": {
+          "x": 595,
+          "y": 350,
+          "zone_radius": 80
+        },
+        "overlays": {
+          "keep_clear_boat_id": "bravo"
+        },
+        "expected_answer": {
+          "type": "select_boat",
+          "correct_boat_id": "bravo"
+        },
+        "answer_scene": {
+          "version": 1,
+          "wind": {
+            "direction_deg": 0
+          },
+          "boats": [
+            {
+              "id": "alpha",
+              "x": 520,
+              "y": 350,
+              "heading_deg": 90,
+              "sails": {
+                "main": {}
+              },
+              "label": "A",
+              "highlight": "none"
+            },
+            {
+              "id": "bravo",
+              "x": 430,
+              "y": 420,
+              "heading_deg": 90,
+              "sails": {
+                "main": {}
+              },
+              "label": "B",
+              "highlight": "answer"
+            }
+          ],
+          "mark": {
+            "x": 595,
+            "y": 350,
+            "zone_radius": 80
+          },
+          "overlays": {
+            "keep_clear_boat_id": "bravo"
+          }
+        }
+      },
+      "tags": [
+        "rrs"
+      ],
+      "sort_order": 22
+    },
+    {
+      "slug": "rule18-3-tacking-in-zone",
+      "template_type": "right_of_way",
+      "prompt": "Кто должен сторониться, если лодка A делает оверштаг в зоне у знака?",
+      "answer": "Лодка A должна сторониться после такого оверштага.",
+      "explanation": "Оверштаг в зоне не даёт автоматического преимущества: лодка после поворота не должна мешать другой яхте.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 520,
+            "y": 350,
+            "heading_deg": 350,
+            "sails": {
+              "main": {}
+            },
+            "label": "A"
+          },
+          {
+            "id": "bravo",
+            "x": 620,
+            "y": 360,
+            "heading_deg": 315,
+            "sails": {
+              "main": {}
+            },
+            "label": "B"
+          }
+        ],
+        "mark": {
+          "x": 595,
+          "y": 350,
+          "zone_radius": 80
+        },
+        "overlays": {
+          "keep_clear_boat_id": "alpha"
+        },
+        "expected_answer": {
+          "type": "select_boat",
+          "correct_boat_id": "alpha"
+        },
+        "answer_scene": {
+          "version": 1,
+          "wind": {
+            "direction_deg": 0
+          },
+          "boats": [
+            {
+              "id": "alpha",
+              "x": 520,
+              "y": 350,
+              "heading_deg": 350,
+              "sails": {
+                "main": {}
+              },
+              "label": "A",
+              "highlight": "answer"
+            },
+            {
+              "id": "bravo",
+              "x": 620,
+              "y": 360,
+              "heading_deg": 315,
+              "sails": {
+                "main": {}
+              },
+              "label": "B",
+              "highlight": "none"
+            }
+          ],
+          "mark": {
+            "x": 595,
+            "y": 350,
+            "zone_radius": 80
+          },
+          "overlays": {
+            "keep_clear_boat_id": "alpha"
+          }
+        }
+      },
+      "tags": [
+        "rrs"
+      ],
+      "sort_order": 23
     }
   ]
 }
