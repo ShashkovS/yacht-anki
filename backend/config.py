@@ -53,7 +53,7 @@ class Settings:
 
 
 def load_settings() -> Settings:
-    load_dotenv()
+    load_dotenv(ROOT_DIR / ".env")
     mode = os.getenv("APP_MODE", "dev").strip().lower()
     host = os.getenv("APP_HOST", "localhost").strip()
     port = int(os.getenv("APP_PORT", "8000"))
@@ -61,7 +61,9 @@ def load_settings() -> Settings:
     if not db_path.is_absolute():
         db_path = ROOT_DIR / db_path
     cookie_secret = os.getenv("COOKIE_SECRET", DEFAULT_COOKIE_SECRET)
-    frontend_origin = os.getenv("FRONTEND_ORIGIN", "http://localhost:5173").rstrip("/")
+    frontend_public_host = os.getenv("FRONTEND_PUBLIC_HOST", "localhost").strip()
+    frontend_port = os.getenv("FRONTEND_PORT", "5173").strip()
+    frontend_origin = os.getenv("FRONTEND_ORIGIN", f"http://{frontend_public_host}:{frontend_port}").rstrip("/")
     settings = Settings(
         mode=mode,
         host=host,

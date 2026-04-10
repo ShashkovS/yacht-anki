@@ -3,22 +3,25 @@
 # Copy an existing target pattern here when you add another simple root command.
 .DEFAULT_GOAL := help
 
-DOCKER_PROJECT_NAME := templatepwa_local
-DOCKER_FRONTEND_PORT := 8088
-DOCKER_BACKEND_PORT := 8089
-DOCKER_APP_MODE := dev
-DOCKER_COOKIE_SECRET := local-docker-secret
-DOCKER_FRONTEND_ORIGIN := http://localhost:$(DOCKER_FRONTEND_PORT)
-DOCKER_VITE_BACKEND_URL := http://localhost:$(DOCKER_BACKEND_PORT)
-DOCKER_COMPOSE := ./scripts/docker-compose.sh -p $(DOCKER_PROJECT_NAME) -f docker-compose.yml
-WIFI_IP := $(shell ipconfig getifaddr en0 2>/dev/null)
-LAN_FRONTEND_PORT := 4173
-LAN_BACKEND_PORT := 4174
+ifneq (,$(wildcard .env))
+include .env
+endif
+
+ifneq (,$(wildcard .docker.env))
+include .docker.env
+endif
+
+DOCKER_COMPOSE := ./scripts/docker-compose.sh --env-file .docker.env -p $(DOCKER_PROJECT_NAME) -f docker-compose.yml
+LOCAL_BACKEND_URL := http://$(APP_PUBLIC_HOST):$(APP_PORT)
+LOCAL_FRONTEND_URL := http://$(FRONTEND_PUBLIC_HOST):$(FRONTEND_PORT)
+WIFI_IP := $(shell if [ -n "$(WIFI_INTERFACE)" ]; then ipconfig getifaddr "$(WIFI_INTERFACE)" 2>/dev/null; fi)
 LAN_FRONTEND_URL := http://$(WIFI_IP):$(LAN_FRONTEND_PORT)
 LAN_BACKEND_URL := http://$(WIFI_IP):$(LAN_BACKEND_PORT)
 PY_RUNTIME_DEPS := $(shell python3 -c 'import re, tomllib, pathlib; data = tomllib.loads(pathlib.Path("pyproject.toml").read_text()); print(" ".join(re.match(r"[A-Za-z0-9._-]+", dep).group(0) for dep in data["project"]["dependencies"]))')
 PY_DEV_DEPS := $(shell python3 -c 'import re, tomllib, pathlib; data = tomllib.loads(pathlib.Path("pyproject.toml").read_text()); print(" ".join(re.match(r"[A-Za-z0-9._-]+", dep).group(0) for dep in data["dependency-groups"]["dev"]))')
-CHECK_WIFI_IP = @test -n "$(WIFI_IP)" || (echo "Wi-Fi IP was not found on en0. Connect to Wi-Fi or use normal make back / make front."; exit 1)
+CHECK_LOCAL_ENV = @test -f .env || (echo "Local config file .env was not found. Run make setup first."; exit 1)
+CHECK_DOCKER_ENV = @test -f .docker.env || (echo "Docker config file .docker.env was not found. Run make setup first."; exit 1)
+CHECK_WIFI_IP = @test -n "$(WIFI_IP)" || (echo "Wi-Fi IP was not found on $(WIFI_INTERFACE). Connect to Wi-Fi or use normal make back / make front."; exit 1)
 
 .PHONY: help setup back back-once front open back-lan front-lan open-lan back-docker front-docker open-docker stop-docker clean-docker format test test-e2e-docker deps-update-safe deps-update-latest
 
@@ -47,47 +50,59 @@ setup:
 	uv sync --all-groups
 	cd frontend && npm install && npx playwright install
 	test -f .env || cp .env.example .env
-	cd frontend && test -f .env.development.local || cp .env.example .env.development.local
+	test -f .docker.env || cp .docker.env.example .docker.env
 
 back:
-	APP_HOST=localhost FRONTEND_ORIGIN=http://localhost:5173 uv run python -m backend.dev
+	$(CHECK_LOCAL_ENV)
+	uv run python -m backend.dev
 
 back-once:
-	APP_HOST=localhost FRONTEND_ORIGIN=http://localhost:5173 uv run python -m backend.main
+	$(CHECK_LOCAL_ENV)
+	uv run python -m backend.main
 
 front:
-	cd frontend && VITE_BACKEND_URL=http://localhost:8000 npm run dev -- --host localhost --port 5173
+	$(CHECK_LOCAL_ENV)
+	cd frontend && VITE_BACKEND_URL=$(LOCAL_BACKEND_URL) npm run dev -- --host $(FRONTEND_BIND_HOST) --port $(FRONTEND_PORT)
 
 open:
-	open http://localhost:5173
+	$(CHECK_LOCAL_ENV)
+	open $(LOCAL_FRONTEND_URL)
 
 back-lan:
+	$(CHECK_LOCAL_ENV)
 	$(CHECK_WIFI_IP)
 	APP_HOST=0.0.0.0 APP_PORT=$(LAN_BACKEND_PORT) FRONTEND_ORIGIN=$(LAN_FRONTEND_URL) uv run python -m backend.dev
 
 front-lan:
+	$(CHECK_LOCAL_ENV)
 	$(CHECK_WIFI_IP)
 	cd frontend && VITE_BACKEND_URL=$(LAN_BACKEND_URL) npm run dev -- --host 0.0.0.0 --port $(LAN_FRONTEND_PORT)
 
 open-lan:
+	$(CHECK_LOCAL_ENV)
 	$(CHECK_WIFI_IP)
 	@echo "Open $(LAN_FRONTEND_URL)"
 	open $(LAN_FRONTEND_URL)
 
 back-docker:
-	DOCKER_APP_MODE=$(DOCKER_APP_MODE) DOCKER_COOKIE_SECRET=$(DOCKER_COOKIE_SECRET) DOCKER_FRONTEND_PORT=$(DOCKER_FRONTEND_PORT) DOCKER_BACKEND_PORT=$(DOCKER_BACKEND_PORT) DOCKER_FRONTEND_ORIGIN=$(DOCKER_FRONTEND_ORIGIN) DOCKER_VITE_BACKEND_URL=$(DOCKER_VITE_BACKEND_URL) $(DOCKER_COMPOSE) up -d --build backend
+	$(CHECK_DOCKER_ENV)
+	$(DOCKER_COMPOSE) up -d --build backend
 
 front-docker:
-	DOCKER_APP_MODE=$(DOCKER_APP_MODE) DOCKER_COOKIE_SECRET=$(DOCKER_COOKIE_SECRET) DOCKER_FRONTEND_PORT=$(DOCKER_FRONTEND_PORT) DOCKER_BACKEND_PORT=$(DOCKER_BACKEND_PORT) DOCKER_FRONTEND_ORIGIN=$(DOCKER_FRONTEND_ORIGIN) DOCKER_VITE_BACKEND_URL=$(DOCKER_VITE_BACKEND_URL) $(DOCKER_COMPOSE) up -d --build frontend
+	$(CHECK_DOCKER_ENV)
+	$(DOCKER_COMPOSE) up -d --build frontend
 
 open-docker:
-	open http://localhost:$(DOCKER_FRONTEND_PORT)
+	$(CHECK_DOCKER_ENV)
+	open $(DOCKER_FRONTEND_ORIGIN)
 
 stop-docker:
-	DOCKER_APP_MODE=$(DOCKER_APP_MODE) DOCKER_COOKIE_SECRET=$(DOCKER_COOKIE_SECRET) DOCKER_FRONTEND_PORT=$(DOCKER_FRONTEND_PORT) DOCKER_BACKEND_PORT=$(DOCKER_BACKEND_PORT) DOCKER_FRONTEND_ORIGIN=$(DOCKER_FRONTEND_ORIGIN) DOCKER_VITE_BACKEND_URL=$(DOCKER_VITE_BACKEND_URL) $(DOCKER_COMPOSE) down --remove-orphans
+	$(CHECK_DOCKER_ENV)
+	$(DOCKER_COMPOSE) down --remove-orphans
 
 clean-docker:
-	DOCKER_APP_MODE=$(DOCKER_APP_MODE) DOCKER_COOKIE_SECRET=$(DOCKER_COOKIE_SECRET) DOCKER_FRONTEND_PORT=$(DOCKER_FRONTEND_PORT) DOCKER_BACKEND_PORT=$(DOCKER_BACKEND_PORT) DOCKER_FRONTEND_ORIGIN=$(DOCKER_FRONTEND_ORIGIN) DOCKER_VITE_BACKEND_URL=$(DOCKER_VITE_BACKEND_URL) $(DOCKER_COMPOSE) down -v --remove-orphans --rmi local
+	$(CHECK_DOCKER_ENV)
+	$(DOCKER_COMPOSE) down -v --remove-orphans --rmi local
 
 deps-update-safe:
 	uv add --bounds major $(PY_RUNTIME_DEPS)
@@ -104,9 +119,11 @@ format:
 	cd frontend && npm run format
 
 test:
+	$(CHECK_LOCAL_ENV)
 	uv run pytest
 	cd frontend && npm run test
 	cd frontend && npm run test:e2e
 
 test-e2e-docker:
+	$(CHECK_DOCKER_ENV)
 	cd frontend && npm run test:e2e:docker

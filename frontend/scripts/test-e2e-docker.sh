@@ -9,33 +9,38 @@ SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 FRONTEND_DIR=$(CDPATH= cd -- "${SCRIPT_DIR}/.." && pwd)
 REPO_DIR=$(CDPATH= cd -- "${FRONTEND_DIR}/.." && pwd)
 COMPOSE_SCRIPT="${REPO_DIR}/scripts/docker-compose.sh"
-PROJECT_NAME="${PW_DOCKER_PROJECT_NAME:-templatepwa_e2e}"
+DOCKER_ENV_FILE="${REPO_DIR}/.docker.env"
 
-find_free_ports() {
-  python3 -c 'import socket; sockets = []; ports = []; 
-for _ in range(2):
-    sock = socket.socket()
-    sock.bind(("127.0.0.1", 0))
-    sockets.append(sock)
-    ports.append(str(sock.getsockname()[1]))
-print(" ".join(ports))
-[sock.close() for sock in sockets]'
-}
+if [ ! -f "${DOCKER_ENV_FILE}" ]; then
+  printf '%s\n' "Docker config file .docker.env was not found. Run make setup first." >&2
+  exit 1
+fi
 
-DEFAULT_PORTS=$(find_free_ports)
-DEFAULT_FRONTEND_PORT=$(printf '%s' "${DEFAULT_PORTS}" | awk '{print $1}')
-DEFAULT_BACKEND_PORT=$(printf '%s' "${DEFAULT_PORTS}" | awk '{print $2}')
+set -a
+. "${DOCKER_ENV_FILE}"
+set +a
 
-export DOCKER_APP_MODE="${DOCKER_APP_MODE:-dev}"
-export DOCKER_COOKIE_SECRET="${DOCKER_COOKIE_SECRET:-playwright-docker-secret}"
-export DOCKER_FRONTEND_PORT="${DOCKER_FRONTEND_PORT:-${DEFAULT_FRONTEND_PORT}}"
-export DOCKER_BACKEND_PORT="${DOCKER_BACKEND_PORT:-${DEFAULT_BACKEND_PORT}}"
-export DOCKER_FRONTEND_ORIGIN="${DOCKER_FRONTEND_ORIGIN:-http://localhost:${DOCKER_FRONTEND_PORT}}"
-export DOCKER_VITE_BACKEND_URL="${DOCKER_VITE_BACKEND_URL:-http://localhost:${DOCKER_BACKEND_PORT}}"
-export PW_DOCKER_FRONTEND_URL="${PW_DOCKER_FRONTEND_URL:-http://localhost:${DOCKER_FRONTEND_PORT}}"
+: "${DOCKER_E2E_PROJECT_NAME:?Missing DOCKER_E2E_PROJECT_NAME in .docker.env.}"
+: "${DOCKER_E2E_APP_MODE:?Missing DOCKER_E2E_APP_MODE in .docker.env.}"
+: "${DOCKER_E2E_COOKIE_SECRET:?Missing DOCKER_E2E_COOKIE_SECRET in .docker.env.}"
+: "${DOCKER_E2E_FRONTEND_PORT:?Missing DOCKER_E2E_FRONTEND_PORT in .docker.env.}"
+: "${DOCKER_E2E_BACKEND_PORT:?Missing DOCKER_E2E_BACKEND_PORT in .docker.env.}"
+: "${DOCKER_E2E_FRONTEND_ORIGIN:?Missing DOCKER_E2E_FRONTEND_ORIGIN in .docker.env.}"
+: "${DOCKER_E2E_VITE_BACKEND_URL:?Missing DOCKER_E2E_VITE_BACKEND_URL in .docker.env.}"
+: "${DOCKER_E2E_FRONTEND_URL:?Missing DOCKER_E2E_FRONTEND_URL in .docker.env.}"
+
+PROJECT_NAME="${DOCKER_E2E_PROJECT_NAME}"
+export DOCKER_PROJECT_NAME="${DOCKER_E2E_PROJECT_NAME}"
+export DOCKER_APP_MODE="${DOCKER_E2E_APP_MODE}"
+export DOCKER_COOKIE_SECRET="${DOCKER_E2E_COOKIE_SECRET}"
+export DOCKER_FRONTEND_PORT="${DOCKER_E2E_FRONTEND_PORT}"
+export DOCKER_BACKEND_PORT="${DOCKER_E2E_BACKEND_PORT}"
+export DOCKER_FRONTEND_ORIGIN="${DOCKER_E2E_FRONTEND_ORIGIN}"
+export DOCKER_VITE_BACKEND_URL="${DOCKER_E2E_VITE_BACKEND_URL}"
+export PW_DOCKER_FRONTEND_URL="${DOCKER_E2E_FRONTEND_URL}"
 
 cleanup() {
-  "${COMPOSE_SCRIPT}" -p "${PROJECT_NAME}" -f "${REPO_DIR}/docker-compose.yml" down -v --remove-orphans >/dev/null 2>&1 || true
+  "${COMPOSE_SCRIPT}" --env-file "${DOCKER_ENV_FILE}" -p "${PROJECT_NAME}" -f "${REPO_DIR}/docker-compose.yml" down -v --remove-orphans >/dev/null 2>&1 || true
 }
 
 wait_for_frontend() {
@@ -55,7 +60,7 @@ wait_for_frontend() {
 trap cleanup EXIT INT TERM
 
 cleanup
-"${COMPOSE_SCRIPT}" -p "${PROJECT_NAME}" -f "${REPO_DIR}/docker-compose.yml" up -d --build --remove-orphans
+"${COMPOSE_SCRIPT}" --env-file "${DOCKER_ENV_FILE}" -p "${PROJECT_NAME}" -f "${REPO_DIR}/docker-compose.yml" up -d --build --remove-orphans
 wait_for_frontend
 
 cd "${FRONTEND_DIR}"

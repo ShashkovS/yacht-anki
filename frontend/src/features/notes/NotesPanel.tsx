@@ -24,7 +24,7 @@ export function NotesPanel({ refreshKey, socketStatus }: NotesPanelProps) {
     setLoading(true);
     setError("");
     try {
-      const data = await postJson<{ notes: Note[] }>("/notes/list");
+      const data = await postJson<{ notes: Note[] }>("/api/notes/list");
       setNotes(data.notes);
     } catch (loadError) {
       setError(loadError instanceof Error ? loadError.message : "Could not load notes.");
@@ -43,7 +43,7 @@ export function NotesPanel({ refreshKey, socketStatus }: NotesPanelProps) {
     if (!text) {
       return;
     }
-    const data = await postJson<{ note: Note }>("/notes/save", {
+    const data = await postJson<{ note: Note }>("/api/notes/save", {
       id: editingId,
       text,
     });
@@ -56,7 +56,7 @@ export function NotesPanel({ refreshKey, socketStatus }: NotesPanelProps) {
   };
 
   const onDelete = async (id: number) => {
-    await postJson<{ deleted: boolean; id: number }>("/notes/delete", { id });
+    await postJson<{ deleted: boolean; id: number }>("/api/notes/delete", { id });
     setNotes((current) => current.filter((note) => note.id !== id));
   };
 

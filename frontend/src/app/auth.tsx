@@ -4,7 +4,7 @@ Edit this file when login, logout, refresh, or current-user browser behavior cha
 Copy the provider and hook pattern here when you add another small shared frontend context.
 */
 
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { ApiError, postJson } from "../shared/api";
 import type { User } from "../shared/types";
 
@@ -20,13 +20,13 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 
 async function loadCurrentUser(): Promise<User | null> {
   try {
-    const data = await postJson<{ user: User }>("/auth/me");
+    const data = await postJson<{ user: User }>("/api/auth/me");
     return data.user;
   } catch (error) {
     if (error instanceof ApiError && error.status === 401) {
       try {
-        await postJson<{ user: User }>("/auth/refresh");
-        const refreshed = await postJson<{ user: User }>("/auth/me");
+        await postJson<{ user: User }>("/api/auth/refresh");
+        const refreshed = await postJson<{ user: User }>("/api/auth/me");
         return refreshed.user;
       } catch {
         return null;
@@ -39,8 +39,13 @@ async function loadCurrentUser(): Promise<User | null> {
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const didLoadSession = useRef(false);
 
   useEffect(() => {
+    if (didLoadSession.current) {
+      return;
+    }
+    didLoadSession.current = true;
     loadCurrentUser()
       .then(setUser)
       .finally(() => setLoading(false));
@@ -51,11 +56,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       user,
       loading,
       async login(username: string, password: string) {
-        const data = await postJson<{ user: User }>("/auth/login", { username, password });
+        const data = await postJson<{ user: User }>("/api/auth/login", { username, password });
         setUser(data.user);
       },
       async logout() {
-        await postJson<{ logged_out: boolean }>("/auth/logout");
+        await postJson<{ logged_out: boolean }>("/api/auth/logout");
         setUser(null);
       },
       async reloadUser() {

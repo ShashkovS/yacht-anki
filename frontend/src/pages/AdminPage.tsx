@@ -13,7 +13,7 @@ export function AdminPage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    postJson<{ users: User[] }>("/admin/users/list")
+    postJson<{ users: User[] }>("/api/admin/users/list")
       .then((data) => setUsers(data.users))
       .catch((loadError) => setError(loadError instanceof Error ? loadError.message : "Could not load users."));
   }, []);

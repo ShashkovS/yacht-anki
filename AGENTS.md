@@ -9,6 +9,10 @@
   - production is same-origin behind nginx or Traefik;
   - dev-only CORS is for localhost splits;
   - browser API calls stay POST-based for this template.
+- Keep production routing path-based for this template:
+  - JSON endpoints live under `/api/...`;
+  - websocket stays at `/ws`;
+  - reverse proxy should send `/api` and `/ws` to backend and everything else to frontend.
 - Keep all user-facing text in simple English.
 - When adding backend DB code, place SQL only under `backend/db`.
 - When adding frontend pages, keep routing and auth flow direct and beginner-friendly.
@@ -40,6 +44,9 @@
 - Add Python packages with `uv add` for runtime deps and `uv add --dev` for dev-only deps.
 - Add frontend packages with `npm install` for runtime deps and `npm install -D` for dev-only deps.
 - Do not edit dependency lists by hand unless there is a strong reason and it is explained.
+- Student-facing configuration belongs only in the root `.env` and `.docker.env` files.
+- Do not add new user-tuned ports, URLs, secrets, modes, or project names to `Makefile`, compose files, Playwright configs, or Dockerfiles.
+- Keep `.docker.env` as the Docker config filename for this repo. Do not rename it to `.env.docker` unless the user explicitly asks.
 - Keep LAN dev mode intentionally simple: prefer the explicit macOS Wi-Fi `en0` helper over generic network auto-detection.
 - Keep LAN ports separate from the default localhost ports unless the user asks otherwise.
 - Do not expand LAN mode into a multi-interface discovery system unless the user asks for broader network support.

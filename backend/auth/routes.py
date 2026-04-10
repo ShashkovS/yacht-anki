@@ -39,13 +39,13 @@ def _set_auth_cookies(response: web.StreamResponse, settings: Settings, user: di
         httponly=True,
         samesite="Lax",
         secure=settings.secure_cookies,
-        path="/auth",
+        path="/api/auth",
     )
 
 
 def clear_auth_cookies(response: web.StreamResponse, settings: Settings) -> None:
     response.del_cookie(settings.access_cookie_name, path="/")
-    response.del_cookie(settings.refresh_cookie_name, path="/auth")
+    response.del_cookie(settings.refresh_cookie_name, path="/api/auth")
 
 
 def _parse_refresh_cookie(raw_value: str | None) -> tuple[str, str] | None:
@@ -141,7 +141,7 @@ async def me(request: web.Request) -> web.Response:
 
 
 def setup_auth_routes(app: web.Application) -> None:
-    app.router.add_post("/auth/login", login)
-    app.router.add_post("/auth/refresh", refresh)
-    app.router.add_post("/auth/logout", logout)
-    app.router.add_post("/auth/me", me)
+    app.router.add_post("/api/auth/login", login)
+    app.router.add_post("/api/auth/refresh", refresh)
+    app.router.add_post("/api/auth/logout", logout)
+    app.router.add_post("/api/auth/me", me)

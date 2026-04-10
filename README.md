@@ -99,7 +99,7 @@ The easiest way (one command does it all):
 make setup
 ```
 
-That is it. `make setup` installs Python libraries, installs JavaScript libraries, installs browser drivers for tests, and creates the `.env` config files.
+That is it. `make setup` installs Python libraries, installs JavaScript libraries, installs browser drivers for tests, and creates the local config files `.env` and `.docker.env`.
 
 <details>
 <summary>What does make setup do exactly? (click to expand)</summary>
@@ -111,9 +111,8 @@ uv sync --all-groups       # installs Python libraries
 cd frontend
 npm install                # installs JavaScript libraries
 npx playwright install     # installs browsers for end-to-end tests
-cp .env.example .env.development.local
-cd ..
 cp .env.example .env
+cp .docker.env.example .docker.env
 ```
 
 You do not need to run these yourself — `make setup` does it for you.
@@ -122,6 +121,10 @@ You do not need to run these yourself — `make setup` does it for you.
 ---
 
 ## Running the app in development
+
+All local app settings live in the root `.env` file.
+Change ports, hosts, local secrets, LAN settings, and local e2e settings there.
+Do not edit the `Makefile` or frontend config files for that.
 
 You need **two terminals** open at the same time — one for the backend, one for the frontend.
 
@@ -192,15 +195,9 @@ These accounts exist only in development mode. They are not in production.
 
 ## How the frontend talks to the backend
 
-The frontend needs to know the backend address. `make front` sets this automatically.
+`make front` reads the backend URL from the root `.env` file and passes it to Vite automatically.
 
-If you start the frontend with `npm run dev` instead, create the file `frontend/.env.development.local` and put this inside:
-
-```
-VITE_BACKEND_URL=http://localhost:8000
-```
-
-> **Important:** Always use `localhost` for both. Do not mix `localhost` and `127.0.0.1` — the browser may stop sending login cookies if you do.
+> **Important:** Use the root `.env` file as the single source of truth for local ports and local URLs. Do not switch to editing `frontend/.env.*`, `Makefile`, or Playwright config files.
 
 In LAN mode, use the same Wi-Fi IP on both sides:
 
@@ -311,6 +308,7 @@ make format
 | `make open` | Open the app in the browser |
 | `make format` | Format all code |
 | `make test` | Run all tests |
+| `make test-e2e-docker` | Run browser tests against Docker containers |
 
 ---
 
@@ -336,6 +334,10 @@ make test-e2e-docker
 Docker packages the app into containers so it runs the same way everywhere.
 You do not need Docker for local development. Use it when you want to test how the app behaves in production.
 
+All Docker and Dokploy settings live in the root `.docker.env` file.
+Change Docker ports, Docker URLs, Docker secrets, Docker project names, and Docker e2e settings there.
+Do not edit `docker-compose.yml` or the Dockerfiles for normal student configuration.
+
 Quick local test with Docker:
 
 ```bash
@@ -346,13 +348,19 @@ make open-docker
 
 Open in browser:
 - Frontend: `http://localhost:8088`
-- Backend health check: `http://localhost:8089/health`
+- Backend health check: `http://localhost:8089/api/health`
 
 Stop and remove containers:
 
 ```bash
 make stop-docker
 make clean-docker
+```
+
+Run browser e2e tests against the Docker stack:
+
+```bash
+make test-e2e-docker
 ```
 
 ---
@@ -369,11 +377,52 @@ make clean-docker
 ## Production deployment
 
 This template is designed for [Dokploy](https://dokploy.com/) with Docker Compose.
-Set these environment variables in Dokploy instead of editing the `docker-compose.yml` file:
+The root `.docker.env.example` file shows the same variable set that Dokploy should provide.
+Set these values in Dokploy instead of editing `docker-compose.yml`:
 
 | Variable | What it is |
 |----------|------------|
+| `DOCKER_PROJECT_NAME` | Docker Compose project name for the normal app stack |
 | `DOCKER_COOKIE_SECRET` | Secret key for signing cookies — use a long random string |
+| `DOCKER_DB_PATH` | SQLite path inside the backend container |
+| `DOCKER_FRONTEND_PORT` | Published frontend port on the host |
+| `DOCKER_BACKEND_PORT` | Published backend port on the host |
 | `DOCKER_FRONTEND_ORIGIN` | Public URL of the frontend, e.g. `https://myapp.example.com` |
-| `DOCKER_VITE_BACKEND_URL` | Public URL of the backend API |
+| `DOCKER_VITE_BACKEND_URL` | Backend origin used at frontend build time |
 | `DOCKER_APP_MODE` | `prod` for production, `dev` to enable demo accounts |
+
+Important notes:
+
+- The frontend backend URL is still a build-time value. If `DOCKER_VITE_BACKEND_URL` changes, rebuild the frontend image.
+- Internal container ports stay fixed at `8080` and `8081`. Students should only change the published ports and URLs in `.docker.env`.
+- For same-origin production behind nginx or Traefik, set `DOCKER_VITE_BACKEND_URL` to the same public site origin as `DOCKER_FRONTEND_ORIGIN`.
+
+### Start the Docker stack
+
+With `.docker.env` filled in, this is enough to boot the stack:
+
+```bash
+docker compose --env-file .docker.env -f docker-compose.yml up -d --build
+```
+
+That starts the frontend and backend containers. It does not add public one-domain routing by itself.
+
+### Recommended production routing
+
+Use one public origin and route by path:
+
+- `/api/*` -> backend
+- `/ws` -> backend
+- everything else -> frontend
+
+This keeps the production app same-origin, so cookie auth and websocket auth stay simple.
+
+If nginx or Traefik runs on the same host but outside Docker, it can route to:
+
+- `localhost:${DOCKER_FRONTEND_PORT}` for frontend pages
+- `localhost:${DOCKER_BACKEND_PORT}` for backend `/api` and `/ws`
+
+If nginx or Traefik is on the same Docker network, it can route to:
+
+- `frontend:8080`
+- `backend:8081`

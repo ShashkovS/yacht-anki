@@ -61,8 +61,8 @@ async def admin_users_list(request: web.Request) -> web.Response:
 
 
 def setup_api_routes(app: web.Application) -> None:
-    app.router.add_get("/health", health)
-    app.router.add_post("/notes/list", notes_list)
-    app.router.add_post("/notes/save", notes_save)
-    app.router.add_post("/notes/delete", notes_delete)
-    app.router.add_post("/admin/users/list", admin_users_list)
+    app.router.add_get("/api/health", health)
+    app.router.add_post("/api/notes/list", notes_list)
+    app.router.add_post("/api/notes/save", notes_save)
+    app.router.add_post("/api/notes/delete", notes_delete)
+    app.router.add_post("/api/admin/users/list", admin_users_list)

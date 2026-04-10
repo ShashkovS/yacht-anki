@@ -30,26 +30,26 @@ def test_password_hashing() -> None:
 @pytest.mark.asyncio
 async def test_login_success_and_me(client, create_user, auth_headers) -> None:
     await create_user("user", "user")
-    response = await client.post("/auth/login", json={"username": "user", "password": "user"}, headers=auth_headers)
+    response = await client.post("/api/auth/login", json={"username": "user", "password": "user"}, headers=auth_headers)
     assert response.status == 200
     payload = await response.json()
     assert payload["ok"] is True
     assert payload["data"]["user"]["username"] == "user"
 
-    me_response = await client.post("/auth/me", json={})
+    me_response = await client.post("/api/auth/me", json={})
     assert me_response.status == 200
 
 
 @pytest.mark.asyncio
 async def test_login_invalid_credentials(client, create_user, auth_headers) -> None:
     await create_user("user", "user")
-    response = await client.post("/auth/login", json={"username": "user", "password": "wrong"}, headers=auth_headers)
+    response = await client.post("/api/auth/login", json={"username": "user", "password": "wrong"}, headers=auth_headers)
     assert response.status == 401
 
 
 @pytest.mark.asyncio
 async def test_requires_auth(client) -> None:
-    response = await client.post("/notes/list", json={})
+    response = await client.post("/api/notes/list", json={})
     assert response.status == 401
 
 
@@ -59,7 +59,7 @@ async def test_tampered_access_cookie_returns_401(client, create_user, auth_head
     await login(client, "user", "user", auth_headers)
     access_cookie = extract_cookie(client, "template_access", "/")
 
-    response = await client.post("/auth/me", json={}, cookies={"template_access": f"{access_cookie}tampered"})
+    response = await client.post("/api/auth/me", json={}, cookies={"template_access": f"{access_cookie}tampered"})
     assert response.status == 401
 
 
@@ -84,13 +84,13 @@ async def test_expired_access_cookie_returns_401(client, create_user) -> None:
         },
     )
 
-    response = await client.post("/auth/me", json={}, cookies={"template_access": expired_token})
+    response = await client.post("/api/auth/me", json={}, cookies={"template_access": expired_token})
     assert response.status == 401
 
 
 @pytest.mark.asyncio
 async def test_auth_error_keeps_cors_headers_for_localhost_origin(client) -> None:
-    response = await client.post("/auth/me", json={}, headers={"Origin": "http://localhost:5173"})
+    response = await client.post("/api/auth/me", json={}, headers={"Origin": "http://localhost:5173"})
     assert response.status == 401
     assert response.headers["Access-Control-Allow-Origin"] == "http://localhost:5173"
     assert response.headers["Access-Control-Allow-Credentials"] == "true"
@@ -100,7 +100,7 @@ async def test_auth_error_keeps_cors_headers_for_localhost_origin(client) -> Non
 async def test_admin_forbidden_for_normal_user(client, create_user, auth_headers) -> None:
     await create_user("user", "user")
     await login(client, "user", "user", auth_headers)
-    response = await client.post("/admin/users/list", json={})
+    response = await client.post("/api/admin/users/list", json={})
     assert response.status == 403
 
 
@@ -110,7 +110,7 @@ async def test_non_json_write_request_returns_400(client, create_user, auth_head
     await login(client, "user", "user", auth_headers)
 
     response = await client.post(
-        "/notes/save",
+        "/api/notes/save",
         data="text=bad",
         headers={"Origin": "http://127.0.0.1:5173", "Content-Type": "application/x-www-form-urlencoded"},
     )
@@ -123,13 +123,13 @@ async def test_refresh_rotates_token(client, create_user, auth_headers, extract_
     await login(client, "user", "user", auth_headers)
     first_refresh = extract_cookie(client, "template_refresh")
 
-    refresh_response = await client.post("/auth/refresh", json={}, headers=auth_headers)
+    refresh_response = await client.post("/api/auth/refresh", json={}, headers=auth_headers)
     assert refresh_response.status == 200
     second_refresh = extract_cookie(client, "template_refresh")
     assert second_refresh != first_refresh
 
     invalid_response = await client.post(
-        "/auth/refresh",
+        "/api/auth/refresh",
         json={},
         headers=auth_headers,
         cookies={"template_refresh": first_refresh},
@@ -143,12 +143,12 @@ async def test_refresh_reuse_revokes_session(client, create_user, auth_headers, 
     await login(client, "user", "user", auth_headers)
     first_refresh = extract_cookie(client, "template_refresh")
 
-    refresh_response = await client.post("/auth/refresh", json={}, headers=auth_headers)
+    refresh_response = await client.post("/api/auth/refresh", json={}, headers=auth_headers)
     assert refresh_response.status == 200
     assert await count_sessions(db) == 1
 
     invalid_response = await client.post(
-        "/auth/refresh",
+        "/api/auth/refresh",
         json={},
         headers=auth_headers,
         cookies={"template_refresh": first_refresh},
@@ -167,7 +167,7 @@ async def test_expired_refresh_session_returns_401_and_deletes_session(client, c
     await db.execute("UPDATE refresh_sessions SET expires_at = ? WHERE id IS NOT NULL", (expired_at,))
     await db.commit()
 
-    response = await client.post("/auth/refresh", json={}, headers=auth_headers)
+    response = await client.post("/api/auth/refresh", json={}, headers=auth_headers)
     assert response.status == 401
     assert await count_sessions(db) == 0
 
@@ -178,7 +178,7 @@ async def test_logout_removes_refresh_session(client, create_user, auth_headers,
     await login(client, "user", "user", auth_headers)
     assert await count_sessions(db) == 1
 
-    response = await client.post("/auth/logout", json={}, headers=auth_headers)
+    response = await client.post("/api/auth/logout", json={}, headers=auth_headers)
     assert response.status == 200
     assert await count_sessions(db) == 0
 

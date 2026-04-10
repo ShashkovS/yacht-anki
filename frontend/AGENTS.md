@@ -6,6 +6,8 @@
 - Do not add a UI component library (no MUI, Ant Design, etc.). Tailwind CSS is already here.
 - Keep all user-facing text in simple English.
 - Keep browser API calls POST-based in this template — that is a deliberate teaching choice.
+- Student-facing frontend config belongs in the root `.env` and `.docker.env` files, not in frontend-only env files.
+- Keep frontend JSON calls on `/api/...` and keep websocket on `/ws` so same-origin production routing stays simple.
 
 ## File layout
 
@@ -25,7 +27,7 @@
 
 - Call `useAuth()` from `src/app/auth.tsx` to read the current logged-in user and the logout function.
 - A protected page should redirect to `/login` when `useAuth().user` is `null`.
-- Do not call `/auth/me` yourself — `AuthProvider` in `App.tsx` loads the session on startup automatically.
+- Do not call `/api/auth/me` yourself — `AuthProvider` in `App.tsx` loads the session on startup automatically.
 
 ## Real-time updates (WebSocket)
 
