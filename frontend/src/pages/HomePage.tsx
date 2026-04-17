@@ -22,12 +22,6 @@ export function HomePage() {
           <Link className="rounded-full bg-amber-300 px-5 py-3 font-semibold text-slate-950 transition hover:bg-amber-200" to="/login">
             Войти в приложение
           </Link>
-          <a
-            className="rounded-full border border-white/20 px-5 py-3 font-semibold text-white transition hover:bg-white/10"
-            href="#dev-users"
-          >
-            Dev-учётки
-          </a>
         </div>
       </div>
 
@@ -39,22 +33,6 @@ export function HomePage() {
           </p>
           <div className="mt-4">
             <ResponsiveDiagram className="w-full" diagramSpec={exampleDiagramSpec} minHeight={280} />
-          </div>
-        </article>
-
-        <article className="rounded-[2rem] border border-slate-200/80 bg-white/92 p-6 shadow-lg shadow-slate-200/60" id="dev-users">
-          <h3 className="text-xl font-semibold text-slate-950">Dev-учётки</h3>
-          <div className="mt-4 grid gap-3 text-sm text-slate-700">
-            <div className="rounded-2xl bg-slate-50 px-4 py-4">
-              <p className="font-medium text-slate-900">Обычный пользователь</p>
-              <p>Логин: user</p>
-              <p>Пароль: user</p>
-            </div>
-            <div className="rounded-2xl bg-slate-50 px-4 py-4">
-              <p className="font-medium text-slate-900">Администратор</p>
-              <p>Логин: admin</p>
-              <p>Пароль: admin</p>
-            </div>
           </div>
         </article>
       </div>

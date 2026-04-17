@@ -39,7 +39,7 @@ export function LoginPage() {
     <section className="mx-auto max-w-md rounded-[2rem] border border-slate-200/80 bg-white/92 p-8 shadow-[0_24px_80px_rgba(148,163,184,0.22)]">
       <h2 className="text-3xl font-semibold tracking-tight text-slate-950">Вход</h2>
       <p className="mt-3 text-sm leading-7 text-slate-600">
-        В dev-режиме можно использовать тестовые учётки с главной страницы. После входа откроются дашборд, повторение карточек и список колод.
+        Введите логин и пароль своей учётной записи. После входа откроются кабинет, повторение карточек и список колод.
       </p>
       <form className="mt-6 space-y-4" onSubmit={onSubmit}>
         <label className="block">
