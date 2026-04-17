@@ -195,7 +195,7 @@ def get_user_id(db) -> Callable[[str], Awaitable[int]]:
 
 @pytest.fixture
 def extract_cookie() -> Callable[[TestClient, str, str], str]:
-    def _extract_cookie(client: TestClient, name: str, path: str = "/api/auth/refresh") -> str:
+    def _extract_cookie(client: TestClient, name: str, path: str = "/auth/refresh") -> str:
         cookie = client.session.cookie_jar.filter_cookies(URL(f"http://127.0.0.1:8081{path}")).get(name)
         assert cookie is not None
         return cookie.value
@@ -204,5 +204,5 @@ def extract_cookie() -> Callable[[TestClient, str, str], str]:
 
 
 async def login(client: TestClient, username: str, password: str, headers: dict[str, str]) -> None:
-    response = await client.post("/api/auth/login", json={"username": username, "password": password}, headers=headers)
+    response = await client.post("/auth/login", json={"username": username, "password": password}, headers=headers)
     assert response.status == 200

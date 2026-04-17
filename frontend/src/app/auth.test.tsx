@@ -34,6 +34,7 @@ function AuthStatus() {
 describe("AuthProvider", () => {
   it("loads the session only once during StrictMode startup", async () => {
     postJson.mockResolvedValueOnce({ user: null });
+    document.cookie = "template_session=1; path=/";
 
     render(
       <StrictMode>
@@ -45,6 +46,6 @@ describe("AuthProvider", () => {
 
     await waitFor(() => expect(screen.getByText("Anonymous")).toBeInTheDocument());
     expect(postJson).toHaveBeenCalledTimes(1);
-    expect(postJson).toHaveBeenCalledWith("/api/auth/me");
+    expect(postJson).toHaveBeenCalledWith("/auth/me");
   });
 });

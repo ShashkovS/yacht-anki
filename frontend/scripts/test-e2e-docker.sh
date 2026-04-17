@@ -9,6 +9,7 @@ SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 FRONTEND_DIR=$(CDPATH= cd -- "${SCRIPT_DIR}/.." && pwd)
 REPO_DIR=$(CDPATH= cd -- "${FRONTEND_DIR}/.." && pwd)
 COMPOSE_SCRIPT="${REPO_DIR}/scripts/docker-compose.sh"
+DOCKER_ENV_FILE="${REPO_DIR}/.docker.env"
 PROJECT_NAME="${PW_DOCKER_PROJECT_NAME:-yachtanki_e2e}"
 
 find_free_ports() {
@@ -25,11 +26,19 @@ print(" ".join(ports))
 DEFAULT_PORTS=$(find_free_ports)
 DEFAULT_FRONTEND_PORT=$(printf '%s' "${DEFAULT_PORTS}" | awk '{print $1}')
 
-export DOCKER_APP_MODE="${DOCKER_APP_MODE:-dev}"
-export DOCKER_COOKIE_SECRET="${DOCKER_COOKIE_SECRET:-playwright-docker-secret}"
-export DOCKER_FRONTEND_PORT="${DOCKER_FRONTEND_PORT:-${DEFAULT_FRONTEND_PORT}}"
-export DOCKER_FRONTEND_ORIGIN="${DOCKER_FRONTEND_ORIGIN:-http://localhost:${DOCKER_FRONTEND_PORT}}"
-export PW_DOCKER_FRONTEND_URL="${PW_DOCKER_FRONTEND_URL:-http://localhost:${DOCKER_FRONTEND_PORT}}"
+if [ -f "${DOCKER_ENV_FILE}" ]; then
+  set -a
+  # shellcheck disable=SC1090
+  . "${DOCKER_ENV_FILE}"
+  set +a
+fi
+
+export DOCKER_APP_MODE="${DOCKER_E2E_APP_MODE:-${DOCKER_APP_MODE:-dev}}"
+export DOCKER_COOKIE_SECRET="${DOCKER_E2E_COOKIE_SECRET:-${DOCKER_COOKIE_SECRET:-playwright-docker-secret}}"
+PROJECT_NAME="${PW_DOCKER_PROJECT_NAME:-${DOCKER_E2E_PROJECT_NAME:-${PROJECT_NAME}}}"
+export DOCKER_FRONTEND_PORT="${DOCKER_E2E_FRONTEND_PORT:-${DOCKER_FRONTEND_PORT:-${DEFAULT_FRONTEND_PORT}}}"
+export DOCKER_FRONTEND_ORIGIN="${DOCKER_E2E_FRONTEND_ORIGIN:-${DOCKER_FRONTEND_ORIGIN:-http://localhost:${DOCKER_FRONTEND_PORT}}}"
+export PW_DOCKER_FRONTEND_URL="${PW_DOCKER_FRONTEND_URL:-${DOCKER_E2E_FRONTEND_URL:-http://localhost:${DOCKER_FRONTEND_PORT}}}"
 
 cleanup() {
   "${COMPOSE_SCRIPT}" -p "${PROJECT_NAME}" -f "${REPO_DIR}/docker-compose.yml" down -v --remove-orphans >/dev/null 2>&1 || true

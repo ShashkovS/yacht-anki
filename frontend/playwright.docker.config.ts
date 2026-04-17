@@ -13,10 +13,12 @@ const frontendRoot = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(frontendRoot, "..");
 process.loadEnvFile(path.join(repoRoot, ".docker.env"));
 
-const frontendUrl = process.env.DOCKER_E2E_FRONTEND_URL?.trim();
+const frontendUrl = process.env.PW_DOCKER_FRONTEND_URL?.trim() || process.env.DOCKER_E2E_FRONTEND_URL?.trim();
 
 if (!frontendUrl) {
-  throw new Error("Missing DOCKER_E2E_FRONTEND_URL in .docker.env. Run make setup or update the root .docker.env file.");
+  throw new Error(
+    "Missing docker e2e frontend URL. Set PW_DOCKER_FRONTEND_URL or DOCKER_E2E_FRONTEND_URL in .docker.env.",
+  );
 }
 
 export default defineConfig({
