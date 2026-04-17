@@ -37,6 +37,11 @@ async function login(page: Page, username: "user" | "admin") {
   await page.waitForURL("**/dashboard");
 }
 
+async function logout(page: Page) {
+  await page.getByRole("button", { name: "Выйти" }).click();
+  await page.waitForURL("**/login");
+}
+
 test("anonymous user is redirected away from protected routes", async ({ page }) => {
   const issues = collectBrowserIssues(page);
 
@@ -75,8 +80,7 @@ test("user can review a real card, inspect stats, and logout", async ({ page }) 
   await expect(page.getByRole("heading", { name: "Самые сложные карточки" })).toBeVisible();
   await expect(page.getByText("Again", { exact: true })).toBeVisible();
 
-  await page.getByRole("button", { name: "Выйти" }).click();
-  await expect(page.getByRole("heading", { name: "Вход" })).toBeVisible();
+  await logout(page);
 
   expect(issues.consoleErrors).toEqual([]);
   expect(issues.httpErrors).toEqual([]);
@@ -160,6 +164,36 @@ test("user can continue review offline and sync answers after reconnect", async 
   await page.getByRole("navigation").getByRole("link", { name: "Статистика", exact: true }).click();
   await page.waitForURL("**/stats");
   await expect(page.getByRole("heading", { name: "Активность за 30 дней" })).toBeVisible();
+});
+
+test("admin can create a new user who does not see admin navigation", async ({ page }) => {
+  const issues = collectBrowserIssues(page);
+  const username = `crew-smoke-${Date.now()}`;
+  const password = "crew-pass";
+
+  await login(page, "admin");
+  await page.getByRole("navigation").getByRole("link", { name: "Пользователи", exact: true }).click();
+  await page.waitForURL("**/admin/users");
+  await expect(page.getByRole("heading", { name: "Новый пользователь" })).toBeVisible();
+
+  await page.getByLabel("Логин").fill(username);
+  await page.getByLabel("Пароль").fill(password);
+  await page.getByRole("button", { name: "Создать пользователя" }).click();
+  await expect(page.getByText(`Пользователь ${username} создан.`)).toBeVisible();
+
+  await logout(page);
+
+  await page.getByLabel("Логин").fill(username);
+  await page.getByLabel("Пароль").fill(password);
+  await page.getByRole("button", { name: "Войти" }).click();
+  await page.waitForURL("**/dashboard");
+  await expect(page.getByRole("link", { name: "Пользователи" })).toHaveCount(0);
+
+  await page.goto("/admin/users");
+  await page.waitForURL("**/dashboard");
+
+  expect(issues.consoleErrors).toEqual([]);
+  expect(issues.httpErrors).toEqual([]);
 });
 
 test.describe("mobile viewport", () => {

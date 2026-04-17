@@ -31,7 +31,7 @@ async def test_startup_seeds_builtin_decks_and_cards(client) -> None:
     db = client.app["db"]
     expected_counts = {
         "decks": 3,
-        "cards": 70,
+        "cards": 74,
         "card_states": 0,
         "review_log": 0,
         "user_settings": 0,

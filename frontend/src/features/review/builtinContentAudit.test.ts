@@ -63,7 +63,7 @@ describe("builtin content audit", () => {
   it("keeps expected deck counts", () => {
     const decks = loadBuiltinDecks();
 
-    expect(decks.map((deck) => deck.cards.length)).toEqual([31, 16, 23]);
+    expect(decks.map((deck) => deck.cards.length)).toEqual([35, 16, 23]);
   });
 
   it("keeps tack-definition cards aligned with the current tack helper", () => {

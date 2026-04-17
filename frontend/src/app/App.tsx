@@ -5,6 +5,7 @@ Copy the route pattern here when you add another top-level page.
 */
 
 import { NavLink, Navigate, Route, Routes } from "react-router-dom";
+import { AdminUsersPage } from "../pages/AdminUsersPage";
 import { DeckDetailPage } from "../pages/DeckDetailPage";
 import { DecksPage } from "../pages/DecksPage";
 import { DashboardPage } from "../pages/DashboardPage";
@@ -56,6 +57,11 @@ function Layout({ children }: { children: React.ReactNode }) {
                 <NavLink className={navLinkClassName} to="/settings">
                   Настройки
                 </NavLink>
+                {user.is_admin ? (
+                  <NavLink className={navLinkClassName} to="/admin/users">
+                    Пользователи
+                  </NavLink>
+                ) : null}
                 <button className="rounded-full bg-slate-950 px-4 py-2 text-white transition hover:bg-slate-800" onClick={() => void logout()}>
                   Выйти
                 </button>
@@ -92,6 +98,20 @@ function RequireAuth({ children }: { children: React.ReactNode }) {
   }
   if (!user) {
     return <Navigate to="/login" replace />;
+  }
+  return <>{children}</>;
+}
+
+function RequireAdmin({ children }: { children: React.ReactNode }) {
+  const { user, loading } = useAuth();
+  if (loading) {
+    return <p className="text-slate-600">Проверяем сессию...</p>;
+  }
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+  if (!user.is_admin) {
+    return <Navigate to="/dashboard" replace />;
   }
   return <>{children}</>;
 }
@@ -150,9 +170,17 @@ export function App() {
             </RequireAuth>
           }
         />
+        <Route
+          path="/admin/users"
+          element={
+            <RequireAdmin>
+              <AdminUsersPage />
+            </RequireAdmin>
+          }
+        />
       </Routes>
     </Layout>
   );
 }
 
-export { RequireAuth };
+export { RequireAdmin, RequireAuth };

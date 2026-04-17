@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from aiohttp import web
 
+from backend.http.admin_routes import setup_admin_routes
 from backend.http.deck_routes import setup_deck_routes
 from backend.http.json_api import ok
 from backend.http.review_routes import setup_review_routes
@@ -21,6 +22,7 @@ async def health(request: web.Request) -> web.Response:
 
 def setup_api_routes(app: web.Application) -> None:
     app.router.add_get("/health", health)
+    setup_admin_routes(app)
     setup_deck_routes(app)
     setup_review_routes(app)
     setup_settings_routes(app)

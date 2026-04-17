@@ -209,7 +209,7 @@ async def test_dev_seed_only_creates_missing_users(tmp_path, monkeypatch) -> Non
         deck_count = await (await app["db"].execute("SELECT COUNT(*) AS count FROM decks")).fetchone()
         card_count = await (await app["db"].execute("SELECT COUNT(*) AS count FROM cards")).fetchone()
         assert deck_count["count"] == 3
-        assert card_count["count"] == 70
+        assert card_count["count"] == 74
     finally:
         await on_cleanup(app)
 

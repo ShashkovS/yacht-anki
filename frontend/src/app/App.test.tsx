@@ -39,6 +39,9 @@ vi.mock("../pages/StatsPage", () => ({
 vi.mock("../pages/SettingsPage", () => ({
   SettingsPage: () => <h2>Настройки</h2>,
 }));
+vi.mock("../pages/AdminUsersPage", () => ({
+  AdminUsersPage: () => <h2>Пользователи</h2>,
+}));
 
 const userValue: User = {
   id: 2,
@@ -46,6 +49,12 @@ const userValue: User = {
   is_admin: false,
   created_at: "2026-03-06T10:00:00+00:00",
   updated_at: "2026-03-06T10:00:00+00:00",
+};
+
+const adminValue: User = {
+  ...userValue,
+  username: "admin",
+  is_admin: true,
 };
 
 function renderApp(path: string, user: User | null) {
@@ -92,5 +101,17 @@ describe("App routes", () => {
   it("shows the settings route for logged-in users", () => {
     renderApp("/settings", userValue);
     expect(screen.getByRole("heading", { name: "Настройки" })).toBeInTheDocument();
+  });
+
+  it("shows the admin users route and nav link for admins", () => {
+    renderApp("/admin/users", adminValue);
+    expect(screen.getByRole("heading", { name: "Пользователи" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Пользователи" })).toBeInTheDocument();
+  });
+
+  it("redirects non-admin users away from admin routes", () => {
+    renderApp("/admin/users", userValue);
+    expect(screen.getByRole("heading", { name: "Личный кабинет экипажа" })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Пользователи" })).not.toBeInTheDocument();
   });
 });

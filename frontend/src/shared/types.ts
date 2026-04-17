@@ -12,6 +12,10 @@ export type User = {
   updated_at: string;
 };
 
+export type CreateUserResponse = {
+  user: User;
+};
+
 export type ApiOk<T> = {
   ok: true;
   data: T;
