@@ -1449,6 +1449,150 @@
         "downwind"
       ],
       "sort_order": 35
+    },
+    {
+      "slug": "main-top-leech-telltale",
+      "template_type": "term_definition",
+      "prompt": "Что показывает верхний колдунчик на задней шкаторине грота?",
+      "answer": "Насколько верх грота близок к срыву потока.",
+      "explanation": "Это главный индикатор тонкой доборки грота на апвинде: по нему ловят грань между мощностью и перетяжкой.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 45,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              },
+              "jib": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ]
+      },
+      "tags": [
+        "trim",
+        "telltales",
+        "main"
+      ],
+      "sort_order": 36
+    },
+    {
+      "slug": "jib-upper-leech-telltale",
+      "template_type": "term_definition",
+      "prompt": "Какой колдунчик на стакселе обычно используют для тонкой доборки шкотом в рабочем режиме?",
+      "answer": "Верхний колдунчик на задней шкаторине стакселя.",
+      "explanation": "Его доводят до грани stall: добрали до намёка на срыв — и отпустили на волос.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 45,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              },
+              "jib": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ]
+      },
+      "tags": [
+        "trim",
+        "telltales",
+        "jib"
+      ],
+      "sort_order": 37
+    },
+    {
+      "slug": "steering-groove",
+      "template_type": "term_definition",
+      "prompt": "Как называется узкий диапазон курсов на лавировке, где нижние колдунчики стакселя работают правильно?",
+      "answer": "Это рабочий коридор руления, или groove.",
+      "explanation": "На хорошей лодке разница между fast mode и slow mode часто всего один-два градуса. Выйти из groove легко, вернуться — уже дороже по скорости.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 45,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              },
+              "jib": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ]
+      },
+      "tags": [
+        "steering",
+        "upwind",
+        "telltales"
+      ],
+      "sort_order": 38
+    },
+    {
+      "slug": "weather-helm",
+      "template_type": "term_definition",
+      "prompt": "Как называется чувство на руле, когда лодка сама лезет в ветер и руль тяжелеет?",
+      "answer": "Это наветренная рука, или weather helm.",
+      "explanation": "Небольшая наветренная рука нормальна, но сильная превращает руль в тормоз и часто означает лишний крен или избыток мощности в гроте.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 42,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              },
+              "jib": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ]
+      },
+      "tags": [
+        "steering",
+        "upwind",
+        "helm"
+      ],
+      "sort_order": 39
     }
   ]
 }
