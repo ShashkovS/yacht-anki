@@ -40,6 +40,14 @@ function getCard(deckSlug: string, cardSlug: string): ReviewCard {
   return card;
 }
 
+function getDeck(deckSlug: string): BuiltinDeckFile {
+  const deck = loadBuiltinDecks().find((entry) => entry.slug === deckSlug);
+  if (!deck) {
+    throw new Error(`Deck ${deckSlug} not found.`);
+  }
+  return deck;
+}
+
 function getBoatTack(spec: DiagramSpec, boatId: string): "port" | "starboard" | "head-to-wind" {
   const boat = spec.boats.find((entry) => entry.id === boatId);
   if (!boat) {
@@ -57,6 +65,34 @@ function getBoatProjection(spec: DiagramSpec, boatId: string): number {
   const forwardX = Math.sin(radians);
   const forwardY = -Math.cos(radians);
   return boat.x * forwardX + boat.y * forwardY;
+}
+
+function getBoat(spec: DiagramSpec, boatId: string) {
+  const boat = spec.boats.find((entry) => entry.id === boatId);
+  if (!boat) {
+    throw new Error(`Boat ${boatId} not found.`);
+  }
+  return boat;
+}
+
+function getAnswerScene(spec: DiagramSpec): DiagramSpec {
+  if (!spec.answer_scene) {
+    throw new Error("Answer scene not found.");
+  }
+  return spec.answer_scene as DiagramSpec;
+}
+
+function getMarkSide(spec: DiagramSpec, boatId: string): number {
+  if (!spec.mark) {
+    throw new Error("Mark not found.");
+  }
+  const boat = getBoat(spec, boatId);
+  const radians = (boat.heading_deg * Math.PI) / 180;
+  const forwardX = Math.sin(radians);
+  const forwardY = -Math.cos(radians);
+  const toMarkX = spec.mark.x - boat.x;
+  const toMarkY = spec.mark.y - boat.y;
+  return forwardX * toMarkY - forwardY * toMarkX;
 }
 
 describe("builtin content audit", () => {
@@ -121,5 +157,167 @@ describe("builtin content audit", () => {
       const spec = parseDiagramSpec(card.diagram_spec);
       expect(spec.expected_answer?.type).toBe("choose_option");
     }
+  });
+
+  it("keeps windward and leeward term cards spoiler-free until reveal", () => {
+    const windwardSpec = parseDiagramSpec(getCard("terms", "windward-boat").diagram_spec);
+    const leewardSpec = parseDiagramSpec(getCard("terms", "leeward-boat").diagram_spec);
+
+    expect(windwardSpec.overlays).toBeUndefined();
+    expect(leewardSpec.overlays).toBeUndefined();
+
+    expect(getBoat(getAnswerScene(windwardSpec), "alpha").highlight).toBe("answer");
+    expect(getBoat(getAnswerScene(windwardSpec), "bravo").highlight).toBeUndefined();
+
+    expect(getBoat(getAnswerScene(leewardSpec), "alpha").highlight).toBeUndefined();
+    expect(getBoat(getAnswerScene(leewardSpec), "bravo").highlight).toBe("answer");
+  });
+
+  it("keeps the reviewed terms cards on the intended sail trim states", () => {
+    const levyentic = parseDiagramSpec(getCard("terms", "levyentic").diagram_spec);
+    const headUpBroadReach = parseDiagramSpec(getCard("terms", "head-up-broad-reach").diagram_spec);
+    const bearAwayBasic = parseDiagramSpec(getCard("terms", "bear-away-basic").diagram_spec);
+    const bearAwayCloseReach = parseDiagramSpec(getCard("terms", "bear-away-close-reach").diagram_spec);
+    const bearAwayPortTack = parseDiagramSpec(getCard("terms", "bear-away-port-tack").diagram_spec);
+
+    expect(getBoat(levyentic, "alpha").sails.main.state).toBe("luffing");
+
+    expect(getBoat(headUpBroadReach, "alpha").sails.main.state).toBe("eased");
+    expect(getBoat(headUpBroadReach, "alpha").sails.jib?.state).toBe("eased");
+
+    expect(getBoat(getAnswerScene(bearAwayBasic), "alpha").sails.jib?.state).toBe("eased");
+    expect(getBoat(getAnswerScene(bearAwayCloseReach), "alpha").sails.jib?.state).toBe("eased");
+    expect(getBoat(getAnswerScene(bearAwayPortTack), "alpha").sails.jib?.state).toBe("eased");
+  });
+
+  it("keeps reviewed manoeuvre cards aligned with their intended trim and non-duplicated text", () => {
+    const gennakerHoist = parseDiagramSpec(getCard("manoeuvres", "gennaker-hoist-steps").diagram_spec);
+    const duplicateTextSlugs = [
+      "tack-steps",
+      "gybe-steps",
+      "gennaker-hoist-steps",
+      "gennaker-drop-steps",
+      "traveller-vs-sheet-steps",
+      "heavy-air-flattening",
+      "reefing-steps",
+      "mark-rounding-bear-away",
+    ];
+
+    expect(getBoat(gennakerHoist, "alpha").sails.jib?.state).toBe("eased");
+
+    for (const slug of duplicateTextSlugs) {
+      const card = getCard("manoeuvres", slug);
+      expect(card.answer).not.toBe(card.explanation);
+    }
+  });
+
+  it("keeps goosewing visually distinct from a plain run", () => {
+    const goosewing = parseDiagramSpec(getCard("terms", "goosewing").diagram_spec);
+    const boat = getBoat(goosewing, "alpha");
+    const mainAngle = boat.sails.main.angle_deg;
+    const jibAngle = boat.sails.jib?.angle_deg;
+
+    expect(typeof mainAngle).toBe("number");
+    expect(typeof jibAngle).toBe("number");
+    expect((mainAngle as number) * (jibAngle as number)).toBeLessThan(0);
+  });
+
+  it("keeps the right-of-way deck in the intended beginner-friendly order", () => {
+    const expectedOrder = [
+      "rule14-avoid-contact",
+      "keep-clear-basic",
+      "windward-identify",
+      "leeward-identify",
+      "overlap-basic",
+      "clear-ahead",
+      "clear-astern",
+      "rule10-starboard-over-port",
+      "rule10-port-over-starboard",
+      "rule11-windward-leeward",
+      "rule11-windward-leeward-port",
+      "rule12-clear-astern",
+      "rule12-clear-astern-port",
+      "rule13-tacking",
+      "rule15-acquiring-row",
+      "rule16-course-change",
+      "zone-awareness",
+      "mark-room-inside",
+      "mark-room-outside-duty",
+      "mark-room-no-overlap",
+      "opposite-tacks-at-mark",
+      "rule18-2d-late-overlap",
+      "rule18-3-tacking-in-zone",
+    ];
+    const deck = getDeck("right-of-way");
+    const actualOrder = [...deck.cards]
+      .sort((left, right) => left.sort_order - right.sort_order)
+      .map((card) => card.slug);
+
+    expect(actualOrder).toEqual(expectedOrder);
+  });
+
+  it("keeps question-scene overlays hidden on right-of-way quiz cards except the legend card", () => {
+    const hiddenOverlaySlugs = [
+      "rule10-starboard-over-port",
+      "rule10-port-over-starboard",
+      "rule11-windward-leeward",
+      "rule11-windward-leeward-port",
+      "rule12-clear-astern",
+      "rule12-clear-astern-port",
+      "rule13-tacking",
+      "windward-identify",
+      "leeward-identify",
+      "overlap-basic",
+      "mark-room-inside",
+      "mark-room-outside-duty",
+      "mark-room-no-overlap",
+      "opposite-tacks-at-mark",
+      "rule15-acquiring-row",
+      "rule16-course-change",
+      "rule18-2d-late-overlap",
+      "rule18-3-tacking-in-zone",
+    ];
+
+    for (const slug of hiddenOverlaySlugs) {
+      const spec = parseDiagramSpec(getCard("right-of-way", slug).diagram_spec);
+      expect(spec.overlays).toBeUndefined();
+    }
+
+    const keepClearCards = getDeck("right-of-way").cards.filter((card) => {
+      const spec = parseDiagramSpec(card.diagram_spec);
+      return spec.overlays?.keep_clear_boat_id;
+    });
+
+    expect(keepClearCards.map((card) => card.slug)).toEqual(["keep-clear-basic"]);
+  });
+
+  it("keeps history-dependent right-of-way rules as concept choose-option cards", () => {
+    const slugs = [
+      "rule15-acquiring-row",
+      "rule16-course-change",
+      "rule18-2d-late-overlap",
+      "rule18-3-tacking-in-zone",
+    ];
+
+    for (const slug of slugs) {
+      const card = getCard("right-of-way", slug);
+      const spec = parseDiagramSpec(card.diagram_spec);
+
+      expect(card.template_type).toBe("concept");
+      expect(spec.expected_answer?.type).toBe("choose_option");
+    }
+  });
+
+  it("keeps the mark-room approach cards on the same starboard side of the mark", () => {
+    const inside = parseDiagramSpec(getCard("right-of-way", "mark-room-inside").diagram_spec);
+    const outside = parseDiagramSpec(getCard("right-of-way", "mark-room-outside-duty").diagram_spec);
+
+    expect(getMarkSide(inside, "alpha")).toBeGreaterThan(0);
+    expect(getMarkSide(inside, "bravo")).toBeGreaterThan(0);
+    expect(getBoat(inside, "alpha").y).toBeGreaterThan(getBoat(inside, "bravo").y);
+
+    expect(getMarkSide(outside, "alpha")).toBeGreaterThan(0);
+    expect(getMarkSide(outside, "bravo")).toBeGreaterThan(0);
+    expect(getBoat(outside, "alpha").y).toBeGreaterThan(getBoat(outside, "bravo").y);
   });
 });

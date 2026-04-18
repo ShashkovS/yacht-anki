@@ -334,7 +334,7 @@
       "template_type": "manoeuvre",
       "prompt": "Какой порядок действий при повороте оверштаг?",
       "answer": "Поворот оверштаг начинается с подготовки и заканчивается добором на новом галсе.",
-      "explanation": "Поворот оверштаг начинается с подготовки и заканчивается добором на новом галсе.",
+      "explanation": "Важно не терять ход лодки: слишком резкий поворот или поздний добор замедляют выход на новый галс.",
       "diagram_spec": {
         "version": 1,
         "wind": {
@@ -400,7 +400,7 @@
       "template_type": "manoeuvre",
       "prompt": "Какой безопасный порядок действий при фордевиндном повороте?",
       "answer": "Нужно заранее собрать экипаж и контролировать гик.",
-      "explanation": "Нужно заранее собрать экипаж и контролировать гик.",
+      "explanation": "Самый опасный момент здесь — контролируемый перевод гика, поэтому роли экипажа нужно распределить заранее.",
       "diagram_spec": {
         "version": 1,
         "wind": {
@@ -466,7 +466,7 @@
       "template_type": "manoeuvre",
       "prompt": "Какой порядок действий при постановке генакера?",
       "answer": "Генакер ставят после выхода на полный курс и готовности снастей.",
-      "explanation": "Генакер ставят после выхода на полный курс и готовности снастей.",
+      "explanation": "Полный курс разгружает лодку и даёт команде время спокойно подготовить снасти перед постановкой.",
       "diagram_spec": {
         "version": 1,
         "wind": {
@@ -483,7 +483,7 @@
                 "state": "eased"
               },
               "jib": {
-                "state": "trimmed"
+                "state": "eased"
               }
             },
             "label": "A"
@@ -533,7 +533,7 @@
       "template_type": "manoeuvre",
       "prompt": "Какой порядок действий при уборке генакера?",
       "answer": "Сначала разгружают парус и только потом убирают его в лодку.",
-      "explanation": "Сначала разгружают парус и только потом убирают его в лодку.",
+      "explanation": "Если сначала не снять нагрузку со шкота, наполненный генакер становится тяжёлым и плохо контролируется при уборке.",
       "diagram_spec": {
         "version": 1,
         "wind": {
@@ -600,7 +600,7 @@
       "template_type": "manoeuvre",
       "prompt": "Что делать, если нужно быстро снять крен на порыве, но сохранить форму грота?",
       "answer": "Сначала работать кареткой, а не грубо бросать весь шкот.",
-      "explanation": "Сначала работать кареткой, а не грубо бросать весь шкот.",
+      "explanation": "Каретка быстрее снимает лишний крен, а полный сброс шкота сильнее портит форму грота и скорость.",
       "diagram_spec": {
         "version": 1,
         "wind": {
@@ -660,7 +660,7 @@
       "template_type": "manoeuvre",
       "prompt": "Какой порядок действий помогает уплощать грот в усиливающийся ветер?",
       "answer": "Сначала увеличивают натяжение управляющих снастей, чтобы сделать профиль площе.",
-      "explanation": "Сначала увеличивают натяжение управляющих снастей, чтобы сделать профиль площе.",
+      "explanation": "Плоский грот уменьшает лишнюю тягу и крен, поэтому лодка остаётся быстрее и легче на руле.",
       "diagram_spec": {
         "version": 1,
         "wind": {
@@ -720,7 +720,7 @@
       "template_type": "manoeuvre",
       "prompt": "Какой базовый порядок действий при рифлении грота?",
       "answer": "Рифление требует разгрузить парус, заложить риф и заново настроить грот.",
-      "explanation": "Рифление требует разгрузить парус, заложить риф и заново настроить грот.",
+      "explanation": "Главная ошибка новичка — рифиться на перегруженном парусе, поэтому сначала нужно снять часть нагрузки.",
       "diagram_spec": {
         "version": 1,
         "wind": {
@@ -780,7 +780,7 @@
       "template_type": "manoeuvre",
       "prompt": "Что делать после огибания верхнего знака, если лодка уходит на полный курс?",
       "answer": "Нужно увалиться и сразу открыть паруса под новый курс.",
-      "explanation": "Нужно увалиться и сразу открыть паруса под новый курс.",
+      "explanation": "После верхнего знака важно быстро перейти на спусковой режим, но не потерять контроль над курсом и ролями экипажа.",
       "diagram_spec": {
         "version": 1,
         "wind": {
@@ -920,6 +920,669 @@
         "gennaker"
       ],
       "sort_order": 16
+    },
+      {
+      "slug": "main-top-telltale-stalled",
+      "template_type": "trim",
+      "prompt": "Устойчивый апвинд, лодка уже разогнана. Верхний колдунчик на задней шкаторине грота почти всё время спрятан. Что делать?",
+      "answer": "Чуть потравить грот-шкот.",
+      "explanation": "Если верхний колдунчик грота почти всё время в срыве, верхушка грота перетянута. В рабочем режиме его держат на грани срыва, а не в постоянном stall.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 45,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              },
+              "jib": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ],
+        "expected_answer": {
+          "type": "choose_option",
+          "options": [
+            {
+              "id": "ease-main",
+              "label": "Чуть потравить грот-шкот"
+            },
+            {
+              "id": "sheet-in-main",
+              "label": "Ещё добрать грот-шкот"
+            }
+          ],
+          "correct_option_id": "ease-main"
+        }
+      },
+      "tags": [
+        "trim",
+        "upwind",
+        "telltales",
+        "main"
+      ],
+      "sort_order": 17
+    },
+    {
+      "slug": "main-top-telltale-flowing",
+      "template_type": "trim",
+      "prompt": "Плоская вода, устойчивый апвинд, нужен height. Верхний колдунчик грота всё время свободно летит. Что делать?",
+      "answer": "Добрать грот-шкот совсем чуть-чуть.",
+      "explanation": "Когда лодка уже разогнана и вы идёте на рабочую высоту, постоянно свободный верхний колдунчик часто означает, что верхушку грота можно закрыть ещё немного.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 45,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              },
+              "jib": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ],
+        "expected_answer": {
+          "type": "choose_option",
+          "options": [
+            {
+              "id": "sheet-in-main",
+              "label": "Чуть добрать грот-шкот"
+            },
+            {
+              "id": "ease-main",
+              "label": "Ещё потравить грот-шкот"
+            }
+          ],
+          "correct_option_id": "sheet-in-main"
+        }
+      },
+      "tags": [
+        "trim",
+        "upwind",
+        "telltales",
+        "main"
+      ],
+      "sort_order": 18
+    },
+    {
+      "slug": "jib-upper-leech-stalled",
+      "template_type": "trim",
+      "prompt": "На лавировке верхний колдунчик на задней шкаторине стакселя залип. Что делать со стаксель-шкотом первым?",
+      "answer": "Чуть потравить стаксель-шкот.",
+      "explanation": "Рабочий max trim на стакселе — это граница срыва верхнего колдунчика. Если он уже стоит, сначала отпускают sheet на волос, а не добирают ещё.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 45,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              },
+              "jib": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ],
+        "expected_answer": {
+          "type": "choose_option",
+          "options": [
+            {
+              "id": "ease-jib",
+              "label": "Чуть потравить стаксель-шкот"
+            },
+            {
+              "id": "sheet-in-jib",
+              "label": "Ещё добрать стаксель-шкот"
+            }
+          ],
+          "correct_option_id": "ease-jib"
+        }
+      },
+      "tags": [
+        "trim",
+        "upwind",
+        "telltales",
+        "jib"
+      ],
+      "sort_order": 19
+    },
+    {
+      "slug": "jib-upper-leech-flowing",
+      "template_type": "trim",
+      "prompt": "Плоская вода, рабочий апвинд, лодка уже разогнана. Верхний колдунчик стакселя всё время летит. Что делать со стаксель-шкотом?",
+      "answer": "Добрать стаксель-шкот совсем чуть-чуть.",
+      "explanation": "В рабочем режиме стаксель добирают до самой грани stall верхнего колдунчика и потом держат его живым. Если он всё время летит, высоты часто можно добавить.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 45,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              },
+              "jib": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ],
+        "expected_answer": {
+          "type": "choose_option",
+          "options": [
+            {
+              "id": "sheet-in-jib",
+              "label": "Чуть добрать стаксель-шкот"
+            },
+            {
+              "id": "ease-jib",
+              "label": "Ещё потравить стаксель-шкот"
+            }
+          ],
+          "correct_option_id": "sheet-in-jib"
+        }
+      },
+      "tags": [
+        "trim",
+        "upwind",
+        "telltales",
+        "jib"
+      ],
+      "sort_order": 20
+    },
+    {
+      "slug": "helm-windward-lower-telltale",
+      "template_type": "trim",
+      "prompt": "На лавировке первым поднимается нижний наветренный колдунчик стакселя. Что делать рулём?",
+      "answer": "Чуть увалиться.",
+      "explanation": "Если первым оживает нижний наветренный колдунчик, лодка стоит слишком высоко к ветру для текущего трима. Рулевому нужно немного увалиться и вернуть поток.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 42,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              },
+              "jib": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ],
+        "expected_answer": {
+          "type": "choose_option",
+          "options": [
+            {
+              "id": "bear-away",
+              "label": "Чуть увалиться"
+            },
+            {
+              "id": "head-up",
+              "label": "Чуть приводиться"
+            }
+          ],
+          "correct_option_id": "bear-away"
+        }
+      },
+      "tags": [
+        "trim",
+        "upwind",
+        "helm",
+        "telltales"
+      ],
+      "sort_order": 21
+    },
+    {
+      "slug": "helm-leeward-lower-telltale",
+      "template_type": "trim",
+      "prompt": "На лавировке начинает залипать нижний подветренный колдунчик стакселя. Что делать рулём?",
+      "answer": "Чуть приводиться.",
+      "explanation": "Если первым умирает нижний подветренный колдунчик, лодка стоит слишком низко для текущего трима. Рулевому нужно немного привестись и вернуть поток.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 48,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              },
+              "jib": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ],
+        "expected_answer": {
+          "type": "choose_option",
+          "options": [
+            {
+              "id": "head-up",
+              "label": "Чуть приводиться"
+            },
+            {
+              "id": "bear-away",
+              "label": "Чуть увалиться"
+            }
+          ],
+          "correct_option_id": "head-up"
+        }
+      },
+      "tags": [
+        "trim",
+        "upwind",
+        "helm",
+        "telltales"
+      ],
+      "sort_order": 22
+    },
+    {
+      "slug": "helm-watch-lower-jib-telltales",
+      "template_type": "trim",
+      "prompt": "Какие колдунчики стакселя важнее рулевому, чтобы держать лодку в рабочем коридоре на лавировке?",
+      "answer": "Нижняя пара у передней шкаторины.",
+      "explanation": "Для steering в groove рулевой обычно живёт по нижним колдунчикам у передней шкаторины. Верхний на задней шкаторине больше нужен триммеру для тонкой доборки стакселя.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 45,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              },
+              "jib": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ],
+        "expected_answer": {
+          "type": "choose_option",
+          "options": [
+            {
+              "id": "lower-luff-pair",
+              "label": "Нижняя пара у передней шкаторины"
+            },
+            {
+              "id": "upper-leech",
+              "label": "Верхний на задней шкаторине"
+            }
+          ],
+          "correct_option_id": "lower-luff-pair"
+        }
+      },
+      "tags": [
+        "trim",
+        "upwind",
+        "helm",
+        "telltales"
+      ],
+      "sort_order": 23
+    },
+    {
+      "slug": "jib-trimmer-watch-upper-leech",
+      "template_type": "trim",
+      "prompt": "Какой колдунчик на стакселе важнее триммеру для тонкой доборки в рабочем режиме?",
+      "answer": "Верхний колдунчик на задней шкаторине.",
+      "explanation": "Именно по верхнему колдунчику на задней шкаторине удобно ловить границу max trim: добрал до намёка на stall — и отпустил на волос.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 45,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              },
+              "jib": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ],
+        "expected_answer": {
+          "type": "choose_option",
+          "options": [
+            {
+              "id": "upper-leech",
+              "label": "Верхний колдунчик на задней шкаторине"
+            },
+            {
+              "id": "lower-luff-pair",
+              "label": "Нижняя пара у передней шкаторины"
+            }
+          ],
+          "correct_option_id": "upper-leech"
+        }
+      },
+      "tags": [
+        "trim",
+        "upwind",
+        "jib",
+        "telltales"
+      ],
+      "sort_order": 24
+    },
+    {
+      "slug": "post-tack-accelerate-first",
+      "template_type": "trim",
+      "prompt": "Сразу после оверштага лодка ещё не разогналась. Что правильнее делать по рулю сначала?",
+      "answer": "Чуть увалиться на скорость, а уже потом зажимать высоту.",
+      "explanation": "Сразу после поворота сначала строят скорость и поток на парусах, а затем постепенно возвращаются в height mode. Зажать лодку слишком рано — типичная потеря после оверштага.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 42,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              },
+              "jib": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ],
+        "expected_answer": {
+          "type": "choose_option",
+          "options": [
+            {
+              "id": "foot-first",
+              "label": "Чуть увалиться и построить скорость"
+            },
+            {
+              "id": "pinch-first",
+              "label": "Сразу зажать высоту"
+            }
+          ],
+          "correct_option_id": "foot-first"
+        }
+      },
+      "tags": [
+        "trim",
+        "upwind",
+        "helm",
+        "tack"
+      ],
+      "sort_order": 25
+    },
+    {
+      "slug": "heavy-weather-helm",
+      "template_type": "trim",
+      "prompt": "На апвинде руль тяжёлый, лодка валится и сама лезет в ветер. Что это чаще всего означает?",
+      "answer": "Лодка перегружена: слишком много мощности и weather helm.",
+      "explanation": "Сильная наветренная рука — это не «хорошая высота», а лишний тормоз на руле. Обычно нужно снимать крен и лишнюю мощность, а не просто держать больше угла румпелем.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 40,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              },
+              "jib": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ],
+        "expected_answer": {
+          "type": "choose_option",
+          "options": [
+            {
+              "id": "overpowered",
+              "label": "Слишком много мощности и weather helm"
+            },
+            {
+              "id": "sheet-harder",
+              "label": "Нужно ещё добрать грот и держать курс рулём"
+            }
+          ],
+          "correct_option_id": "overpowered"
+        }
+      },
+      "tags": [
+        "trim",
+        "upwind",
+        "helm",
+        "depower"
+      ],
+      "sort_order": 26
+    },
+    {
+      "slug": "backstay-depower-upwind",
+      "template_type": "trim",
+      "prompt": "Апвинд, ветер усилился, лодку грузит, форштаг провисает. Что набить из силового депауэра?",
+      "answer": "Ахтерштаг.",
+      "explanation": "Ахтерштаг уплощает грот и одновременно натягивает форштаг, делая стаксель стабильнее и уменьшая лишнюю мощность.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 45,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              },
+              "jib": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ],
+        "expected_answer": {
+          "type": "choose_option",
+          "options": [
+            {
+              "id": "backstay",
+              "label": "Набить ахтерштаг"
+            },
+            {
+              "id": "vang",
+              "label": "Набить оттяжку гика"
+            }
+          ],
+          "correct_option_id": "backstay"
+        }
+      },
+      "tags": [
+        "trim",
+        "upwind",
+        "depower",
+        "controls"
+      ],
+      "sort_order": 27
+    },
+    {
+      "slug": "cunningham-draft-forward",
+      "template_type": "trim",
+      "prompt": "В усилившийся ветер пузо грота ушло назад. Что сделать первым?",
+      "answer": "Набить каннингхэм.",
+      "explanation": "Каннингхэм тянет переднюю шкаторину, двигает draft вперёд и помогает сделать грот суше и стабильнее в ветер.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 45,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              },
+              "jib": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ],
+        "expected_answer": {
+          "type": "choose_option",
+          "options": [
+            {
+              "id": "cunningham-on",
+              "label": "Набить каннингхэм"
+            },
+            {
+              "id": "cunningham-off",
+              "label": "Потравить каннингхэм"
+            }
+          ],
+          "correct_option_id": "cunningham-on"
+        }
+      },
+      "tags": [
+        "trim",
+        "upwind",
+        "main",
+        "controls"
+      ],
+      "sort_order": 28
+    },
+    {
+      "slug": "outhaul-flatten-foot",
+      "template_type": "trim",
+      "prompt": "Низ грота слишком глубокий, нижняя латта заметно крючит к ветру. Что выбрать?",
+      "answer": "Набить аутхаул.",
+      "explanation": "Если низ грота слишком полный, а нижняя латта сильно крючит, аутхаулом обычно делают нижнюю треть грота суше и ровнее.",
+      "diagram_spec": {
+        "version": 1,
+        "wind": {
+          "direction_deg": 0
+        },
+        "boats": [
+          {
+            "id": "alpha",
+            "x": 500,
+            "y": 350,
+            "heading_deg": 45,
+            "sails": {
+              "main": {
+                "state": "trimmed"
+              },
+              "jib": {
+                "state": "trimmed"
+              }
+            },
+            "label": "A"
+          }
+        ],
+        "expected_answer": {
+          "type": "choose_option",
+          "options": [
+            {
+              "id": "outhaul-on",
+              "label": "Набить аутхаул"
+            },
+            {
+              "id": "outhaul-off",
+              "label": "Потравить аутхаул"
+            }
+          ],
+          "correct_option_id": "outhaul-on"
+        }
+      },
+      "tags": [
+        "trim",
+        "upwind",
+        "main",
+        "controls"
+      ],
+      "sort_order": 29
     }
   ]
 }

@@ -179,6 +179,7 @@ describe("ReviewCardView", () => {
 
     expect(screen.getByText(/Проверить вокруг/)).toBeInTheDocument();
     expect(screen.getByText(/Плавно увалиться/)).toBeInTheDocument();
+    expect(screen.getAllByRole("listitem").map((item) => item.textContent?.trim())).toEqual(["Проверить вокруг", "Плавно увалиться"]);
   });
 
   it("renders selectable boats for right-of-way cards and reveals the correct boat", () => {

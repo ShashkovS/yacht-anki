@@ -119,9 +119,9 @@ export function ReviewCardView({
 
           {expectedAnswer?.type === "reveal_steps" ? (
             <ol className="rounded-2xl bg-slate-100 px-6 py-4 text-sm leading-7 text-slate-700">
-              {expectedAnswer.steps.map((step, index) => (
+              {expectedAnswer.steps.map((step) => (
                 <li key={step} className="list-decimal">
-                  <strong className="text-slate-900">{index + 1}.</strong> {step}
+                  {step}
                 </li>
               ))}
             </ol>

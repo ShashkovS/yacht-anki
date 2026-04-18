@@ -23,7 +23,7 @@
             "heading_deg": 0,
             "sails": {
               "main": {
-                "state": "eased"
+                "state": "luffing"
               },
               "jib": {
                 "state": "luffing"
@@ -315,7 +315,7 @@
                   "state": "eased"
                 },
                 "jib": {
-                  "state": "trimmed"
+                  "state": "eased"
                 }
               },
               "label": "A"
@@ -353,10 +353,10 @@
             "heading_deg": 140,
             "sails": {
               "main": {
-                "state": "trimmed"
+                "state": "eased"
               },
               "jib": {
-                "state": "trimmed"
+                "state": "eased"
               }
             },
             "label": "A"
@@ -441,7 +441,7 @@
                   "state": "eased"
                 },
                 "jib": {
-                  "state": "trimmed"
+                  "state": "eased"
                 }
               },
               "label": "A"
@@ -567,7 +567,7 @@
                   "state": "eased"
                 },
                 "jib": {
-                  "state": "trimmed"
+                  "state": "eased"
                 }
               },
               "label": "A"
@@ -691,9 +691,38 @@
             "label": "B"
           }
         ],
-        "overlays": {
-          "windward_boat_id": "alpha",
-          "leeward_boat_id": "bravo"
+        "answer_scene": {
+          "version": 1,
+          "wind": {
+            "direction_deg": 0
+          },
+          "boats": [
+            {
+              "id": "alpha",
+              "x": 450,
+              "y": 260,
+              "heading_deg": 90,
+              "highlight": "answer",
+              "sails": {
+                "main": {
+                  "state": "trimmed"
+                }
+              },
+              "label": "A"
+            },
+            {
+              "id": "bravo",
+              "x": 450,
+              "y": 420,
+              "heading_deg": 90,
+              "sails": {
+                "main": {
+                  "state": "trimmed"
+                }
+              },
+              "label": "B"
+            }
+          ]
         }
       },
       "tags": [
@@ -738,9 +767,38 @@
             "label": "B"
           }
         ],
-        "overlays": {
-          "windward_boat_id": "alpha",
-          "leeward_boat_id": "bravo"
+        "answer_scene": {
+          "version": 1,
+          "wind": {
+            "direction_deg": 0
+          },
+          "boats": [
+            {
+              "id": "alpha",
+              "x": 430,
+              "y": 260,
+              "heading_deg": 90,
+              "sails": {
+                "main": {
+                  "state": "trimmed"
+                }
+              },
+              "label": "A"
+            },
+            {
+              "id": "bravo",
+              "x": 430,
+              "y": 430,
+              "heading_deg": 90,
+              "highlight": "answer",
+              "sails": {
+                "main": {
+                  "state": "trimmed"
+                }
+              },
+              "label": "B"
+            }
+          ]
         }
       },
       "tags": [
@@ -1375,10 +1433,12 @@
             "heading_deg": 180,
             "sails": {
               "main": {
-                "state": "eased"
+                "state": "eased",
+                "angle_deg": 78
               },
               "jib": {
-                "state": "eased"
+                "state": "eased",
+                "angle_deg": -58
               }
             },
             "label": "A"
